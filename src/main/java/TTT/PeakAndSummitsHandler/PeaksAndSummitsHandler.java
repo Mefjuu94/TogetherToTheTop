@@ -1,4 +1,4 @@
-package TTT;
+package TTT.PeakAndSummitsHandler;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -8,14 +8,16 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.util.ArrayList;
 
-public class peaksAndSummitsHandler {
-    peaksAndSummitsHandler(){
+public class PeaksAndSummitsHandler {
+    public static ArrayList<Top> polishSummits = new ArrayList<>();
+
+    public PeaksAndSummitsHandler() {
 
     }
 
-    public static void readXLSX() throws IOException {
+    public static void readAndCreateObjectsFromXLSX() {
 
         File file = new File("src/main/resources/peaksAndSummits/Wierzcholki-wzgorza-i-szczyty-gor-w-Polsce.xls");
         try {
@@ -32,27 +34,33 @@ public class peaksAndSummitsHandler {
             int tmp = 0;
 
             // This trick ensures that we get the data properly even if it doesn't start from first few rows
-            for(int i = 0; i < 10 || i < rows; i++) {
+            for (int i = 0; i < 10 || i < rows; i++) {
                 row = sheet.getRow(i);
-                if(row != null) {
+                if (row != null) {
                     tmp = sheet.getRow(i).getPhysicalNumberOfCells();
-                    if(tmp > cols) cols = tmp;
+                    if (tmp > cols) cols = tmp;
                 }
             }
 
-            for(int r = 0; r < rows; r++) {
+            for (int r = 1; r < rows; r++) { // to avoid description of column
                 row = sheet.getRow(r);
-                if(row != null) {
-                    for(int c = 0; c < cols; c++) {
-                        cell = row.getCell((short)c);
-                        if(cell != null) {
-                            // Your code here
-                            System.out.println(r + ". wiersz " + cell);
-                        }
+                if (row != null) {
+                    cell = row.getCell((short) 0);
+                    String heightOf = String.valueOf(row.getCell((short) 1));
+                    if (!cell.getStringCellValue().isEmpty() && !heightOf.isEmpty()) {
+                        String name = String.valueOf(cell);
+                        String heightDouble = String.valueOf(row.getCell((short) 1));
+                        String latitude = String.valueOf(row.getCell((short) 2));
+                        String longitude = String.valueOf(row.getCell((short) 3));
+                        String[] height = heightDouble.split("\\.");
+                        latitude = latitude.replace(",",".");
+                        longitude = longitude.replace(",",".");
+                        polishSummits.add(new Top(name,Integer.parseInt(height[0]),Float.parseFloat(latitude),Float.parseFloat(longitude)));
                     }
+
                 }
             }
-        } catch(Exception ioe) {
+        } catch (Exception ioe) {
             ioe.printStackTrace();
         }
     }
