@@ -29,11 +29,13 @@ public class TogetherToTheTopApplication {
 //            System.out.println(top);
 //        }
 
-        List<Top> myHeight = topDAO.findSummitByHeight(1257);
+        List<Top> myHeight = topDAO.findSummitsByHeightBetween(999,1000);
 
         for (Top top : myHeight) {
             System.out.println(top);
         }
+
+
 
 
     }
