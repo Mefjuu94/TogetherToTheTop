@@ -1,4 +1,4 @@
-package TTT.PeakAndSummitsHandler;
+package TTT.peaksAndSummitsHandler;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

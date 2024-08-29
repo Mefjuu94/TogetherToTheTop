@@ -1,5 +1,5 @@
-import TTT.PeakAndSummitsHandler.Top;
-import TTT.PeakAndSummitsHandler.TopDAO;
+import TTT.peaksAndSummitsHandler.Top;
+import TTT.databaseUtils.TopDAO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

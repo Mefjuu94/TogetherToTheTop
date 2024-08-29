@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Page</title>
+</head>
+<body>
+<form th:action="@{/register}" th:object="${customUser}" method="post">
+    <input type="email" id="email" th:field="*{email}" placeholder="Email" th:errorclass="is-invalid" required/>
+    <label class="form-label" for="email">Email</label>
+    <input type="password" id="password" class="form-control" th:field="*{password}"
+           placeholder="Password"/>
+    <label class="form-label" for="password">Password</label>
+    <button type="submit" class="btn btn-primary btn-block btn=mb4">Register</button>
+</form>
+</body>
+</html>

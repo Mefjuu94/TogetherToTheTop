@@ -1,5 +1,6 @@
-package TTT.PeakAndSummitsHandler;
+package TTT.databaseUtils;
 
+import TTT.peaksAndSummitsHandler.Top;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -46,7 +47,8 @@ public class TopDAO {
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Top> userQuery = cb.createQuery(Top.class);
             Root<Top> root = userQuery.from(Top.class);
-            userQuery.select(root).where(cb.equal(root.get("name"), summit));
+            // getting all letters to small in name column, also with argument (cb.lower() , to lowerCase()
+            userQuery.select(root).where(cb.like(cb.lower(root.get("name")), "%" + summit.toLowerCase() + "%"));
             List <Top> results = session.createQuery(userQuery).getResultList();
             return results;
         } catch (NoResultException e) {
