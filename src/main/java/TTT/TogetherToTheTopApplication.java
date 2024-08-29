@@ -1,7 +1,7 @@
 package TTT;
 
-import TTT.PeakAndSummitsHandler.Top;
-import TTT.PeakAndSummitsHandler.TopDAO;
+import TTT.peaksAndSummitsHandler.Top;
+import TTT.databaseUtils.TopDAO;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -29,11 +29,21 @@ public class TogetherToTheTopApplication {
 //            System.out.println(top);
 //        }
 
-        List<Top> myHeight = topDAO.findSummitsByHeightBetween(999,1000);
+//        List<Top> myHeight = topDAO.findSummitsByHeightBetween(999,1000);
+//
+//        for (Top top : myHeight) {
+//            System.out.println(top);
+//        }
 
-        for (Top top : myHeight) {
-            System.out.println(top);
+        List<Top> summits = topDAO.findSummitByName("Szarlota");
+
+
+        for (Top summit : summits) {
+            System.out.println(summit);
         }
+
+        System.out.println("Ilość szczytów: " + summits.size());
+
 
 
 
