@@ -35,7 +35,7 @@ public class TogetherToTheTopApplication {
 //            System.out.println(top);
 //        }
 
-        List<Top> summits = topDAO.findSummitByName("Szarlota");
+        List<Top> summits = topDAO.findSummitByName("trzy");
 
 
         for (Top summit : summits) {
