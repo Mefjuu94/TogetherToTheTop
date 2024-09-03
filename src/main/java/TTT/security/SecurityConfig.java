@@ -30,7 +30,7 @@ public class SecurityConfig {
                         .permitAll().anyRequest().authenticated())
                 .formLogin((form) -> form.loginPage("/login")
                         .usernameParameter("email")
-                        .defaultSuccessUrl("/index")
+                        .defaultSuccessUrl("/")
                         .failureUrl("/login?error=true")
                         .permitAll());
 

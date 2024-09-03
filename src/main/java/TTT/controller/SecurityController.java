@@ -20,7 +20,7 @@ public class SecurityController {
 
     @GetMapping("/register")
     public String getRegisterPage(Model model){
-        model.addAttribute("customUser", new CustomUser());
+        model.addAttribute("CustomUser", new CustomUser());
         return "security/register";
     }
 

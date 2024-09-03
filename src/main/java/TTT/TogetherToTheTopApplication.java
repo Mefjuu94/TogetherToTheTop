@@ -1,7 +1,10 @@
 package TTT;
 
+import TTT.databaseUtils.CustomUserDAO;
+import TTT.peaksAndSummitsHandler.PeaksAndSummitsHandler;
 import TTT.peaksAndSummitsHandler.Top;
 import TTT.databaseUtils.TopDAO;
+import TTT.users.CustomUser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -29,20 +32,28 @@ public class TogetherToTheTopApplication {
 //            System.out.println(top);
 //        }
 
-//        List<Top> myHeight = topDAO.findSummitsByHeightBetween(999,1000);
+//        List<Top> myHeight = topDAO.findSummitByHeight(1800);
 //
 //        for (Top top : myHeight) {
 //            System.out.println(top);
 //        }
 
-        List<Top> summits = topDAO.findSummitByName("trzy");
+        CustomUser cs = new CustomUser("costam@mail.com","123");
+        CustomUserDAO dao = new CustomUserDAO();
+        dao.saveUser(cs);
+
+        System.out.println(dao.findCustomUser("costam@mail.com").getId());
+        System.out.println(dao.deleteCustomUser("costam@mail.com"));
 
 
-        for (Top summit : summits) {
-            System.out.println(summit);
-        }
+//        List<Top> summits = topDAO.findSummitByName("trzy");
+//
+//
+//        for (Top summit : summits) {
+//            System.out.println(summit);
+//        }
 
-        System.out.println("Ilość szczytów: " + summits.size());
+       // System.out.println("Ilość szczytów: " + summits.size());
 
 
 

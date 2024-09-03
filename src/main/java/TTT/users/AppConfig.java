@@ -1,4 +1,4 @@
-package TTT.beans;
+package TTT.users;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfig {
 
     @Bean
-    public User defaultUser(){
-        return new User("admin","admin","nick1",99);
+    public CustomUser defaultUser(){
+        return new CustomUser("user@mail.123","user");
     }
 }

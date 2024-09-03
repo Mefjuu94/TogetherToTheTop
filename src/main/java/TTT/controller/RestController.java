@@ -1,7 +1,6 @@
 package TTT.controller;
 
-import TTT.beans.User;
-import TTT.security.CustomUserSecurityService;
+import TTT.users.CustomUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -9,10 +8,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class RestController {
 
     @Autowired
-    private User user;
+    private CustomUser customUser;
 
     @PostMapping("/addUser")
-    public String saveUser(){
+    public String saveUser() {
         return "";
     }
 

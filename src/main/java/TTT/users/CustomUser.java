@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 
+
 import java.util.Objects;
 
 @Entity
@@ -17,6 +18,14 @@ public class CustomUser {
     @Email
     private String email;
     private String password;
+
+    public CustomUser() {
+    }
+
+    public CustomUser(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
     public long getId() {
         return id;
@@ -53,5 +62,14 @@ public class CustomUser {
     @Override
     public int hashCode() {
         return Objects.hash(id, email, password);
+    }
+
+    @Override
+    public String toString() {
+        return "CustomUser{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
