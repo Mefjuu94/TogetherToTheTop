@@ -1,7 +1,7 @@
 package TTT.databaseUtils;
 
 import TTT.users.CustomUser;
-import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -17,20 +17,31 @@ public class CustomUserDAO {
     private final SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
 
     public boolean saveUser(CustomUser customUser) {
-        if (findCustomUser(customUser.getEmail()) == null) {
-            Session session = sessionFactory.openSession();
-            Transaction transaction = session.beginTransaction();
+
+        if (findCustomUser(customUser.getEmail()) != null) {
+            return false;
+        }
+        if (customUser.getPassword().length() < 7) {
+            return false;
+        }
+
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
             customUser.setPassword(passwordEncoder.encode(customUser.getPassword()));
             session.merge(customUser);
             transaction.commit();
-            session.close();
             return true;
-        } else {
-            System.out.println("EntityExistsException: email alerady exist.");
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback(); // back transaction when is error
+            e.printStackTrace();
             return false;
+        } finally {
+            session.close(); // close session
         }
     }
-
 
     public CustomUser findCustomUser(String email) {
         try {
@@ -39,31 +50,48 @@ public class CustomUserDAO {
             CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
             Root<CustomUser> root = userQuery.from(CustomUser.class);
             userQuery.select(root).where(cb.equal(root.get("email"), email));
-            CustomUser results = session.createQuery(userQuery).getSingleResult();
+            CustomUser results = session.createQuery(userQuery).getSingleResultOrNull();
             return results;
-        } catch (NoResultException e) {
-            System.out.println("there is no Customer User with that email");
-            return null;
+        } catch (PersistenceException | IllegalArgumentException e) {
+            System.out.println("No entity found with email: " + email);
         }
+        return null;
     }
 
     public boolean deleteCustomUser(String email) {
-        if (findCustomUser(email) != null) {
-            Session session = sessionFactory.openSession();
+
+        if (email == null) {
+            return false;
+        }
+        email = email.trim();
+        if (email.isEmpty()) {
+            return false;
+        }
+
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
             session.beginTransaction();
 
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaDelete<CustomUser> delete = cb.createCriteriaDelete(CustomUser.class);
-            Root<CustomUser> authorRoot = delete.from(CustomUser.class);
 
+            Root<CustomUser> authorRoot = delete.from(CustomUser.class);
             delete.where(cb.equal(authorRoot.get("email"), email));
 
             session.createMutationQuery(delete).executeUpdate();
             session.getTransaction().commit();
             return true;
-        } else {
-            System.out.println("there is no Customer User with that email");
+        } catch (Exception e) {
+            if (session != null && session.getTransaction().isActive()) {
+                session.getTransaction().rollback();
+            }
+            e.printStackTrace();
             return false;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 

@@ -9,42 +9,41 @@ import java.util.List;
 
 public class TopDaoTests {
 
-    TopDAO testObject = new TopDAO();
-    Top testTop = new Top("test", 1, 111, 222);
-    List<Top> testlist = new ArrayList<>();
+    private TopDAO testObject = new TopDAO();
+    private Top testTop = new Top("test", 1, 111, 222);
+    private List<Top> testlist = new ArrayList<>();
 
     private List<Top> setList() {
-        testObject.addTop(testTop);
+        testObject.addSummit(testTop);
         return setList();
     }
 
     @Test
     public void addTopTest() {
-        Assertions.assertTrue(testObject.addTop(testTop));
+        Assertions.assertTrue(testObject.addSummit(testTop));
+        testObject.deleteTop(testTop.getName()); //delete unecesarry after test
     }
 
     @Test
     public void addBigTopTestFail() {
-        Assertions.assertFalse(testObject.addTop(new Top("biggest top ever", 9999, 123123, 213232)));
+        Assertions.assertFalse(testObject.addSummit(new Top("biggest top ever", 9999, 123123, 213232)));
         testObject.deleteTop("biggest top ever");
     }
 
     @Test
     public void addSmallTopTestFail() {
-        Assertions.assertFalse(testObject.addTop(new Top("smalles top ever", -2, 123123, 213232)));
+        Assertions.assertFalse(testObject.addSummit(new Top("smalles top ever", -2, 123123, 213232)));
         testObject.deleteTop("smalles top ever");
     }
 
     @Test
     public void findSummitTest() {
-        testObject.addTop(testTop);
-        testlist.add(testTop);
-        Assertions.assertEquals(testlist, testObject.findSummitByName("test"));
+        testlist.add(new Top("Łabski Szczyt / Violík",1469,50.7805043F,15.5457033F));
+        Assertions.assertEquals(testlist, testObject.findSummitByName("Łabski Szczyt"));
     }
 
     @Test
     public void findSummitTestFail() {
-        testObject.addTop(testTop);
         testlist.add(testTop);
         Assertions.assertNotEquals(testlist, testObject.findSummitByName("tested"));
     }
@@ -59,8 +58,9 @@ public class TopDaoTests {
 
     @Test
     public void deleteSummitTest() {
-        testObject.addTop(testTop);
+        testObject.addSummit(testTop);
         testlist.add(testTop);
+
         Assertions.assertTrue(testObject.deleteTop("test"));
         Assertions.assertNotEquals(testlist, testObject.findSummitByName("test"));
     }
@@ -111,20 +111,17 @@ public class TopDaoTests {
 
     @Test
     public void findSummitsByHeightLessThan() {
-        testObject.deleteTop("test"); // to avoid test object
         testlist.add(new Top("Jarcowa Skałka", 3, 49.275032F, 19.869242F));
         Assertions.assertEquals(testlist, testObject.findSummitsByHeightLessThan(5));
     }
 
     @Test
     public void findSummitsByHeightLessThan2isEmpty() {
-        testObject.deleteTop("test"); // to avoid test object
         Assertions.assertEquals(testlist, testObject.findSummitsByHeightLessThan(2));
     }
 
     @Test
     public void findSummitsByHeightLessThanFail() {
-        testObject.deleteTop("test"); // to avoid test object
         testlist.add(new Top("Wzgórze Cmentarne", 6, 54.66309F, 17.060831F));
         Assertions.assertNotEquals(testlist, testObject.findSummitsByHeightLessThan(5));
     }
@@ -132,7 +129,6 @@ public class TopDaoTests {
 
     @Test
     public void findSummitsByHeight() {
-        testObject.deleteTop("test"); // to avoid test object
         testlist.add(new Top("Wzgórze Cmentarne", 6, 54.66309F, 17.060831F));
         Assertions.assertEquals(testlist, testObject.findSummitByHeight(6));
     }

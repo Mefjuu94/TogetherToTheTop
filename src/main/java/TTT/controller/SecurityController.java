@@ -8,6 +8,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Objects;
+
 @Controller
 public class SecurityController {
 
@@ -20,17 +22,18 @@ public class SecurityController {
 
     @GetMapping("/register")
     public String getRegisterPage(Model model){
-        model.addAttribute("CustomUser", new CustomUser());
+        model.addAttribute("customUser", new CustomUser());
         return "security/register";
     }
 
     @PostMapping("/register")
     public String registerUser(CustomUser customUser, BindingResult bindingResult){
 
-        if (bindingResult.hasErrors()){
+        // if has errors, return customUser to register form
+        if (bindingResult.hasErrors()) {
             return "security/register";
         }
-        dao.saveUser(customUser);
+
         return "index";
     }
 }

@@ -16,7 +16,7 @@ public class TopDAO {
     private final SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
 
 
-    public boolean addTop(Top top) {
+    public boolean addSummit(Top top) {
         if (top.getHeight() > 8850 || top.getHeight() < 1) {
             System.out.println("Invalid height!");
             return false;
