@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integracja z Mapy.cz</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <!-- Leaflet Locate Control CSS (for user location) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol@0.72.0/dist/L.Control.Locate.min.css" />
+
+    <!-- Leaflet MarkerCluster CSS (for marker clustering) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+
+    <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+
+    <link type="text/css" th:href="@{/css/map.css}" rel="stylesheet" />
+
+</head>
+<body>
+<div id="container">
+    <div id="map"></div>
+    <div id="sidebar">
+        <h3>Route Planner</h3>
+        <input type="text" id="searchInput" placeholder="Search..." />
+        <button id="searchBtn">Search</button>
+        <div>Waypoints :</div>
+        <div id="waypointsContainer">
+            <ul id="waypointsList"></ul>
+        </div>
+        <div id="routeInfo">
+            <p><strong>Distance:</strong> <span id="distance"></span></p>
+            <p><strong>Duration:</strong> <span id="duration"></span></p>
+            <button id="addSavedWaypointBtn">Add Saved Waypoint</button>
+        </div>
+        <div id="poiFilters">
+            <label><input type="checkbox" id="restaurant" > Restaurants</label><br>
+            <label><input type="checkbox" id="cafe" > Cafes</label><br>
+            <label><input type="checkbox" id="parking" checked> Parking</label><br>
+            <label><input type="checkbox" id="school" checked> Schools</label><br>
+            <label><input type="checkbox" id="hospital" checked> Hospitals</label><br>
+            <label><input type="checkbox" id="peak" checked> Peaks</label><br> <!-- Added Peaks checkbox -->
+            <label><input type="checkbox" id="generalPoi" > General POIs</label><br> <!-- Added General POIs checkbox -->
+        </div>
+
+    </div>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<!-- Leaflet Locate Control (for finding user location) -->
+<script src="https://unpkg.com/leaflet.locatecontrol@0.72.0/dist/L.Control.Locate.min.js"></script>
+
+<!-- Leaflet Routing Machine (for route planning) -->
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
+<!-- Leaflet Control Geocoder (for address search) -->
+<script src="https://unpkg.com/leaflet-control-geocoder@1.13.0/dist/Control.Geocoder.js"></script>
+
+<!-- Leaflet MarkerCluster (for marker clustering) -->
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+<script type="text/javascript" th:src="@{/js/map.js}"></script>
+</body>
+</html>

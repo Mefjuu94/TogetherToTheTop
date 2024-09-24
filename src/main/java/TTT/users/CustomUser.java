@@ -18,6 +18,14 @@ public class CustomUser {
     private String email;
     private String password;
 
+    public CustomUser() {
+    }
+
+    public CustomUser(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     public long getId() {
         return id;
     }
@@ -53,5 +61,14 @@ public class CustomUser {
     @Override
     public int hashCode() {
         return Objects.hash(id, email, password);
+    }
+
+    @Override
+    public String toString() {
+        return "CustomUser{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

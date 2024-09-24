@@ -1,5 +1,6 @@
 package TTT.security;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -21,21 +23,26 @@ public class SecurityConfig {
         this.securityService = securityService;
     }
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
         security.
-                authorizeHttpRequests((requests) -> requests.
-                        requestMatchers("/","/register","/login","/resources/static")
-                        .permitAll().anyRequest().authenticated())
+                authorizeHttpRequests((requests) -> requests
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                        .permitAll().
+                        requestMatchers("/","/login","/register","/map","/about")
+                        .permitAll()
+                        .anyRequest().authenticated())
                 .formLogin((form) -> form.loginPage("/login")
                         .usernameParameter("email")
                         .defaultSuccessUrl("/")
                         .failureUrl("/login?error=true")
                         .permitAll());
 
+
+
         return security.build();
     }
+
 
     @Bean
     public DaoAuthenticationProvider authProvider(){
@@ -54,4 +61,5 @@ public class SecurityConfig {
 
         return authenticationManagerBuilder.build();
     }
+
 }

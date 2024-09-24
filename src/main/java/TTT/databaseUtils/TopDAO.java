@@ -1,8 +1,6 @@
 package TTT.databaseUtils;
 
 import TTT.peaksAndSummitsHandler.Top;
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -18,18 +16,18 @@ public class TopDAO {
     private final SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
 
 
-    public boolean addTop(Top top) {
-        try {
-            Session session = sessionFactory.openSession();
-            Transaction transaction = session.beginTransaction();
-            session.merge(top);
-            transaction.commit();
-            session.close();
-            return true;
-        } catch (EntityExistsException e) {
-            System.out.println("EntityExistsException: entity alerady exist.");
+    public boolean addSummit(Top top) {
+        if (top.getHeight() > 8850 || top.getHeight() < 1) {
+            System.out.println("Invalid height!");
             return false;
         }
+
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.merge(top);
+        transaction.commit();
+        session.close();
+        return true;
     }
 
     public List<Top> getAllSummits() {
@@ -41,84 +39,79 @@ public class TopDAO {
         return session.createQuery(cq).getResultList();
     }
 
-    public List <Top> findSummitByName(String summit) {
-        try {
-            Session session = sessionFactory.openSession();
-            CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaQuery<Top> userQuery = cb.createQuery(Top.class);
-            Root<Top> root = userQuery.from(Top.class);
-            // getting all letters to small in name column, also with argument (cb.lower() , to lowerCase()
-            userQuery.select(root).where(cb.like(cb.lower(root.get("name")), "%" + summit.toLowerCase() + "%"));
-            List <Top> results = session.createQuery(userQuery).getResultList();
-            return results;
-        } catch (NoResultException e) {
+    public List<Top> findSummitByName(String summit) {
+
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Top> userQuery = cb.createQuery(Top.class);
+        Root<Top> root = userQuery.from(Top.class);
+        // getting all letters to small in name column, also with argument (cb.lower() , to lowerCase()
+        userQuery.select(root).where(cb.like(cb.lower(root.get("name")), "%" + summit.toLowerCase() + "%"));
+        List<Top> results = session.createQuery(userQuery).getResultList();
+        if (results.isEmpty()) {
             System.out.println("there is no Summit with that name");
-            return null;
         }
+        return results;
     }
 
-    public List <Top> findSummitByHeight(int height) {
-        try {
-            Session session = sessionFactory.openSession();
-            CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaQuery<Top> userQuery = cb.createQuery(Top.class);
-            Root<Top> root = userQuery.from(Top.class);
-            userQuery.select(root).where(cb.equal(root.get("height"), height));
-            List <Top> results = session.createQuery(userQuery).getResultList();
-            return results;
-        } catch (NoResultException e) {
+    public List<Top> findSummitByHeight(int height) {
+
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Top> userQuery = cb.createQuery(Top.class);
+        Root<Top> root = userQuery.from(Top.class);
+        userQuery.select(root).where(cb.equal(root.get("height"), height));
+        List<Top> results = session.createQuery(userQuery).getResultList();
+        if (results.isEmpty()) {
+            System.out.println("there is no Summit with that name");
+        }
+        return results;
+    }
+
+    public List<Top> findSummitsByHeightGreaterThan(int height) {
+
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Top> userQuery = cb.createQuery(Top.class);
+        Root<Top> root = userQuery.from(Top.class);
+        userQuery.select(root).where(cb.greaterThan(root.get("height"), height));
+        List<Top> results = session.createQuery(userQuery).getResultList();
+        if (results.isEmpty()) {
             System.out.println("there is no Summit with that height");
-            return null;
         }
+        return results;
     }
 
-    public List <Top> findSummitsByHeightGreaterThan(int height) {
-        try {
-            Session session = sessionFactory.openSession();
-            CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaQuery<Top> userQuery = cb.createQuery(Top.class);
-            Root<Top> root = userQuery.from(Top.class);
-            userQuery.select(root).where(cb.greaterThan(root.get("height"), height));
-            List <Top> results = session.createQuery(userQuery).getResultList();
-            return results;
-        } catch (NoResultException e) {
-            System.out.println("there is no Summits with that height");
-            return null;
+    public List<Top> findSummitsByHeightLessThan(int height) {
+
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Top> userQuery = cb.createQuery(Top.class);
+        Root<Top> root = userQuery.from(Top.class);
+        userQuery.select(root).where(cb.lessThan(root.get("height"), height));
+        List<Top> results = session.createQuery(userQuery).getResultList();
+        if (results.isEmpty()) {
+            System.out.println("there is no Summit with that height");
         }
+        return results;
     }
 
-    public List <Top> findSummitsByHeightLessThan(int height) {
-        try {
-            Session session = sessionFactory.openSession();
-            CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaQuery<Top> userQuery = cb.createQuery(Top.class);
-            Root<Top> root = userQuery.from(Top.class);
-            userQuery.select(root).where(cb.lessThan(root.get("height"), height));
-            List <Top> results = session.createQuery(userQuery).getResultList();
-            return results;
-        } catch (NoResultException e) {
-            System.out.println("there is no Summits with that height");
-            return null;
-        }
-    }
+    public List<Top> findSummitsByHeightBetween(int height1, int height2) {
 
-    public List <Top> findSummitsByHeightBetween(int height1,int height2) {
-        try {
-            Session session = sessionFactory.openSession();
-            CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaQuery<Top> userQuery = cb.createQuery(Top.class);
-            Root<Top> root = userQuery.from(Top.class);
-            userQuery.select(root).where(cb.between(root.get("height"), height1,height2));
-            List <Top> results = session.createQuery(userQuery).getResultList();
-            return results;
-        } catch (NoResultException e) {
-            System.out.println("there is no Summits with that height");
-            return null;
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Top> userQuery = cb.createQuery(Top.class);
+        Root<Top> root = userQuery.from(Top.class);
+        userQuery.select(root).where(cb.between(root.get("height"), height1, height2));
+        List<Top> results = session.createQuery(userQuery).getResultList();
+        if (results.isEmpty()) {
+            System.out.println("there is no Summit with that name");
         }
+        return results;
     }
 
     public boolean deleteTop(String summitName) {
-        if (findSummitByName(summitName) != null) {
+        if (!findSummitByName(summitName).isEmpty()) {
 
             Session session = sessionFactory.openSession();
             session.beginTransaction();
