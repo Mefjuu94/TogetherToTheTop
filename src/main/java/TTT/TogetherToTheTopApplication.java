@@ -9,10 +9,18 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 
 @SpringBootApplication
 public class TogetherToTheTopApplication {
+
+    static String city = "Praha";
+    static String APIKEY = "zjEFy9NsTMuP_e3U9_B0sDu_axPSSl28smWg1PXW4i0";
 
     public static void main(String[] args) throws IOException {
         SpringApplication.run(TogetherToTheTopApplication.class, args);
@@ -26,40 +34,39 @@ public class TogetherToTheTopApplication {
 //        }
 
 
-        //work :D
-//        List<Top> rysy = topDAO.findSummitByName("Rysy");
-//        for (Top top : rysy) {
-//            System.out.println(top);
+
+//        HttpResponse<String> resp = getresp();
+//        if (resp!=null) {
+//            System.out.println(resp.statusCode());
+//            System.out.println(resp.body());
+//        }else {
+//            System.out.println("pusta odpowiedz");
 //        }
-
-//        List<Top> myHeight = topDAO.findSummitByHeight(1800);
 //
-//        for (Top top : myHeight) {
-//            System.out.println(top);
-//        }
 
-//        CustomUser cs = new CustomUser("costam@mail.com","123");
-//        CustomUserDAO dao = new CustomUserDAO();
-//        dao.saveUser(cs);
-//
-//        System.out.println(dao.findCustomUser("costam@mail.com").getId());
-//        System.out.println(dao.deleteCustomUser("costam@mail.com"));
+// https://api.mapy.cz/v1/suggest?lang=pl&apikey=eyJpIjoyNTcsImMiOjE2Njc0ODU2MjN9.c_UlvdpHGTI_Jb-TNMYlDYuIkCLJaUpi911RdlwPsAY&query=Katowice&limit=5
 
-
-//        List<Top> summits = topDAO.findSummitByName("trzy");
-//
-//
-//        for (Top summit : summits) {
-//            System.out.println(summit);
-//        }
-
-       // System.out.println("Ilość szczytów: " + summits.size());
 
 
 
 
 
     }
-
+//    final static HttpClient client = HttpClient.newHttpClient();
+//
+//    public static HttpResponse<String> getresp() {
+//        try {
+//            HttpRequest request = HttpRequest.newBuilder(
+//                    new URI("https://api.mapy.cz/v1/suggest?lang=pl&apikey=" + APIKEY + "&query==" + city + "&limit=5")).GET().build();
+//            //String urlString = "https://api.mapy.cz/geocode?query=" + encodedQuery + "&apikey=" + API_KEY;
+//            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+//            if (response.statusCode() == 200) {
+//                return response;
+//            }
+//            return null;
+//        } catch (URISyntaxException | IOException | InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 }

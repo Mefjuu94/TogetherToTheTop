@@ -27,8 +27,9 @@
     <div id="map"></div>
     <div id="sidebar">
         <h3>Route Planner</h3>
-        <input type="text" id="searchInput" placeholder="Search..." />
+        <label for="searchInput"></label><input type="text" id="searchInput" placeholder="Search..." />
         <button id="searchBtn">Search</button>
+        <div id="searchResults" class="dropdown"></div>
         <div>Waypoints :</div>
         <div id="waypointsContainer">
             <ul id="waypointsList"></ul>
@@ -47,9 +48,10 @@
             <label><input type="checkbox" id="peak" checked> Peaks</label><br> <!-- Added Peaks checkbox -->
             <label><input type="checkbox" id="generalPoi" > General POIs</label><br> <!-- Added General POIs checkbox -->
         </div>
-
+        <div><button id="saveWaypointsBtn">saveWaypointsBtn</button></div>
     </div>
 </div>
+
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>

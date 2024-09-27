@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Objects;
@@ -29,11 +30,14 @@ public class SecurityController {
     @PostMapping("/register")
     public String registerUser(CustomUser customUser, BindingResult bindingResult){
 
+        dao.saveUser(customUser);
+
         // if has errors, return customUser to register form
         if (bindingResult.hasErrors()) {
             return "security/register";
         }
 
-        return "index";
+        return "map";
     }
+    
 }

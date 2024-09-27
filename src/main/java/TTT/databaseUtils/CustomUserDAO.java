@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package TTT.databaseUtils;
 
 import TTT.users.CustomUser;
@@ -17,100 +12,88 @@ import org.hibernate.Transaction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class CustomUserDAO {
+
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
 
-    public CustomUserDAO() {
-    }
-
     public boolean saveUser(CustomUser customUser) {
-        if (this.findCustomUser(customUser.getEmail()) != null) {
+
+        if (findCustomUser(customUser.getEmail()) != null) {
             return false;
-        } else if (customUser.getPassword().length() < 7) {
+        }
+        if (customUser.getPassword().length() < 7) {
             return false;
-        } else {
-            Session session = null;
-            Transaction transaction = null;
+        }
 
-            boolean var5;
-            try {
-                session = this.sessionFactory.openSession();
-                transaction = session.beginTransaction();
-                customUser.setPassword(this.passwordEncoder.encode(customUser.getPassword()));
-                session.merge(customUser);
-                transaction.commit();
-                boolean var11 = true;
-                return var11;
-            } catch (Exception var9) {
-                Exception e = var9;
-                if (transaction != null) {
-                    transaction.rollback();
-                }
-
-                e.printStackTrace();
-                var5 = false;
-            } finally {
-                session.close();
-            }
-
-            return var5;
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            customUser.setPassword(passwordEncoder.encode(customUser.getPassword()));
+            session.merge(customUser);
+            transaction.commit();
+            System.out.println("user saved");
+            return true;
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback(); // back transaction when is error
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close(); // close session
         }
     }
 
     public CustomUser findCustomUser(String email) {
         try {
-            Session session = this.sessionFactory.openSession();
+            Session session = sessionFactory.openSession();
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
             Root<CustomUser> root = userQuery.from(CustomUser.class);
             userQuery.select(root).where(cb.equal(root.get("email"), email));
-            CustomUser results = (CustomUser)session.createQuery(userQuery).getSingleResultOrNull();
+            CustomUser results = session.createQuery(userQuery).getSingleResultOrNull();
             return results;
-        } catch (IllegalArgumentException | PersistenceException var7) {
+        } catch (PersistenceException | IllegalArgumentException e) {
             System.out.println("No entity found with email: " + email);
-            return null;
         }
+        return null;
     }
 
     public boolean deleteCustomUser(String email) {
+
         if (email == null) {
             return false;
-        } else {
-            email = email.trim();
-            if (email.isEmpty()) {
-                return false;
-            } else {
-                Session session = null;
+        }
+        email = email.trim();
+        if (email.isEmpty()) {
+            return false;
+        }
 
-                boolean var4;
-                try {
-                    session = this.sessionFactory.openSession();
-                    session.beginTransaction();
-                    CriteriaBuilder cb = session.getCriteriaBuilder();
-                    CriteriaDelete<CustomUser> delete = cb.createCriteriaDelete(CustomUser.class);
-                    Root<CustomUser> authorRoot = delete.from(CustomUser.class);
-                    delete.where(cb.equal(authorRoot.get("email"), email));
-                    session.createMutationQuery(delete).executeUpdate();
-                    session.getTransaction().commit();
-                    boolean var6 = true;
-                    return var6;
-                } catch (Exception var10) {
-                    Exception e = var10;
-                    if (session != null && session.getTransaction().isActive()) {
-                        session.getTransaction().rollback();
-                    }
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            session.beginTransaction();
 
-                    e.printStackTrace();
-                    var4 = false;
-                } finally {
-                    if (session != null) {
-                        session.close();
-                    }
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaDelete<CustomUser> delete = cb.createCriteriaDelete(CustomUser.class);
 
-                }
+            Root<CustomUser> authorRoot = delete.from(CustomUser.class);
+            delete.where(cb.equal(authorRoot.get("email"), email));
 
-                return var4;
+            session.createMutationQuery(delete).executeUpdate();
+            session.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            if (session != null && session.getTransaction().isActive()) {
+                session.getTransaction().rollback();
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (session != null) {
+                session.close();
             }
         }
     }
+
 }

@@ -50,4 +50,23 @@ html, body {
     background-color: #ddd;
 }
 
+.dropdown {
+    position: absolute; /* Umożliwia umiejscowienie nad innymi elementami */
+    background-color: Grey; /* Tło rozwijanej listy */
+    border: 1px solid black; /* Ramka */
+    z-index: 1000; /* Wyższy z-index, aby była nad innymi elementami */
+    max-height: 200px; /* Maksymalna wysokość, aby zachować proporcje */
+    overflow-y: auto; /* Przewijanie, gdy lista jest za długa */
+    display: none; /* Ukryta domyślnie */
+}
 
+.search-result-item {
+    padding: 8px; /* Padding dla pozycji */
+    cursor: pointer; /* Zmiana kursora na pointer */
+    border: 1px solid black; /* Ramka */
+
+}
+
+.search-result-item:hover {
+    background-color: Grey; /* Kolor tła przy najechaniu */
+}

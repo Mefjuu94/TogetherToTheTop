@@ -132,7 +132,6 @@ async function fetchPOI(bbox) {
 }
 
 
-
 // Function to clear existing POI markers
 function clearPOIMarkers() {
     poiMarkers.forEach(marker => marker.remove());
@@ -169,7 +168,7 @@ async function updatePOIMarkers() {
 
     poiData.forEach(poi => {
         const markerElement = createPoiElement(poi.icon);
-        const marker = new maplibregl.Marker({ element: markerElement })
+        const marker = new maplibregl.Marker({element: markerElement})
             .setLngLat(poi.coords)
             .addTo(map);
 
@@ -181,14 +180,14 @@ async function updatePOIMarkers() {
         addToRouteBtn.style.marginTop = '5px';
 
         addToRouteBtn.addEventListener('click', () => {
-            waypoints.push({ coords: poi.coords, name: poi.name });
+            waypoints.push({coords: poi.coords, name: poi.name});
             updateWaypointsList();
             route();
         });
 
         popupContent.appendChild(addToRouteBtn);
 
-        const popup = new maplibregl.Popup({ closeOnClick: false })
+        const popup = new maplibregl.Popup({closeOnClick: false})
             .setDOMContent(popupContent);
 
         let isMouseOverPopup = false;
@@ -283,19 +282,19 @@ async function route() {
     url.searchParams.set('routeType', 'foot_fast');
     waypoints.slice(1, -1).forEach(wp => url.searchParams.append('waypoints', wp.coords.join(',')));
 
-    const response = await fetch(url.toString(), { mode: 'cors' });
+    const response = await fetch(url.toString(), {mode: 'cors'});
     const json = await response.json();
 
     if (json.geometry) {
         const source = map.getSource('route-geometry');
         source.setData(json.geometry);
         document.getElementById('distance').textContent = `${(json.length / 1000).toFixed(2)} km`;
-        document.getElementById('duration').textContent = `${Math.floor((json.duration / 60)/2)}m ${json.duration % 60}s`;
-        map.fitBounds(bbox(json.geometry.geometry.coordinates), { padding: 40 });
+        document.getElementById('duration').textContent = `${Math.floor(json.duration / 60)}m ${json.duration % 60}s`;
+        map.fitBounds(bbox(json.geometry.geometry.coordinates), {padding: 40});
     }
 }
 
-// Add click event to store coordinates //todo
+// Add click event to store coordinates
 map.on('click', (e) => {
     const coords = [e.lngLat.lng, e.lngLat.lat];
     tempCoordinates = coords;
@@ -317,7 +316,7 @@ map.on('click', (e) => {
 
     // add listener to button
     addButton.addEventListener('click', () => {
-        waypoints.push({ coords: tempCoordinates, name: 'My Point' });
+        waypoints.push({coords: tempCoordinates, name: 'My Point'});
         updateWaypointsList();
         route();  // count route
         console.log("Waypoint added at:", tempCoordinates);
@@ -326,7 +325,7 @@ map.on('click', (e) => {
 
     popupContent.appendChild(addButton);
 
-    const popup = new maplibregl.Popup({ closeOnClick: false })
+    const popup = new maplibregl.Popup({closeOnClick: false})
         .setLngLat(coords)
         .setDOMContent(popupContent)
         .addTo(map);
@@ -360,6 +359,14 @@ function updateWaypointsList() {
             waypoints.splice(index, 1); // delete waypoint
             updateWaypointsList(); // update list
             route(); // count route
+
+            console.log(waypoints.length)
+            if (waypoints.length < 2){
+
+                document.getElementById('distance').textContent = `0 km`;
+                document.getElementById('duration').textContent = `0 s`;
+                resetRoute();
+            }
         });
 
         li.appendChild(deleteBtn);
@@ -372,7 +379,7 @@ function updateWaypointsList() {
 document.getElementById('addSavedWaypointBtn').addEventListener('click', () => {
     if (tempCoordinates) {
         // Dodaj waypoint tak samo jak w przypadku POI
-        waypoints.push({ coords: tempCoordinates, name: 'My Point' });
+        waypoints.push({coords: tempCoordinates, name: 'My Point'});
         updateWaypointsList();
         route();  // count route
         console.log("Added saved point:", tempCoordinates);
@@ -386,68 +393,108 @@ document.getElementById('addSavedWaypointBtn').addEventListener('click', () => {
     }
 });
 
+document.getElementById('searchBtn').addEventListener('click', async () => {
+    const searchInput = document.getElementById('searchInput').value;
+    if (!searchInput) return; // Jeśli pole wyszukiwania jest puste, wyjdź
+
+    try {
+        const url = `https://api.mapy.cz/v1/geocode?query=${searchInput}&lang=pl&limit=5&type=regional&type=poi`;
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+                'X-Mapy-Api-Key': API_KEY
+            }
+        });
+
+        const data = await response.json();
+        console.log('Results:', data); // Logowanie wyników w konsoli
+
+        // Wyczyść poprzednie wyniki
+        const searchResults = document.getElementById('searchResults');
+        searchResults.innerHTML = '';
+
+        // Sprawdź, czy są jakieś wyniki
+        if (data.items && data.items.length > 0) {
+            searchResults.style.display = 'block'; // Pokaż wyniki
+
+            data.items.forEach((item, index) => {
+                const lon = item.position.lon;
+                const lat = item.position.lat;
+                const label = item.name || `Wynik ${index + 1}`;
+                //todo
+                // zrobic location jeszxcze do nazwy
+                //     :
+                // {name: 'Zawadka', label: 'Wieś', position: {…}, type: 'regional.municipality', location: 'gmina Wadowice, gmina Powiat wadowicki, Polska', …}
+
+                // Stwórz element listy dla każdego wyniku
+                const resultItem = document.createElement('div');
+                resultItem.textContent = label;
+                resultItem.className = 'search-result-item'; // css class
+
+                // Obsługa kliknięcia na wynik
+                resultItem.addEventListener('click', () => {
+                    waypoints.push({ coords: [lon, lat], name: label });
+                    updateWaypointsList();
+                    route(); // Zaktualizuj trasę
+
+                    // Centrum mapy na wybranym wyniku
+                    map.flyTo({
+                        center: [lon, lat],
+                        zoom: 15
+                    });
+
+                    // Dodaj marker na mapie dla wybranego wyniku
+                    new maplibregl.Marker()
+                        .setLngLat([lon, lat])
+                        .setPopup(new maplibregl.Popup().setText(label)) // Etykieta na markerze
+                        .addTo(map);
+
+                    // Wyczyść wyniki wyszukiwania po kliknięciu
+                    searchResults.innerHTML = '';
+                    searchResults.style.display = 'none'; // Ukryj listę
+                });
+
+                // Dodaj wynik do listy
+                searchResults.appendChild(resultItem);
+            });
+        } else {
+            // Jeśli brak wyników
+            const noResults = document.createElement('div');
+            noResults.textContent = "Brak wyników.";
+            searchResults.appendChild(noResults);
+            searchResults.style.display = 'block'; // Pokaż informację o braku wyników
+        }
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        const searchResults = document.getElementById('searchResults');
+        searchResults.innerHTML = '<div>Wystąpił błąd podczas wyszukiwania.</div>';
+        searchResults.style.display = 'block'; // Pokaż błąd
+    }
+});
+
 
 
 
 // Add event listener to button to add this POI as a waypoint
-addToRouteBtn.addEventListener('click', () => {
-    if (poi.name) {
-        waypoints.push({ coords: poi.coords, name: poi.name || 'Nieznany' });
-        updateWaypointsList();  // update list of route points
-        route();
-        console.log(`Point added ${poi.name} (${poi.coords.join(', ')}) to route`);
-    } else {
-        console.log("No name for this point.");
-    }
-});
-
-
-document.getElementById('searchBtn').addEventListener('click', async () => {
-    console.log('click');
-    const searchInput = document.getElementById('searchInput').value;
-    if (!searchInput) return;
-
-    // Clear existing waypoints if needed
-    waypoints = [];
-    updateWaypointsList();
-
-    try {
-        // Prepare the URL for the Mapy.cz geocoding API
-        const response = await fetch(`https://api.mapy.cz/v1/geocoding/search?apikey=${API_KEY}&query=${encodeURIComponent(searchInput)}`);
-
-        // Sprawdź, czy odpowiedź jest poprawna
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
-
-        if (data.length > 0) {
-            const { coords } = data[0]; // Assuming the first result is the most relevant
-            const lon = coords[0];
-            const lat = coords[1];
-
-            // Add the searched location as a waypoint
-            waypoints.push({ coords: [lon, lat], name: searchInput });
-            updateWaypointsList();
+document.addEventListener('DOMContentLoaded', () => {
+    addToRouteBtn.addEventListener('click', () => {
+        if (poi.name) {
+            waypoints.push({coords: poi.coords, name: poi.name || 'Nieznany'});
+            updateWaypointsList();  // update list of route points
             route();
-
-            // Center the map on the searched location
-            map.flyTo({
-                center: [lon, lat],
-                zoom: 15
-            });
+            console.log(`Point added ${poi.name} (${poi.coords.join(', ')}) to route`);
         } else {
-            console.log("No results found.");
+            console.log("No name for this point.");
         }
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
+    });
 });
+
 
 document.getElementById('addSavedWaypointBtn').addEventListener('click', () => {
     if (tempCoordinates) {
-        waypoints.push({ coords: tempCoordinates, name: 'My Point' }); // change nape of point to  "My Point" instead of coordinates
+        waypoints.push({coords: tempCoordinates, name: 'My Point'}); // change nape of point to  "My Point" instead of coordinates
         updateWaypointsList();
         route();
         console.log("added saved point:", tempCoordinates);
@@ -455,7 +502,6 @@ document.getElementById('addSavedWaypointBtn').addEventListener('click', () => {
         console.log("No coordinates to save.");
     }
 });
-
 
 map.on('click', (e) => {
     const coords = [e.lngLat.lng, e.lngLat.lat];
