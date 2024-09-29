@@ -4,6 +4,7 @@ const API_KEY = 'zjEFy9NsTMuP_e3U9_B0sDu_axPSSl28smWg1PXW4i0';
 // Initialize temporary coordinates
 let tempCoordinates = null;
 let savedMarker = null;
+let allRouteDuration = null;
 
 // Initialize the map
 const map = new maplibregl.Map({
@@ -279,7 +280,7 @@ async function route() {
     url.searchParams.set('lang', 'cs');
     url.searchParams.set('start', waypoints[0].coords.join(','));
     url.searchParams.set('end', waypoints[waypoints.length - 1].coords.join(','));
-    url.searchParams.set('routeType', 'foot_fast');
+    url.searchParams.set('routeType', 'foot_fast'); //foot_fast, bike_mountain
     waypoints.slice(1, -1).forEach(wp => url.searchParams.append('waypoints', wp.coords.join(',')));
 
     const response = await fetch(url.toString(), {mode: 'cors'});
@@ -289,8 +290,18 @@ async function route() {
         const source = map.getSource('route-geometry');
         source.setData(json.geometry);
         document.getElementById('distance').textContent = `${(json.length / 1000).toFixed(2)} km`;
-        document.getElementById('duration').textContent = `${Math.floor(json.duration / 60)}m ${json.duration % 60}s`;
+        let durationInSeconds = json.duration;
+        let hours = Math.floor(durationInSeconds / 3600);
+        let minutes = Math.floor((durationInSeconds % 3600) / 60);
+        let seconds = durationInSeconds % 60;
+
+        if (hours > 0) {
+            document.getElementById('duration').textContent = `${hours}h ${minutes}m ${seconds}s`;
+        } else {
+            document.getElementById('duration').textContent = `${minutes}m ${seconds}s`;
+        }
         map.fitBounds(bbox(json.geometry.geometry.coordinates), {padding: 40});
+        allRouteDuration = `${hours}h ${minutes}m ${seconds}s`;
     }
 }
 
@@ -351,10 +362,10 @@ function updateWaypointsList() {
 
     waypoints.forEach((wp, index) => {
         const li = document.createElement('li');
-        li.textContent = `Waypoint ${index + 1}: ${wp.name} (${wp.coords.join(', ')})`; // show coordinates
+        li.textContent = `${index + 1}: ${wp.name} (${wp.coords.join(', ')})`; // show coordinates
 
         const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Delete';
+        deleteBtn.textContent = 'delete';
         deleteBtn.addEventListener('click', () => {
             waypoints.splice(index, 1); // delete waypoint
             updateWaypointsList(); // update list
@@ -362,7 +373,6 @@ function updateWaypointsList() {
 
             console.log(waypoints.length)
             if (waypoints.length < 2){
-
                 document.getElementById('distance').textContent = `0 km`;
                 document.getElementById('duration').textContent = `0 s`;
                 resetRoute();
@@ -422,11 +432,7 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
             data.items.forEach((item, index) => {
                 const lon = item.position.lon;
                 const lat = item.position.lat;
-                const label = item.name || `Wynik ${index + 1}`;
-                //todo
-                // zrobic location jeszxcze do nazwy
-                //     :
-                // {name: 'Zawadka', label: 'Wieś', position: {…}, type: 'regional.municipality', location: 'gmina Wadowice, gmina Powiat wadowicki, Polska', …}
+                const label = item.name + "\n" + item.label || `Wynik ${index + 1}`;
 
                 // Stwórz element listy dla każdego wyniku
                 const resultItem = document.createElement('div');
@@ -519,8 +525,13 @@ map.on('click', (e) => {
 
 });
 
+document.getElementById('add_announcement').addEventListener('click', function() {
+    console.log(waypoints);
+    console.log(allRouteDuration);
+    // window.location.href = 'https://twoja-strona.com';  // Uzupełnij URL
+});
 
-// todo naprawić wyszukiwanie
+//todo zrobić wyszukwianie pozycji GPS
 
 
 
