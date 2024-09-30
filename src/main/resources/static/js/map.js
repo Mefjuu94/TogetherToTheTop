@@ -228,7 +228,6 @@ async function updatePOIMarkers() {
     });
 }
 
-
 // Icon mapping
 const iconMap = {
     restaurant: '🍽️',
@@ -372,7 +371,7 @@ function updateWaypointsList() {
             route(); // count route
 
             console.log(waypoints.length)
-            if (waypoints.length < 2){
+            if (waypoints.length < 2) {
                 document.getElementById('distance').textContent = `0 km`;
                 document.getElementById('duration').textContent = `0 s`;
                 resetRoute();
@@ -441,7 +440,7 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
 
                 // Obsługa kliknięcia na wynik
                 resultItem.addEventListener('click', () => {
-                    waypoints.push({ coords: [lon, lat], name: label });
+                    waypoints.push({coords: [lon, lat], name: label});
                     updateWaypointsList();
                     route(); // Zaktualizuj trasę
 
@@ -479,9 +478,6 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
         searchResults.style.display = 'block'; // Pokaż błąd
     }
 });
-
-
-
 
 // Add event listener to button to add this POI as a waypoint
 document.addEventListener('DOMContentLoaded', () => {
@@ -521,17 +517,106 @@ map.on('click', (e) => {
     savedMarker = new maplibregl.Marker()
         .setLngLat(coords)
         .addTo(map);
-
-
 });
 
-document.getElementById('add_announcement').addEventListener('click', function() {
+// localiye user
+function locateUser() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const userCoords = [position.coords.longitude, position.coords.latitude];
+
+            // add marker in user place
+            const userMarker = new maplibregl.Marker({color: 'red'})
+                .setLngLat(userCoords)
+                .setPopup(new maplibregl.Popup().setText("Yours localization"))
+                .addTo(map);
+
+            map.flyTo({
+                center: userCoords,
+                zoom: 14
+            });
+
+            console.log(`User localized:: ${userCoords.join(', ')}`);
+        }, (error) => {
+            console.error("localization error: ", error.message);
+            alert("can't localize user.");
+        });
+    } else {
+        alert("Your browser does not support geolocation.");
+    }
+}
+
+// add listener to localize user
+document.getElementById('locateMeBtn').addEventListener('click', locateUser);
+
+document.getElementById('add_announcement').addEventListener('click', function () {
     console.log(waypoints);
     console.log(allRouteDuration);
     // window.location.href = 'https://twoja-strona.com';  // Uzupełnij URL
 });
 
-//todo zrobić wyszukwianie pozycji GPS
+
+// get checkbox and display field
+const closedGroupCheckbox = document.getElementById('closedGroupCheckbox');
+const peopleInputLabel = document.getElementById('peopleInputLabel');
+const peopleInput = document.getElementById('peopleInput');
+
+// add listener to changes of checkbox
+closedGroupCheckbox.addEventListener('change', function () {
+    if (closedGroupCheckbox.checked) {
+        peopleInputLabel.style.display = 'inline';
+    } else {
+        peopleInputLabel.style.display = 'none';
+    }
+});
+
+const driver = document.getElementById('driver');
+const DriverPeopleInputLabel = document.getElementById('DriverPeopleInputLabel');
+const DriverPeopleInput = document.getElementById('DriverPeopleInput');
+
+driver.addEventListener('change', function () {
+    if (driver.checked) {
+        DriverPeopleInputLabel.style.display = 'inline';
+    } else {
+        DriverPeopleInputLabel.style.display = 'none';
+        DriverPeopleInput.value = '';
+    }
+});
+
+// validate input field - no alphabet only digits
+DriverPeopleInput.addEventListener('input', function () {
+    const value = DriverPeopleInput.value;
+
+    if (isNaN(value) || value.trim() === "") {
+        alert("Please enter a valid number.");
+        DriverPeopleInput.value = '';
+    } else {
+        const numericValue = parseInt(value, 10);
+        if (numericValue < 1 || numericValue > 99) {
+            alert("Please enter a number from 1 to 99.");
+            DriverPeopleInput.value = '';
+        }
+    }
+});
+
+peopleInput.addEventListener('input', function () {
+    const value = peopleInput.value;
+
+    if (isNaN(value) || value.trim() === "") {
+        alert("Please enter a valid number.");
+        peopleInput.value = '';
+    } else {
+        const numericValue = parseInt(value, 10);
+        if (numericValue < 1 || numericValue > 99) {
+            alert("Please enter a number from 1 to 99.");
+            peopleInput.value = '';
+        }
+    }
+});
+
+
+
+
 
 
 

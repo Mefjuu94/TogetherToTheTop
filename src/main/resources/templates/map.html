@@ -24,9 +24,10 @@
 </head>
 <body>
 <div id="container">
-    <div id="map"></div>
+
     <div id="sidebar">
         <h3>Route Planner</h3>
+        <div><button id="locateMeBtn">Locate me 📍</button></div>
         <label for="searchInput"></label><input type="text" id="searchInput" placeholder="Search..." />
         <button id="searchBtn">Search</button>
         <div id="searchResults" class="dropdown"></div>
@@ -40,20 +41,50 @@
             <button id="addSavedWaypointBtn">Add Saved Waypoint</button>
         </div>
         <div id="poiFilters">
-            <label><input type="checkbox" id="restaurant" > Restaurants</label><br>
-            <label><input type="checkbox" id="cafe" > Cafes</label><br>
-            <label><input type="checkbox" id="parking" checked> Parking</label><br>
-            <label><input type="checkbox" id="school" checked> Schools</label><br>
-            <label><input type="checkbox" id="hospital" checked> Hospitals</label><br>
-            <label><input type="checkbox" id="peak" checked> Peaks</label><br> <!-- Added Peaks checkbox -->
-            <label><input type="checkbox" id="generalPoi" > General POIs</label><br> <!-- Added General POIs checkbox -->
+            <label><input type="checkbox" id="restaurant" > Restaurants 🍽️</label><br>
+            <label><input type="checkbox" id="cafe" > Cafes ☕</label><br>
+            <label><input type="checkbox" id="parking" checked> Parking 🅿️</label><br>
+            <label><input type="checkbox" id="school" checked> Schools 🏫</label><br>
+            <label><input type="checkbox" id="hospital" checked> Hospitals 🏥</label><br>
+            <label><input type="checkbox" id="peak" checked> Peaks ⛰️</label><br> <!-- Added Peaks checkbox -->
+            <label><input type="checkbox" id="generalPoi" > General POIs 📍</label><br> <!-- Added General POIs checkbox -->
+        </div>
+    </div>
+
+    <div id="map"></div>
+    <!-- Sekcja ogłoszenia -->
+    <div id="annoucement_information">
+    <h2>Annoucement information</h2>
+    <form>
+        <!-- Sekcja opisu -->
+        <div class="form-group">
+            <label for="description">describe your trip:</label>
+            <textarea id="description" rows="6" placeholder="Description of destination, route, etc."></textarea>
+        </div>
+
+        <!-- Checkboxy z opcjami -->
+        <div class="checkbox-group">
+            <label>
+                <input type="checkbox" id="driver"> I am driving a vehicle and I can take someone with me
+            </label>
+            <label id="DriverPeopleInputLabel" style="display: none;">
+                specify number of people: <input type="text" id="DriverPeopleInput" min="1" max="99" placeholder="amount of people 1-99">
+            </label>
+
+            <label><input type="checkbox"> I tolerate animals</label>
+            <label>
+                <input type="checkbox" id="closedGroupCheckbox"> Closed group (limiting the number of people)
+            </label>
+            <label id="peopleInputLabel" style="display: none;" >
+                specify number of people: <input type="text" min="1" max="99" required id="peopleInput" placeholder="amount of people 1-99">
+            </label>
         </div>
         <div id="add_announcement_div">
             <button id="add_announcement">Add announcement</button>
         </div>
+    </form>
     </div>
 </div>
-
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -73,3 +104,5 @@
 <script type="text/javascript" th:src="@{/js/map.js}"></script>
 </body>
 </html>
+
+

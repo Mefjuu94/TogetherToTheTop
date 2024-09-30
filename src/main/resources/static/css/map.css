@@ -3,22 +3,29 @@ html, body {
     margin: 0;
     padding: 0;
 }
-
-#map {
-    width: 75%;
+#sidebar {
+    width: 15%;
     height: 100vh;
     float: left;
-}
-
-#sidebar {
-    width: 25%;
-    height: 100vh;
-    float: right;
     background-color: #f8f8f8;
     padding: 10px;
     box-sizing: border-box;
     overflow-y: auto;
 }
+
+#map {
+    width: 65%;
+    height: 100vh;
+    float: left;
+}
+#annoucement_information{
+    width: 19%;
+    height: 100vh;
+    float: right;
+    background-color: #f8f8f8;
+}
+
+
 
 .container {
     display: flex;
@@ -95,3 +102,40 @@ html, body {
     background-color: green;
     border: 2px solid orange;
 }
+
+/*sekcja ogłoszenia*/
+
+
+h2 {
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.checkbox-group input {
+    margin-right: 10px;
+}
+
+
+
+

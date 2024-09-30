@@ -1,9 +1,11 @@
 package TTT;
 
 import TTT.databaseUtils.CustomUserDAO;
+import TTT.databaseUtils.TripDAO;
 import TTT.peaksAndSummitsHandler.PeaksAndSummitsHandler;
 import TTT.peaksAndSummitsHandler.Top;
 import TTT.databaseUtils.TopDAO;
+import TTT.trips.Trip;
 import TTT.users.CustomUser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,39 +36,15 @@ public class TogetherToTheTopApplication {
 //        }
 
 
+        Trip trip = new Trip("coś tam","Rysy",null,"2h 44m",true,5,
+                false,0,null);
 
-//        HttpResponse<String> resp = getresp();
-//        if (resp!=null) {
-//            System.out.println(resp.statusCode());
-//            System.out.println(resp.body());
-//        }else {
-//            System.out.println("pusta odpowiedz");
-//        }
-//
+        TripDAO tripDAO = new TripDAO();
 
-// https://api.mapy.cz/v1/suggest?lang=pl&apikey=eyJpIjoyNTcsImMiOjE2Njc0ODU2MjN9.c_UlvdpHGTI_Jb-TNMYlDYuIkCLJaUpi911RdlwPsAY&query=Katowice&limit=5
-
-
+        tripDAO.addAnnouncement(trip);
 
 
 
 
     }
-//    final static HttpClient client = HttpClient.newHttpClient();
-//
-//    public static HttpResponse<String> getresp() {
-//        try {
-//            HttpRequest request = HttpRequest.newBuilder(
-//                    new URI("https://api.mapy.cz/v1/suggest?lang=pl&apikey=" + APIKEY + "&query==" + city + "&limit=5")).GET().build();
-//            //String urlString = "https://api.mapy.cz/geocode?query=" + encodedQuery + "&apikey=" + API_KEY;
-//            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-//            if (response.statusCode() == 200) {
-//                return response;
-//            }
-//            return null;
-//        } catch (URISyntaxException | IOException | InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
 }
