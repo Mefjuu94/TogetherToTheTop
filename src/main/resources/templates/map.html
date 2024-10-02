@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Integracja z Mapy.cz</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="_csrf" content="TWÓJ_TOKEN_CSRF">
+
 
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
@@ -55,6 +57,10 @@
     <!-- Sekcja ogłoszenia -->
     <div id="annoucement_information">
     <h2>Annoucement information</h2>
+        <div>
+        <p th:each="tekst: ${array}"
+                th:text="${tekst}"></p>
+        </div>
     <form>
         <!-- Sekcja opisu -->
         <div class="form-group">
@@ -68,7 +74,7 @@
                 <input type="checkbox" id="driver"> I am driving a vehicle and I can take someone with me
             </label>
             <label id="DriverPeopleInputLabel" style="display: none;">
-                specify number of people: <input type="text" id="DriverPeopleInput" min="1" max="99" placeholder="amount of people 1-99">
+                specify number of people: <input type="text" id="DriverPeopleInput" min="1" max="99" placeholder="amount of people 1-99" value="1">
             </label>
 
             <label><input type="checkbox"> I tolerate animals</label>
@@ -76,13 +82,27 @@
                 <input type="checkbox" id="closedGroupCheckbox"> Closed group (limiting the number of people)
             </label>
             <label id="peopleInputLabel" style="display: none;" >
-                specify number of people: <input type="text" min="1" max="99" required id="peopleInput" placeholder="amount of people 1-99">
+                specify number of people: <input type="text" min="1" max="99" required id="peopleInput" placeholder="amount of people 1-99" value="1">
             </label>
         </div>
-        <div id="add_announcement_div">
-            <button id="add_announcement">Add announcement</button>
-        </div>
     </form>
+        <div>
+            <button id="save_announcement" type="button"
+                    th:arr1="${arr1}" th:arr2="${arr2}" th:arr3="${arr3}">
+                save announcement
+            </button>
+
+        </div>
+        <form id="saveForm"
+            action="/sendData" method="POST">
+            <input type="hidden" id="waypoints" name="waypoints">
+            <input type="hidden" id="coordinatesOfTrip" name="coordinatesOfTrip">
+            <input type="hidden" id="allRouteDuration" name="allRouteDuration">
+<!--            must have! TOKEN-->
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+            <button type="button" onclick="sendToJava()">
+            Add announcement</button>
+        </form>
     </div>
 </div>
 

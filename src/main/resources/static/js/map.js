@@ -5,6 +5,7 @@ const API_KEY = 'zjEFy9NsTMuP_e3U9_B0sDu_axPSSl28smWg1PXW4i0';
 let tempCoordinates = null;
 let savedMarker = null;
 let allRouteDuration = null;
+let coordinatesOfTrip = null;
 
 // Initialize the map
 const map = new maplibregl.Map({
@@ -285,6 +286,8 @@ async function route() {
     const response = await fetch(url.toString(), {mode: 'cors'});
     const json = await response.json();
 
+    coordinatesOfTrip = json;
+
     if (json.geometry) {
         const source = map.getSource('route-geometry');
         source.setData(json.geometry);
@@ -549,13 +552,6 @@ function locateUser() {
 // add listener to localize user
 document.getElementById('locateMeBtn').addEventListener('click', locateUser);
 
-document.getElementById('add_announcement').addEventListener('click', function () {
-    console.log(waypoints);
-    console.log(allRouteDuration);
-    // window.location.href = 'https://twoja-strona.com';  // Uzupełnij URL
-});
-
-
 // get checkbox and display field
 const closedGroupCheckbox = document.getElementById('closedGroupCheckbox');
 const peopleInputLabel = document.getElementById('peopleInputLabel');
@@ -614,12 +610,39 @@ peopleInput.addEventListener('input', function () {
     }
 });
 
+let arr1 = null;
+let arr2 = null;
+let arr3 = null;
 
 
+document.getElementById('save_announcement').onclick = function () {
+    arr1 = this.getAttribute('arr1');
+    arr2 = this.getAttribute('arr2');
+    arr3 = this.getAttribute('arr3');
+    // tu powinno wypisać być "moje koordynaty" w konsoli przeglądarki
+    console.log(arr1);
+    getJavaScript(arr1, arr2, arr3);
+};
 
+function getJavaScript(arr1, arr2, arr3) {
+    arr1 = waypoints;
+    arr2 = coordinatesOfTrip;
+    arr3 = allRouteDuration;
+    console.log("Route Waypoints:", arr1);
+    console.log("coords:", arr2)
+    console.log("Duration:", arr3)
+}
 
+function sendToJava() {
+// Pobieranie danych, z danych globalnych waypoints itp
+    var waypoints1 = waypoints;
+    var coords2 = coordinatesOfTrip;
+    var duration3 = allRouteDuration;
 
+    // Ustawianie wartości w polach ukrytych formularza
+    document.getElementById('waypoints').value = JSON.stringify(waypoints1);
+    document.getElementById('coordinatesOfTrip').value = JSON.stringify(coords2);
+    document.getElementById('allRouteDuration').value = duration3;
 
-
-
-
+    document.getElementById('saveForm').submit();
+}

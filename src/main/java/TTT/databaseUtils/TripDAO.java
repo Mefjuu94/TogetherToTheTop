@@ -1,6 +1,10 @@
 package TTT.databaseUtils;
 
 import TTT.trips.Trip;
+import jakarta.persistence.PersistenceException;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -33,17 +37,17 @@ public class TripDAO {
 //        try {
 //            Session session = sessionFactory.openSession();
 //            CriteriaBuilder cb = session.getCriteriaBuilder();
-//            CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
-//            Root<CustomUser> root = userQuery.from(CustomUser.class);
+//            CriteriaQuery<Trip> userQuery = cb.createQuery(Trip.class);
+//            Root<Trip> root = userQuery.from(Trip.class);
 //            userQuery.select(root).where(cb.equal(root.get("email"), email));
-//            CustomUser results = session.createQuery(userQuery).getSingleResultOrNull();
+//            Trip results = session.createQuery(userQuery).getSingleResultOrNull();
 //            return results;
 //        } catch (PersistenceException | IllegalArgumentException e) {
 //            System.out.println("No entity found with email: " + email);
 //        }
 //        return null;
 //    }
-//
+
 //    public boolean deleteTrip(String email) {
 //
 //        if (email == null) {

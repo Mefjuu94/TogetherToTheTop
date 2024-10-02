@@ -30,13 +30,13 @@ public class SecurityController {
     @PostMapping("/register")
     public String registerUser(CustomUser customUser, BindingResult bindingResult){
 
-        dao.saveUser(customUser);
 
         // if has errors, return customUser to register form
         if (bindingResult.hasErrors()) {
             return "security/register";
         }
 
+        dao.saveUser(customUser);
         return "map";
     }
     

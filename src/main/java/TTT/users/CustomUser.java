@@ -1,10 +1,10 @@
 package TTT.users;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import TTT.trips.Trip;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -17,6 +17,9 @@ public class CustomUser {
     @Email
     private String email;
     private String password;
+
+//    @OneToMany(mappedBy = "CustomUser", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Trip> trips;
 
     public CustomUser() {
     }

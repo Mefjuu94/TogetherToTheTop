@@ -1,5 +1,6 @@
 package TTT.security;
 
+import jakarta.ws.rs.HttpMethod;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +30,7 @@ public class SecurityConfig {
                 authorizeHttpRequests((requests) -> requests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll().
-                        requestMatchers("/","/login","/register","/map","/about")
+                        requestMatchers("/","/login","/register","/map","/sendData","/about", HttpMethod.POST) //http from jokarta todo make private
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin((form) -> form.loginPage("/login")

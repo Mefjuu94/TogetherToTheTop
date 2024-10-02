@@ -36,12 +36,12 @@ public class TogetherToTheTopApplication {
 //        }
 
 
-        Trip trip = new Trip("coś tam","Rysy",null,"2h 44m",true,5,
-                false,0,null);
-
-        TripDAO tripDAO = new TripDAO();
-
-        tripDAO.addAnnouncement(trip);
+//        Trip trip = new Trip("coś tam","Rysy",null,"2h 44m",true,5,
+//                false,0,null);
+//
+//        TripDAO tripDAO = new TripDAO();
+//
+//        tripDAO.addAnnouncement(trip);
 
 
 

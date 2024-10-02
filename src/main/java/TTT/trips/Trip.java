@@ -4,6 +4,9 @@ import TTT.users.CustomUser;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,8 +22,6 @@ public class Trip {
 
     public String destination;
 
-    //private CustomUser user;
-
     private String tripDuration;
 
     private boolean closedGroup;
@@ -31,12 +32,17 @@ public class Trip {
 
     //private List<CustomUser> participants;
 
-    public Trip(String tripDescription, String destination, CustomUser user, String tripDuration,
+//    @ManyToOne
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    private CustomUser customUser;
+
+
+    public Trip(String tripDescription, String destination, CustomUser customUser, String tripDuration,
                 boolean closedGroup, int amountOfClosedGroup, boolean driverPeople,
                 int amountOfDriverpeople, List<CustomUser> participants) {
         this.tripDescription = tripDescription;
         this.destination = destination;
-       // this.user = user;
+//        this.customUser = customUser;
         this.tripDuration = tripDuration;
         this.closedGroup = closedGroup;
         this.amountOfClosedGroup = amountOfClosedGroup;
@@ -73,12 +79,12 @@ public class Trip {
         this.destination = destination;
     }
 
-//    public CustomUser getUser() {
-//        return user;
+//    public CustomUser getCustomUser() {
+//        return customUser;
 //    }
 //
-//    public void setUser(CustomUser user) {
-//        this.user = user;
+//    public void setCustomUser(CustomUser customUser) {
+//        this.customUser = customUser;
 //    }
 
     public String getTripDuration() {
@@ -143,30 +149,31 @@ public class Trip {
 //    }
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Trip trip = (Trip) o;
-        return id == trip.id && closedGroup == trip.closedGroup && amountOfClosedGroup == trip.amountOfClosedGroup && DriverPeople == trip.DriverPeople && amountOfDriverpeople == trip.amountOfDriverpeople && Objects.equals(tripDescription, trip.tripDescription) && Objects.equals(destination, trip.destination) && Objects.equals(tripDuration, trip.tripDuration);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, tripDescription, destination, tripDuration, closedGroup, amountOfClosedGroup, DriverPeople, amountOfDriverpeople);
-    }
-
-    @Override
-    public String toString() {
-        return "Trip{" +
-                "id=" + id +
-                ", tripDescription='" + tripDescription + '\'' +
-                ", destination='" + destination + '\'' +
-                ", tripDuration='" + tripDuration + '\'' +
-                ", closedGroup=" + closedGroup +
-                ", amountOfClosedGroup=" + amountOfClosedGroup +
-                ", DriverPeople=" + DriverPeople +
-                ", amountOfDriverpeople=" + amountOfDriverpeople +
-                '}';
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        Trip trip = (Trip) o;
+//        return id == trip.id && closedGroup == trip.closedGroup && amountOfClosedGroup == trip.amountOfClosedGroup && DriverPeople == trip.DriverPeople && amountOfDriverpeople == trip.amountOfDriverpeople && Objects.equals(tripDescription, trip.tripDescription) && Objects.equals(destination, trip.destination) && Objects.equals(tripDuration, trip.tripDuration) && Objects.equals(customUser, trip.customUser);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(id, tripDescription, destination, tripDuration, closedGroup, amountOfClosedGroup, DriverPeople, amountOfDriverpeople, customUser);
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "Trip{" +
+//                "id=" + id +
+//                ", tripDescription='" + tripDescription + '\'' +
+//                ", destination='" + destination + '\'' +
+//                ", tripDuration='" + tripDuration + '\'' +
+//                ", closedGroup=" + closedGroup +
+//                ", amountOfClosedGroup=" + amountOfClosedGroup +
+//                ", DriverPeople=" + DriverPeople +
+//                ", amountOfDriverpeople=" + amountOfDriverpeople +
+//                ", customUser=" + customUser +
+//                '}';
+//    }
 }
