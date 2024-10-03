@@ -1,13 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>User Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dane użytkownika</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-
-<p th:text="${customUser.getName()}"></p>
-<p th:text="${customUser.getLastName()}"></p>
-
+<header>
+    <div class="login-register">
+        <a href="/logout">Logout</a>
+    </div>
+</header>
+<div class="container">
+    <aside class="menu">
+        <nav>
+            <ul>
+                <li><a href="/map">Plan Trip</a></li>
+                <li><a href="/trips">My Trips</a></li>
+                <li><a href="/announcements">Annoucement</a></li>
+            </ul>
+        </nav>
+    </aside>
+    <main class="content">
+        <section class="user-details">
+            <h2>User Data</h2>
+            <form action="/user/update" method="POST">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" value="" required>
+                </div>
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" value="" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">New Password:</label>
+                    <input type="password" id="password" name="password">
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input type="password" id="confirm-password" name="confirmPassword">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="button_register">Accept changes</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
 </body>
 </html>

@@ -25,6 +25,8 @@ public class CustomUserDAO {
             return false;
         }
 
+        customUser.setCustomUserName("yourName");
+
         Session session = null;
         Transaction transaction = null;
         try {
@@ -95,5 +97,32 @@ public class CustomUserDAO {
             }
         }
     }
+
+//    public void updateUserName(String email, String newName) {
+//        Transaction transaction = null;
+//
+//        try (Session session = sessionFactory.openSession()) {
+//            transaction = session.beginTransaction();
+//
+//
+//            CustomUser user = findCustomUser(email);
+//            if (user != null) {
+//
+//                user.setName(newName);
+//
+//
+//                session.update(user);
+//                transaction.commit();
+//            } else {
+//                System.out.println("User not found with email: " + email);
+//            }
+//        } catch (Exception e) {
+//            if (transaction != null) {
+//                transaction.rollback();
+//            }
+//            e.printStackTrace();
+//        }
+//    }
+
 
 }

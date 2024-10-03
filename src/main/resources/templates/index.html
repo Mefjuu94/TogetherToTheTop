@@ -9,8 +9,14 @@
 <body>
 <header>
     <div class="login-register">
-        <a href="security/login">Logowanie</a>
-        <a href="security/register">Rejestracja</a>
+        <div th:if="${not #authorization.expression('isAuthenticated()')}">
+        <a href="/security/login">Login</a>
+            <a href="/security/register">Register</a>
+        </div>
+        <div th:if="${#authorization.expression('isAuthenticated()')}">
+        <a href="/user">My Profile</a>
+            <a href="/logout">Logout</a>
+        </div>
     </div>
 </header>
 <div class="container">
@@ -18,6 +24,7 @@
         <!-- Miejsce na menu (do wypełnienia) -->
         <nav>
             <ul>
+                <li><a href="/user">User Profile</a></li>
                 <li><a href="/map">Plan Trip</a></li>
                 <li><a href="/about">About "TTT" project</a></li>
                 <li><a href="#">Contact</a></li>

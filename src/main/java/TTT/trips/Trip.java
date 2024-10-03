@@ -1,10 +1,7 @@
 package TTT.trips;
 
 import TTT.users.CustomUser;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -32,9 +29,9 @@ public class Trip {
 
     //private List<CustomUser> participants;
 
-//    @ManyToOne
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    private CustomUser customUser;
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private CustomUser customUser;
 
 
     public Trip(String tripDescription, String destination, CustomUser customUser, String tripDuration,
@@ -42,7 +39,7 @@ public class Trip {
                 int amountOfDriverpeople, List<CustomUser> participants) {
         this.tripDescription = tripDescription;
         this.destination = destination;
-//        this.customUser = customUser;
+        this.customUser = customUser;
         this.tripDuration = tripDuration;
         this.closedGroup = closedGroup;
         this.amountOfClosedGroup = amountOfClosedGroup;
@@ -79,13 +76,13 @@ public class Trip {
         this.destination = destination;
     }
 
-//    public CustomUser getCustomUser() {
-//        return customUser;
-//    }
-//
-//    public void setCustomUser(CustomUser customUser) {
-//        this.customUser = customUser;
-//    }
+    public CustomUser getCustomUser() {
+        return customUser;
+    }
+
+    public void setCustomUser(CustomUser customUser) {
+        this.customUser = customUser;
+    }
 
     public String getTripDuration() {
         return tripDuration;
@@ -127,53 +124,4 @@ public class Trip {
         this.amountOfDriverpeople = amountOfDriverpeople;
     }
 
-//    public List<CustomUser> getParticipants() {
-//        return participants;
-//    }
-//
-//    public void setParticipants(List<CustomUser> participants) {
-//        this.participants = participants;
-//    }
-
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        Trip trip = (Trip) o;
-//        return id == trip.id && closedGroup == trip.closedGroup && amountOfClosedGroup == trip.amountOfClosedGroup && DriverPeople == trip.DriverPeople && amountOfDriverpeople == trip.amountOfDriverpeople && Objects.equals(tripDescription, trip.tripDescription) && Objects.equals(destination, trip.destination) && Objects.equals(user, trip.user) && Objects.equals(tripDuration, trip.tripDuration) && Objects.equals(participants, trip.participants);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(id, tripDescription, destination, user, tripDuration, closedGroup, amountOfClosedGroup, DriverPeople, amountOfDriverpeople, participants);
-//    }
-
-
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        Trip trip = (Trip) o;
-//        return id == trip.id && closedGroup == trip.closedGroup && amountOfClosedGroup == trip.amountOfClosedGroup && DriverPeople == trip.DriverPeople && amountOfDriverpeople == trip.amountOfDriverpeople && Objects.equals(tripDescription, trip.tripDescription) && Objects.equals(destination, trip.destination) && Objects.equals(tripDuration, trip.tripDuration) && Objects.equals(customUser, trip.customUser);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(id, tripDescription, destination, tripDuration, closedGroup, amountOfClosedGroup, DriverPeople, amountOfDriverpeople, customUser);
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return "Trip{" +
-//                "id=" + id +
-//                ", tripDescription='" + tripDescription + '\'' +
-//                ", destination='" + destination + '\'' +
-//                ", tripDuration='" + tripDuration + '\'' +
-//                ", closedGroup=" + closedGroup +
-//                ", amountOfClosedGroup=" + amountOfClosedGroup +
-//                ", DriverPeople=" + DriverPeople +
-//                ", amountOfDriverpeople=" + amountOfDriverpeople +
-//                ", customUser=" + customUser +
-//                '}';
-//    }
 }

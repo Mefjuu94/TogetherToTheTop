@@ -77,7 +77,7 @@
                 specify number of people: <input type="text" id="DriverPeopleInput" min="1" max="99" placeholder="amount of people 1-99" value="1">
             </label>
 
-            <label><input type="checkbox"> I tolerate animals</label>
+            <label><input type="checkbox" id="animals"> I tolerate animals</label>
             <label>
                 <input type="checkbox" id="closedGroupCheckbox"> Closed group (limiting the number of people)
             </label>
@@ -98,6 +98,13 @@
             <input type="hidden" id="waypoints" name="waypoints">
             <input type="hidden" id="coordinatesOfTrip" name="coordinatesOfTrip">
             <input type="hidden" id="allRouteDuration" name="allRouteDuration">
+
+            <input type="hidden" id="descriptionOfTrip" name="descriptionOfTrip">
+            <input type="hidden" id="driverCheck" name="driverCheck">
+            <input type="hidden" id="amountOfPeopleDriver" name="amountOfPeopleDriver">
+            <input type="hidden" id="isCheckedAnimals" name="isCheckedAnimals">
+            <input type="hidden" id="isCheckedGroup" name="isCheckedGroup">
+            <input type="hidden" id="amountOfPeopleInGroup" name="amountOfPeopleInGroup">
 <!--            must have! TOKEN-->
             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
             <button type="button" onclick="sendToJava()">

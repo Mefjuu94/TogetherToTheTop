@@ -44,7 +44,5 @@ public class TogetherToTheTopApplication {
 //        tripDAO.addAnnouncement(trip);
 
 
-
-
     }
 }

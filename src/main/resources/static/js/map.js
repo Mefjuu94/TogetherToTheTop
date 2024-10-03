@@ -638,11 +638,25 @@ function sendToJava() {
     var waypoints1 = waypoints;
     var coords2 = coordinatesOfTrip;
     var duration3 = allRouteDuration;
+    var description = document.getElementById('description').value;
+    const isCheckedDriver = document.getElementById('driver').checked;
+    var amountOfPeopleDriver = document.getElementById('DriverPeopleInput').value;
+    const isCheckedAnimals = document.getElementById('animals').checked;
+    const isCheckedGroup = document.getElementById('closedGroupCheckbox').checked;
+    var amountOfPeopleInGroup = document.getElementById('peopleInput').value;
+
 
     // Ustawianie wartości w polach ukrytych formularza
     document.getElementById('waypoints').value = JSON.stringify(waypoints1);
     document.getElementById('coordinatesOfTrip').value = JSON.stringify(coords2);
     document.getElementById('allRouteDuration').value = duration3;
+
+    document.getElementById('descriptionOfTrip').value = description;
+    document.getElementById('driverCheck').value = isCheckedDriver;
+    document.getElementById('amountOfPeopleDriver').value = amountOfPeopleDriver;
+    document.getElementById('isCheckedAnimals').bool = isCheckedAnimals;
+    document.getElementById('isCheckedGroup').value = isCheckedGroup;
+    document.getElementById('amountOfPeopleInGroup').value = amountOfPeopleInGroup;
 
     document.getElementById('saveForm').submit();
 }
