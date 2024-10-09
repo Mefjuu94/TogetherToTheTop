@@ -31,10 +31,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
         security.
                 authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/user","/map","/sendData", HttpMethod.POST).fullyAuthenticated()
+                        .requestMatchers("/user","/map","/sendData","/announcement", HttpMethod.POST).fullyAuthenticated()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll().
-                        requestMatchers("/","/login","/register","/about") //http from jokarta todo make private
+                        requestMatchers("/","/login","/register","/error/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin((form) -> form.loginPage("/login")
@@ -42,7 +42,12 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/")
                         .failureUrl("/login?error=true")
                         .permitAll());
-
+//                .logout((logout) -> logout
+//                .logoutUrl("/logout")  // URL do wylogowania /logout
+//                .logoutSuccessUrl("/login?logout=true")  // Po udanym wylogowaniu przekieruj na stronę logowania
+//                .invalidateHttpSession(true)  // Inwalidacja sesji
+//                .deleteCookies("JSESSIONID")  // Usunięcie ciasteczek sesji
+//                .permitAll());  // Pozwolenie wszystkim użytkownikom na dostęp do endpointu wylogowania
 
 
         return security.build();

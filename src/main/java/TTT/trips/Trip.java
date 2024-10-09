@@ -5,9 +5,6 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.List;
-import java.util.Objects;
-
 @Entity
 public class Trip {
 
@@ -25,7 +22,7 @@ public class Trip {
     private int amountOfClosedGroup;
 
     private boolean DriverPeople;
-    private int amountOfDriverpeople;
+    private int amountOfDriverPeople;
 
     //private List<CustomUser> participants;
 
@@ -34,17 +31,15 @@ public class Trip {
     private CustomUser customUser;
 
 
-    public Trip(String tripDescription, String destination, CustomUser customUser, String tripDuration,
-                boolean closedGroup, int amountOfClosedGroup, boolean driverPeople,
-                int amountOfDriverpeople, List<CustomUser> participants) {
+    private Trip(TripBuilder builder) {
         this.tripDescription = tripDescription;
         this.destination = destination;
         this.customUser = customUser;
         this.tripDuration = tripDuration;
         this.closedGroup = closedGroup;
         this.amountOfClosedGroup = amountOfClosedGroup;
-        DriverPeople = driverPeople;
-        this.amountOfDriverpeople = amountOfDriverpeople;
+        this.DriverPeople = DriverPeople;
+        this.amountOfDriverPeople = amountOfDriverPeople;
        // this.participants = participants;
     }
 
@@ -117,11 +112,67 @@ public class Trip {
     }
 
     public int getAmountOfDriverpeople() {
-        return amountOfDriverpeople;
+        return amountOfDriverPeople;
     }
 
     public void setAmountOfDriverpeople(int amountOfDriverpeople) {
-        this.amountOfDriverpeople = amountOfDriverpeople;
+        this.amountOfDriverPeople = amountOfDriverpeople;
+    }
+
+
+
+    public static class TripBuilder{
+
+        private String tripDescription;
+        private String destination;
+        private String tripDuration;
+        private boolean closedGroup;
+        private int amountOfClosedGroup;
+        private boolean DriverPeople;
+        private int amountOfDriverPeople;
+        private CustomUser customUser;
+
+        public Trip build(){
+            return new Trip();
+        }
+
+        public TripBuilder withTripDescription(String tripDescription){
+            this.tripDescription = tripDescription;
+            return this;
+        }
+
+        public TripBuilder withDestination(String destination){
+            this.destination = destination;
+            return this;
+        }
+        public TripBuilder withClosedGroup(boolean closedGroup){
+            this.closedGroup = closedGroup;
+            return this;
+        }
+        public TripBuilder withAmountOfClosedGroup(int amountOfClosedGroup){
+            this.amountOfClosedGroup = amountOfClosedGroup;
+            return this;
+        }
+        public TripBuilder withTripDuration(String tripDuration){
+            this.tripDuration = tripDuration;
+            return this;
+        }
+
+        public TripBuilder withDriverPeople(boolean DriverPeople){
+            this.DriverPeople = DriverPeople;
+            return this;
+        }
+
+        public TripBuilder withAmountOfDriverPeople(int amountOfDriverPeople){
+            this.amountOfDriverPeople = amountOfDriverPeople;
+            return this;
+        }
+
+        public TripBuilder withCustomUser(CustomUser customUser){
+            this.customUser = customUser;
+            return this;
+        }
+
     }
 
 }

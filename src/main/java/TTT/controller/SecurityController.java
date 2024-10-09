@@ -32,6 +32,9 @@ public class SecurityController {
         if (bindingResult.hasErrors()) {
             return "security/register";
         }
+        if (customUser.getPassword().length() < 8){
+            return "index";
+        }
 
         dao.saveUser(customUser);
         return "index";
