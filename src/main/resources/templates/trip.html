@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Trip to ' + ${trip.destination}">Trip Details</title>
+    <link rel="stylesheet" th:href="@{/css/trip.css}">
+    <meta name="_csrf" content="my_token_csrf">
+</head>
+<body class="background-image" style="background-image: url('/images/tripBackground.jpg');">
+<div class="container">
+    <h1 th:text="${trip.destination}">Trip Destination</h1>
+
+    <div class="grid-container">
+        <!-- Główne informacje o wycieczce -->
+        <div class="tile">
+            <h3>Trip ID</h3>
+            <p id="IDofTrip" th:text="${trip.id}">Trip ID</p>
+        </div>
+        <div class="tile">
+            <h3>Trip Description</h3>
+            <p th:text="${trip.tripDescription}">This is a trip description</p>
+        </div>
+        <div class="tile">
+            <h3>Trip Duration</h3>
+            <p th:text="${trip.tripDuration}">3 days</p>
+        </div>
+
+        <!-- Grupa -->
+        <div class="tile">
+            <h3>Closed Group</h3>
+            <p th:text="${trip.closedGroup ? 'Yes' : 'No'}">No</p>
+        </div>
+        <div class="tile">
+            <h3>Group Size</h3>
+            <p th:text="${trip.amountOfClosedGroup}">5 people</p>
+        </div>
+
+        <!-- Transport -->
+        <div class="tile">
+            <h3>People in the Car</h3>
+            <p th:text="${trip.peopleInTheCar ? 'Yes' : 'No'}">No</p>
+        </div>
+        <div class="tile">
+            <h3>Amount of Driver People</h3>
+            <p th:text="${trip.amountOfDriverPeople}">3</p>
+        </div>
+
+        <!-- Właściciel i uczestnicy -->
+        <div class="tile">
+            <h3>Owner</h3>
+            <p th:text="${trip.ownerOfTrip.getCustomUserName()}">Owner Name</p>
+        </div>
+        <div class="tile">
+            <h3>Participants</h3>
+            <ul>
+                <li th:each="participant : ${trip.getParticipants()}" th:text="${participant.customUserName}">Participant 1</li>
+            </ul>
+        </div>
+    </div>
+
+<!--    <div class="button-container">-->
+<!--        <p hidden="hidden" id="userId" th:text="${customUser.id}"></p>-->
+<!--        <button id="add_button">Add to Group</button>-->
+<!--    </div>-->
+
+    <form id="saveForm"
+          action="/addMe" method="POST">
+        <p hidden="hidden" id="USER_id" th:text="${customUser.id}"></p>
+        <input type="hidden" id="tripId" name="tripId">
+        <input type="hidden" id="userId" name="userId">
+<!--        <input type="hidden" id="allRouteDuration" name="allRouteDuration">-->
+
+        <!--            must have! TOKEN-->
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+
+    <div class="button-container">
+        <button id="add_button">Add to Group</button>
+    </div>
+    </form>
+</div>
+
+
+
+
+
+
+<script type="text/javascript" th:src="@{/js/trip.js}"></script>
+</body>
+</html>

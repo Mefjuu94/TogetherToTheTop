@@ -16,6 +16,7 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
@@ -36,12 +37,6 @@ public class TogetherToTheTopApplication {
 //        }
 
 
-//        Trip trip = new Trip("coś tam","Rysy",null,"2h 44m",true,5,
-//                false,0,null);
-//
-//        TripDAO tripDAO = new TripDAO();
-//
-//        tripDAO.addAnnouncement(trip);
 
 
     }

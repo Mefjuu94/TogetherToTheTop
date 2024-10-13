@@ -45,15 +45,15 @@ public class CustomUserDAOTests {
     }
 
     @Test
-    public void findCustomUserTest() {
+    public void findCustomUserByEmailTest() {
         this.testObject.saveUser(this.testCustomUser);
-        Assertions.assertEquals(this.testCustomUser.getEmail(), this.testObject.findCustomUser("test@mail.com").getEmail());
+        Assertions.assertEquals(this.testCustomUser.getEmail(), this.testObject.findCustomUserByEmail("test@mail.com").getEmail());
     }
 
     @Test
-    public void findCustomUserTestFail() {
+    public void findCustomUserByEmailTestFail() {
         this.testObject.saveUser(this.testCustomUser);
-        Assertions.assertNull(this.testObject.findCustomUser("testCustomUser@mail.com"));
+        Assertions.assertNull(this.testObject.findCustomUserByEmail("testCustomUser@mail.com"));
         this.testObject.deleteCustomUser("test@mail.com");
     }
 

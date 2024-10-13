@@ -2,8 +2,9 @@ package TTT.trips;
 
 import TTT.users.CustomUser;
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Trip {
@@ -13,39 +14,41 @@ public class Trip {
     private long id;
 
     public String tripDescription;
-
     public String destination;
-
     private String tripDuration;
-
     private boolean closedGroup;
     private int amountOfClosedGroup;
-
-    private boolean DriverPeople;
+    private boolean peopleInTheCar;
     private int amountOfDriverPeople;
 
-    //private List<CustomUser> participants;
-
+    // Właściciel wycieczki (ManyToOne)
     @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private CustomUser customUser;
+    private CustomUser owner; // Właściciel wycieczki
 
+    // Uczestnicy wycieczki (ManyToMany)
+    @ManyToMany
+    @JoinTable(
+            name = "trip_participants", // Nazwa tabeli pośredniej
+            joinColumns = @JoinColumn(name = "trip_id"), // Kolumna dla Trip
+            inverseJoinColumns = @JoinColumn(name = "user_id") // Kolumna dla CustomUser
+    )
+    private List<CustomUser> participants; // Lista uczestników
 
+    // Prywatny konstruktor, używający buildera
     private Trip(TripBuilder builder) {
-        this.tripDescription = tripDescription;
-        this.destination = destination;
-        this.customUser = customUser;
-        this.tripDuration = tripDuration;
-        this.closedGroup = closedGroup;
-        this.amountOfClosedGroup = amountOfClosedGroup;
-        this.DriverPeople = DriverPeople;
-        this.amountOfDriverPeople = amountOfDriverPeople;
-       // this.participants = participants;
+        this.tripDescription = builder.tripDescription;
+        this.destination = builder.destination;
+        this.owner = builder.owner;
+        this.tripDuration = builder.tripDuration;
+        this.closedGroup = builder.closedGroup;
+        this.amountOfClosedGroup = builder.amountOfClosedGroup;
+        this.peopleInTheCar = builder.driverPeople;
+        this.amountOfDriverPeople = builder.peopleInTheCar;
     }
 
-    public Trip() {
+    public Trip() {}
 
-    }
+    // Gettery i Settery
 
     public long getId() {
         return id;
@@ -71,12 +74,12 @@ public class Trip {
         this.destination = destination;
     }
 
-    public CustomUser getCustomUser() {
-        return customUser;
+    public CustomUser getOwnerOfTrip() {
+        return owner;
     }
 
-    public void setCustomUser(CustomUser customUser) {
-        this.customUser = customUser;
+    public void setOwnerOfTrip(CustomUser customUser) {
+        this.owner = customUser;
     }
 
     public String getTripDuration() {
@@ -103,76 +106,110 @@ public class Trip {
         this.amountOfClosedGroup = amountOfClosedGroup;
     }
 
-    public boolean isDriverPeople() {
-        return DriverPeople;
+    public boolean isPeopleInTheCar() {
+        return peopleInTheCar;
     }
 
-    public void setDriverPeople(boolean driverPeople) {
-        DriverPeople = driverPeople;
+    public void setPeopleInTheCar(boolean driverPeople) {
+        this.peopleInTheCar = driverPeople;
     }
 
-    public int getAmountOfDriverpeople() {
+    public int getAmountOfDriverPeople() {
         return amountOfDriverPeople;
     }
 
-    public void setAmountOfDriverpeople(int amountOfDriverpeople) {
-        this.amountOfDriverPeople = amountOfDriverpeople;
+    public void setAmountOfDriverPeople(int amountOfDriverPeople) {
+        this.amountOfDriverPeople = amountOfDriverPeople;
     }
 
+    public List<CustomUser> getParticipants() {
+        return participants;
+    }
 
+    public void setParticipants(List<CustomUser> participants) {
+        this.participants = participants;
+    }
 
-    public static class TripBuilder{
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Trip trip = (Trip) o;
+        return id == trip.id && closedGroup == trip.closedGroup && amountOfClosedGroup == trip.amountOfClosedGroup && peopleInTheCar == trip.peopleInTheCar && amountOfDriverPeople == trip.amountOfDriverPeople && Objects.equals(tripDescription, trip.tripDescription) && Objects.equals(destination, trip.destination) && Objects.equals(tripDuration, trip.tripDuration) && Objects.equals(owner, trip.owner);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tripDescription, destination, tripDuration, closedGroup, amountOfClosedGroup, peopleInTheCar, amountOfDriverPeople, owner);
+    }
+
+    @Override
+    public String toString() {
+        return "Trip{" +
+                "id=" + id +
+                ", tripDescription='" + tripDescription + '\'' +
+                ", destination='" + destination + '\'' +
+                ", tripDuration='" + tripDuration + '\'' +
+                ", closedGroup=" + closedGroup +
+                ", amountOfClosedGroup=" + amountOfClosedGroup +
+                ", driverPeople=" + peopleInTheCar +
+                ", amountOfDriverPeople=" + amountOfDriverPeople +
+                '}';
+    }
+
+    // TripBuilder
+    public static class TripBuilder {
         private String tripDescription;
         private String destination;
         private String tripDuration;
         private boolean closedGroup;
         private int amountOfClosedGroup;
-        private boolean DriverPeople;
-        private int amountOfDriverPeople;
-        private CustomUser customUser;
+        private boolean driverPeople; // Poprawiona nazwa
+        private int peopleInTheCar;
+        private CustomUser owner;
 
-        public Trip build(){
-            return new Trip();
+        public Trip build() {
+            return new Trip(this); // Zwraca obiekt korzystający z danych buildera
         }
 
-        public TripBuilder withTripDescription(String tripDescription){
+        public TripBuilder withTripDescription(String tripDescription) {
             this.tripDescription = tripDescription;
             return this;
         }
 
-        public TripBuilder withDestination(String destination){
+        public TripBuilder withDestination(String destination) {
             this.destination = destination;
             return this;
         }
-        public TripBuilder withClosedGroup(boolean closedGroup){
+
+        public TripBuilder withClosedGroup(boolean closedGroup) {
             this.closedGroup = closedGroup;
             return this;
         }
-        public TripBuilder withAmountOfClosedGroup(int amountOfClosedGroup){
+
+        public TripBuilder withAmountOfClosedGroup(int amountOfClosedGroup) {
             this.amountOfClosedGroup = amountOfClosedGroup;
             return this;
         }
-        public TripBuilder withTripDuration(String tripDuration){
+
+        public TripBuilder withTripDuration(String tripDuration) {
             this.tripDuration = tripDuration;
             return this;
         }
 
-        public TripBuilder withDriverPeople(boolean DriverPeople){
-            this.DriverPeople = DriverPeople;
+        public TripBuilder withDriverPeople(boolean driverPeople) {
+            this.driverPeople = driverPeople;
             return this;
         }
 
-        public TripBuilder withAmountOfDriverPeople(int amountOfDriverPeople){
-            this.amountOfDriverPeople = amountOfDriverPeople;
+        public TripBuilder withAmountOfDriverPeople(int peopleInTheCar) {
+            this.peopleInTheCar = peopleInTheCar;
             return this;
         }
 
-        public TripBuilder withCustomUser(CustomUser customUser){
-            this.customUser = customUser;
+        public TripBuilder withOwner(CustomUser owner) {
+            this.owner = owner;
             return this;
         }
-
     }
-
 }

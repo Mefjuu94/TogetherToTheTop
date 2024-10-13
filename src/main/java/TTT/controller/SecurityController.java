@@ -27,11 +27,6 @@ public class SecurityController {
     @PostMapping("/register")
     public String registerUser(CustomUser customUser, BindingResult bindingResult){
 
-
-        // if has errors, return customUser to register form
-        if (bindingResult.hasErrors()) {
-            return "security/register";
-        }
         if (customUser.getPassword().length() < 8){
             return "index";
         }

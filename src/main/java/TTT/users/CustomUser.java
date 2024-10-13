@@ -26,13 +26,19 @@ public class CustomUser {
     @Column(nullable = false, columnDefinition = "int default 0")
     private int numbersOfAnnoucements;
 
-    @OneToMany(mappedBy = "customUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Trip> trips;
+    // Lista wycieczek, których użytkownik jest właścicielem
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Trip> tripsOwned; // Wycieczki, których użytkownik jest właścicielem
+
+    // Lista wycieczek, w których użytkownik bierze udział
+    @ManyToMany(mappedBy = "participants")
+    private List<Trip> tripsParticipated; // Wycieczki, w których użytkownik uczestniczy
+
 
     public CustomUser() {
     }
 
-    public CustomUser(long id, String email, String password, String customUserName, int age, int numbersOfTrips, int numbersOfAnnoucements, List<Trip> trips) {
+    public CustomUser(long id, String email, String password, String customUserName, int age, int numbersOfTrips, int numbersOfAnnoucements, List<Trip> tripsOwned, List<Trip> tripsParticipated) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -40,7 +46,8 @@ public class CustomUser {
         this.age = age;
         this.numbersOfTrips = numbersOfTrips;
         this.numbersOfAnnoucements = numbersOfAnnoucements;
-        this.trips = trips;
+        this.tripsOwned = tripsOwned;
+        this.tripsParticipated = tripsParticipated;
     }
 
     public long getId() {
@@ -71,8 +78,8 @@ public class CustomUser {
         return customUserName;
     }
 
-    public void setCustomUserName(String name) {
-        this.customUserName = name;
+    public void setCustomUserName(String customUserName) {
+        this.customUserName = customUserName;
     }
 
     public int getAge() {
@@ -99,12 +106,20 @@ public class CustomUser {
         this.numbersOfAnnoucements = numbersOfAnnoucements;
     }
 
-    public List<Trip> getTrips() {
-        return trips;
+    public List<Trip> getTripsOwned() {
+        return tripsOwned;
     }
 
-    public void setTrips(List<Trip> trips) {
-        this.trips = trips;
+    public void setTripsOwned(List<Trip> tripsOwned) {
+        this.tripsOwned = tripsOwned;
+    }
+
+    public List<Trip> getTripsParticipated() {
+        return tripsParticipated;
+    }
+
+    public void setTripsParticipated(List<Trip> tripsParticipated) {
+        this.tripsParticipated = tripsParticipated;
     }
 
     @Override
@@ -112,12 +127,12 @@ public class CustomUser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomUser that = (CustomUser) o;
-        return id == that.id && customUserName == that.customUserName && age == that.age && numbersOfTrips == that.numbersOfTrips && numbersOfAnnoucements == that.numbersOfAnnoucements && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(trips, that.trips);
+        return id == that.id && age == that.age && numbersOfTrips == that.numbersOfTrips && numbersOfAnnoucements == that.numbersOfAnnoucements && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(customUserName, that.customUserName) && Objects.equals(tripsOwned, that.tripsOwned) && Objects.equals(tripsParticipated, that.tripsParticipated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, customUserName, age, numbersOfTrips, numbersOfAnnoucements, trips);
+        return Objects.hash(id, email, password, customUserName, age, numbersOfTrips, numbersOfAnnoucements, tripsOwned, tripsParticipated);
     }
 
     @Override
@@ -126,11 +141,12 @@ public class CustomUser {
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", name=" + customUserName +
+                ", customUserName='" + customUserName + '\'' +
                 ", age=" + age +
                 ", numbersOfTrips=" + numbersOfTrips +
                 ", numbersOfAnnoucements=" + numbersOfAnnoucements +
-                ", trips=" + trips +
+                ", tripsOwned=" + tripsOwned +
+                ", tripsParticipated=" + tripsParticipated +
                 '}';
     }
 }

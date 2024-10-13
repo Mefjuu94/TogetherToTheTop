@@ -1,5 +1,6 @@
 package TTT.databaseUtils;
 
+import TTT.trips.Trip;
 import TTT.users.CustomUser;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -10,6 +11,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 public class CustomUserDAO {
 
@@ -18,19 +22,17 @@ public class CustomUserDAO {
 
     public boolean saveUser(CustomUser customUser) {
 
-        if (findCustomUser(customUser.getEmail()) != null) {
+        if (findCustomUserByEmail(customUser.getEmail()) != null) {
             return false;
         }
-        if (customUser.getPassword().length() < 7) {
+        if (customUser.getPassword().length() < 8) {
             return false;
         }
 
         customUser.setCustomUserName("yourName");
 
-        Session session = null;
         Transaction transaction = null;
-        try {
-            session = sessionFactory.openSession();
+        try(Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             customUser.setPassword(passwordEncoder.encode(customUser.getPassword()));
             session.merge(customUser);
@@ -41,12 +43,10 @@ public class CustomUserDAO {
             if (transaction != null) transaction.rollback(); // back transaction when is error
             e.printStackTrace();
             return false;
-        } finally {
-            session.close(); // close session
         }
     }
 
-    public CustomUser findCustomUser(String email) {
+    public CustomUser findCustomUserByEmail(String email) {
         try {
             Session session = sessionFactory.openSession();
             CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -60,6 +60,23 @@ public class CustomUserDAO {
         }
         return null;
     }
+
+
+    public CustomUser findCustomUserByID(String ID) {
+        try {
+            Session session = sessionFactory.openSession();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
+            Root<CustomUser> root = userQuery.from(CustomUser.class);
+            userQuery.select(root).where(cb.equal(root.get("id"), ID));
+            CustomUser results = session.createQuery(userQuery).getSingleResultOrNull();
+            return results;
+        } catch (PersistenceException | IllegalArgumentException e) {
+            System.out.println("No entity found with email: " + ID);
+        }
+        return null;
+    }
+
 
     public boolean deleteCustomUser(String email) {
 
@@ -98,31 +115,95 @@ public class CustomUserDAO {
         }
     }
 
-//    public void updateUserName(String email, String newName) {
-//        Transaction transaction = null;
-//
-//        try (Session session = sessionFactory.openSession()) {
-//            transaction = session.beginTransaction();
-//
-//
-//            CustomUser user = findCustomUser(email);
-//            if (user != null) {
-//
-//                user.setName(newName);
-//
-//
-//                session.update(user);
-//                transaction.commit();
-//            } else {
-//                System.out.println("User not found with email: " + email);
-//            }
-//        } catch (Exception e) {
-//            if (transaction != null) {
-//                transaction.rollback();
-//            }
-//            e.printStackTrace();
-//        }
-//    }
+    public void updateUserTrips(String email, List<Trip> trips) {
+        Transaction transaction = null;
+
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            CustomUser user = findCustomUserByEmail(email);
+            if (user != null) {
+                user.setTripsParticipated(trips);
+                session.merge(user);
+                transaction.commit();
+            } else {
+                System.out.println("User not found with email: " + email);
+            }
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public void updateUserName(String email, String newName) {
+        Transaction transaction = null;
+
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            CustomUser user = findCustomUserByEmail(email);
+            if (user != null) {
+                user.setCustomUserName(newName);
+                session.merge(user);
+                transaction.commit();
+            } else {
+                System.out.println("User not found with email: " + email);
+            }
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public void updateUserAge(String email, int age) {
+        Transaction transaction = null;
+
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            CustomUser user = findCustomUserByEmail(email);
+            if (user != null) {
+                user.setAge(age);
+                session.merge(user);
+                transaction.commit();
+            } else {
+                System.out.println("User not found with email: " + email);
+            }
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public void updateUserEmail(String email) {
+        Transaction transaction = null;
+
+        CustomUser customUser = findCustomUserByEmail(email);
+
+        if (customUser != null) {
+            try (Session session = sessionFactory.openSession()) {
+                transaction = session.beginTransaction();
+                CustomUser user = findCustomUserByEmail(email);
+                if (user != null) {
+                    user.setEmail(email);
+                    session.merge(user);
+                    transaction.commit();
+                }
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                e.printStackTrace();
+            }
+        } else {
+        System.out.println("User not found with email: " + email);
+    }
+    }
+
+
 
 
 }

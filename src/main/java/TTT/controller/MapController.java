@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -27,27 +28,15 @@ public class MapController {
                               @RequestParam("isCheckedGroup") String isCheckedGroup,
                               @RequestParam("amountOfPeopleInGroup") String amountOfPeopleInGroup) {
 
-        System.out.println("Otrzymano dane: ");
-        System.out.println("zmienna 1: " + waypoints);
-        System.out.println("zmienna 2: " + coordinatesOfTrip);
-        System.out.println("Zmienna 3: " + allRouteDuration);
-
-        System.out.println("Zmienna 4 opis: " + description);
-        System.out.println("Zmienna 5 driver?: " + driverCheck);
-        System.out.println("Zmienna 6 liczba osób w samochodzie: " + amountOfPeopleDriver);
-        System.out.println("Zmienna 7 zwierzaki?: " + isCheckedAnimals);
-        System.out.println("Zmienna 8 grupa zamknięta?: " + isCheckedGroup);
-        System.out.println("Zmienna 9 ile osób w grupie: " + amountOfPeopleInGroup);
-
         String userEmail = getLoggedInUserName();
         CustomUserDAO customUserDAO = new CustomUserDAO();
-        CustomUser customUser = customUserDAO.findCustomUser(userEmail);
+        CustomUser customUser = customUserDAO.findCustomUserByEmail(userEmail);
         System.out.println(customUser.getCustomUserName());
 
         Trip trip = new Trip.TripBuilder()
                 .withTripDescription(description)
                 .withDestination("Destination...")
-                .withCustomUser(customUser)
+                .withOwner(customUser)
                 .withTripDuration(allRouteDuration)
                 .withClosedGroup(Boolean.parseBoolean(isCheckedGroup))
                 .withAmountOfClosedGroup(Integer.parseInt(amountOfPeopleInGroup))
@@ -62,7 +51,12 @@ public class MapController {
         return "sendData";
     }
 
-    public String getLoggedInUserName() {
+    @GetMapping("/map")
+    public String getMapPage() {
+        return "map";
+    }
+
+    private String getLoggedInUserName() {
         // Pobierz aktualnego użytkownika
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {

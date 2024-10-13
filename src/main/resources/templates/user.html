@@ -1,53 +1,74 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dane użytkownika</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="/css/userPanelStyles.css">
 </head>
 <body>
-<header>
-    <div class="login-register">
-        <a href="/logout">Logout</a>
+<div class="background-image" style="background-image: url('/images/userProfile/backgroundUserProfile.jpg');"></div>
+
+<div class="profile-container">
+    <h1>User Profile</h1>
+
+    <div class="grid-container">
+        <!-- Edytowalne kafelki -->
+        <div class="tile editable" data-field="email" data-label="Email">
+            <h3>Email</h3>
+            <p id="email-display" th:text="${customUser.getEmail()}">Email</p>
+        </div>
+
+        <div class="tile editable" data-field="username" data-label="Username">
+            <h3>Username</h3>
+            <p id="username-display" th:text="${customUser.getCustomUserName()}">Username</p>
+        </div>
+        <div class="tile editable" data-field="age" data-label="Age">
+            <h3>Age</h3>
+            <p id="age-display" th:text="${customUser.getAge()}">?</p>
+        </div>
+
+        <!-- Nieedytowalne kafelki -->
+        <div class="tile">
+            <h3>Number of Trips</h3>
+            <p th:text="${customUser.getNumbersOfTrips()}">numbers</p>
+        </div>
+        <div class="tile">
+            <h3>Number of Announcements</h3>
+            <p th:text="${customUser.getNumbersOfAnnoucements()}">?</p>
+        </div>
+        <div class="tile">
+            <h3>Trips Owned</h3>
+            <p >?</p>
+        </div>
+        <div class="tile">
+            <h3>Trips Participated</h3>
+            <p>?</p>
+        </div>
     </div>
-</header>
-<div class="container">
-    <aside class="menu">
-        <nav>
-            <ul>
-                <li><a href="/map">Plan Trip</a></li>
-                <li><a href="/trips">My Trips</a></li>
-                <li><a href="/announcements">Annoucement</a></li>
-            </ul>
-        </nav>
-    </aside>
-    <main class="content">
-        <section class="user-details">
-            <h2>User Data</h2>
-            <form action="/user/update" method="POST">
-                <div class="form-group">
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" value="" required>
-                </div>
-                <div class="form-group">
-                    <label for="age">Age:</label>
-                    <input type="number" id="age" name="age" value="" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">New Password:</label>
-                    <input type="password" id="password" name="password">
-                </div>
-                <div class="form-group">
-                    <label for="confirm-password">Confirm Password:</label>
-                    <input type="password" id="confirm-password" name="confirmPassword">
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="button_register">Accept changes</button>
-                </div>
-            </form>
-        </section>
-    </main>
 </div>
+
+<!-- Modal do edycji -->
+<div id="edit-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modal-header">Edit Information</h2> <!-- Nagłówek zmienia się dynamicznie -->
+        <form th:action="@{/updateField}" method="POST">
+            <input type="hidden" name="fieldName" id="fieldName"> <!-- Nazwa pola np. email, username -->
+            <div>
+                <label>
+                    <input type="text" name="newValue" id="field-value" placeholder="Enter new value" required>
+                </label>
+            </div>
+            <input type="submit" value="Save">
+            <!-- Token CSRF dla zabezpieczenia -->
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+        </form>
+    </div>
+</div>
+
+
+
+<script type="text/javascript" th:src="@{/js/userProfile.js}"></script>
 </body>
 </html>
