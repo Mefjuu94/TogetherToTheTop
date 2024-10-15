@@ -59,23 +59,17 @@
         </div>
     </div>
 
-<!--    <div class="button-container">-->
-<!--        <p hidden="hidden" id="userId" th:text="${customUser.id}"></p>-->
-<!--        <button id="add_button">Add to Group</button>-->
-<!--    </div>-->
-
     <form id="saveForm"
           action="/addMe" method="POST">
         <p hidden="hidden" id="USER_id" th:text="${customUser.id}"></p>
         <input type="hidden" id="tripId" name="tripId">
         <input type="hidden" id="userId" name="userId">
-<!--        <input type="hidden" id="allRouteDuration" name="allRouteDuration">-->
 
         <!--            must have! TOKEN-->
         <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
 
     <div class="button-container">
-        <button id="add_button">Add to Group</button>
+        <button id="add_button">Join to Trip</button>
     </div>
     </form>
 </div>
