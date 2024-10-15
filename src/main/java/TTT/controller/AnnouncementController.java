@@ -26,7 +26,31 @@ public class AnnouncementController {
     public String getAnnouncementsPage(Model model) {
         TripDAO tripDAO = new TripDAO();
         ArrayList<Trip> trips = new ArrayList<>(tripDAO.listAllAnnouncements());
+        String email = getLoggedInUserName();
+        CustomUserDAO customUserDAO = new CustomUserDAO();
+
+        boolean flag = false;
+        List<Long> tripsID = new ArrayList<>();
+
+        CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
+        for (int i = 0; i < trips.size() ; i++) {
+            List<CustomUser> participant = trips.get(i).getParticipants();
+            for (int j = 0; j < participant.size(); j++) {
+                if (participant.get(j).getId() == customUser.getId()){
+                    flag = true;
+                    break;
+                }
+                System.out.println(flag +  " " + trips.get(i).getId());
+                if (flag){
+                   tripsID.add(trips.get(i).getId()) ;
+                }
+            }
+        }
+
         model.addAttribute("trips", trips);
+        model.addAttribute("customUser",customUser);
+        model.addAttribute("flag",flag);
+        model.addAttribute("tripsID",tripsID);
 
         return "announcement";
     }
@@ -89,7 +113,7 @@ public class AnnouncementController {
                 System.out.println("User " + userId + " is already a participant of trip " + tripId);
             }
         }
-        return "sendData";
+        return "actionSuccess";
     }
 
     private String getLoggedInUserName() {

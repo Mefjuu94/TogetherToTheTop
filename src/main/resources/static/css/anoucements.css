@@ -44,6 +44,9 @@ h1 {
 }
 
 .announcement-item {
+    display: flex; /* Ustawia flexbox dla ogłoszenia */
+    justify-content: space-between; /* Rozmieszcza elementy w wierszu */
+    align-items: center; /* Wyrównuje elementy do środka w osi Y */
     background-color: rgba(255, 255, 255, 0.5);
     padding: 15px;
     border: 2px solid rgba(255, 255, 255, 0.7);
@@ -74,4 +77,26 @@ h1 {
 
 .announcement-item a:hover {
     text-decoration: underline;
+}
+
+.announcement-content {
+    display: flex; /* Ustawia flexbox dla zawartości ogłoszenia */
+    justify-content: space-between; /* Rozmieszcza tekst i ikonę w wierszu */
+    width: 100%; /* Zajmuje pełną szerokość */
+}
+
+.owner-icon {
+    font-size: 1.5em; /* Ustaw rozmiar ikony */
+    color: #FFD700; /* Kolor ikony (złoty) */
+    margin-left: 10px; /* Przerwa między tekstem a ikoną */
+}
+
+.icon-image {
+    width: 24px; /* Szerokość ikony */
+    height: 24px; /* Wysokość ikony */
+}
+
+.icon-image-addme {
+    width: 24px; /* Szerokość ikony */
+    height: 24px; /* Wysokość ikony */
 }

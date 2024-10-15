@@ -14,11 +14,6 @@
 
     <div class="grid-container">
         <!-- Edytowalne kafelki -->
-        <div class="tile editable" data-field="email" data-label="Email">
-            <h3>Email</h3>
-            <p id="email-display" th:text="${customUser.getEmail()}">Email</p>
-        </div>
-
         <div class="tile editable" data-field="username" data-label="Username">
             <h3>Username</h3>
             <p id="username-display" th:text="${customUser.getCustomUserName()}">Username</p>
@@ -27,19 +22,23 @@
             <h3>Age</h3>
             <p id="age-display" th:text="${customUser.getAge()}">?</p>
         </div>
+        <div class="tile editable" data-field="city" data-label="city">
+            <h3>City</h3>
+            <p id="city" th:text="${customUser.getCity()}">?</p>
+        </div>
 
         <!-- Nieedytowalne kafelki -->
+        <div class="tile" data-field="email" data-label="Email">
+            <h3>Email</h3>
+            <p id="email-display" th:text="${customUser.getEmail()}">Email</p>
+        </div>
         <div class="tile">
             <h3>Number of Trips</h3>
             <p th:text="${customUser.getNumbersOfTrips()}">numbers</p>
         </div>
         <div class="tile">
-            <h3>Number of Announcements</h3>
-            <p th:text="${customUser.getNumbersOfAnnoucements()}">?</p>
-        </div>
-        <div class="tile">
             <h3>Trips Owned</h3>
-            <p >?</p>
+            <p th:text="${numberOfTripsOwned}">?</p>
         </div>
         <div class="tile">
             <h3>Trips Participated</h3>

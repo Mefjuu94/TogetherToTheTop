@@ -33,6 +33,15 @@ public class MapController {
         CustomUser customUser = customUserDAO.findCustomUserByEmail(userEmail);
         System.out.println(customUser.getCustomUserName());
 
+        int amountOfPeople = 0;
+
+        if (amountOfPeopleDriver.equals("")){
+            amountOfPeople = 0;
+        }else {
+            amountOfPeople = Integer.parseInt(amountOfPeopleDriver);
+        }
+
+
         Trip trip = new Trip.TripBuilder()
                 .withTripDescription(description)
                 .withDestination("Destination...")
@@ -41,14 +50,15 @@ public class MapController {
                 .withClosedGroup(Boolean.parseBoolean(isCheckedGroup))
                 .withAmountOfClosedGroup(Integer.parseInt(amountOfPeopleInGroup))
                 .withDriverPeople(Boolean.parseBoolean(driverCheck))
-                .withAmountOfDriverPeople(Integer.parseInt(amountOfPeopleDriver))
+                .withAmountOfDriverPeople(amountOfPeople)
+                .withAnimals(Boolean.parseBoolean(isCheckedAnimals))
                 .build();
 
         tripDAO.addAnnouncement(trip);
 
         //todo add distance
 
-        return "sendData";
+        return "actionSuccess";
     }
 
     @GetMapping("/map")

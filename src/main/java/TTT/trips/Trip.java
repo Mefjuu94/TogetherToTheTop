@@ -3,6 +3,7 @@ package TTT.trips;
 import TTT.users.CustomUser;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,6 +21,8 @@ public class Trip {
     private int amountOfClosedGroup;
     private boolean peopleInTheCar;
     private int amountOfDriverPeople;
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean ifTolerateAnimals;
 
     // Właściciel wycieczki (ManyToOne)
     @ManyToOne
@@ -44,6 +47,7 @@ public class Trip {
         this.amountOfClosedGroup = builder.amountOfClosedGroup;
         this.peopleInTheCar = builder.driverPeople;
         this.amountOfDriverPeople = builder.peopleInTheCar;
+        this.ifTolerateAnimals = builder.tolerateAnimals;
     }
 
     public Trip() {}
@@ -135,12 +139,12 @@ public class Trip {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Trip trip = (Trip) o;
-        return id == trip.id && closedGroup == trip.closedGroup && amountOfClosedGroup == trip.amountOfClosedGroup && peopleInTheCar == trip.peopleInTheCar && amountOfDriverPeople == trip.amountOfDriverPeople && Objects.equals(tripDescription, trip.tripDescription) && Objects.equals(destination, trip.destination) && Objects.equals(tripDuration, trip.tripDuration) && Objects.equals(owner, trip.owner);
+        return id == trip.id && closedGroup == trip.closedGroup && amountOfClosedGroup == trip.amountOfClosedGroup && peopleInTheCar == trip.peopleInTheCar && amountOfDriverPeople == trip.amountOfDriverPeople && ifTolerateAnimals == trip.ifTolerateAnimals && Objects.equals(tripDescription, trip.tripDescription) && Objects.equals(destination, trip.destination) && Objects.equals(tripDuration, trip.tripDuration) && Objects.equals(owner, trip.owner) && Objects.equals(participants, trip.participants);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tripDescription, destination, tripDuration, closedGroup, amountOfClosedGroup, peopleInTheCar, amountOfDriverPeople, owner);
+        return Objects.hash(id, tripDescription, destination, tripDuration, closedGroup, amountOfClosedGroup, peopleInTheCar, amountOfDriverPeople, ifTolerateAnimals, owner, participants);
     }
 
     @Override
@@ -152,8 +156,11 @@ public class Trip {
                 ", tripDuration='" + tripDuration + '\'' +
                 ", closedGroup=" + closedGroup +
                 ", amountOfClosedGroup=" + amountOfClosedGroup +
-                ", driverPeople=" + peopleInTheCar +
+                ", peopleInTheCar=" + peopleInTheCar +
                 ", amountOfDriverPeople=" + amountOfDriverPeople +
+                ", ifTolerateAnimals=" + ifTolerateAnimals +
+                ", owner=" + owner +
+                ", participants=" + participants +
                 '}';
     }
 
@@ -167,6 +174,7 @@ public class Trip {
         private boolean driverPeople; // Poprawiona nazwa
         private int peopleInTheCar;
         private CustomUser owner;
+        private boolean tolerateAnimals;
 
         public Trip build() {
             return new Trip(this); // Zwraca obiekt korzystający z danych buildera
@@ -209,6 +217,11 @@ public class Trip {
 
         public TripBuilder withOwner(CustomUser owner) {
             this.owner = owner;
+            return this;
+        }
+
+        public TripBuilder withAnimals(boolean tolerateAnimals) {
+            this.tolerateAnimals = tolerateAnimals;
             return this;
         }
     }

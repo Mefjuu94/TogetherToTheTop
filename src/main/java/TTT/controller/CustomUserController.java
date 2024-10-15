@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class CustomUserController {
@@ -25,28 +25,21 @@ public class CustomUserController {
     public String getMainPage(Model model) {
         String email = getLoggedInUserName();
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
+
+        TripDAO tripDAO = new TripDAO();
+        List<Trip> trips = tripDAO.listAllAnnouncements();
+
+        int numberOfTripsOwned = 0;
+        for (int i = 0; i < trips.size(); i++) {
+            if (trips.get(i).getOwnerOfTrip().getId() == customUser.getId()){
+               numberOfTripsOwned ++;
+            }
+        }
+
         model.addAttribute("customUser",customUser);
+        model.addAttribute("numberOfTripsOwned",numberOfTripsOwned);
 
         return "user";
-    }
-
-    @PostMapping("/updateName")
-    public String updateName(@RequestParam String newName) {
-
-        System.out.println("your new name is: " + newName);
-        String email = getLoggedInUserName();
-
-        customUserDAO.updateUserName(email, newName);
-        return "user"; // lub inna strona po aktualizacji
-    }
-
-    @PostMapping("/updateAge")
-    public String updateName(@RequestParam int newAge) {
-
-        String email = getLoggedInUserName();
-
-        customUserDAO.updateUserAge(email, newAge);
-        return "redirect:/profile"; // lub inna strona po aktualizacji
     }
 
     @PostMapping("/updateField")
@@ -57,21 +50,13 @@ public class CustomUserController {
         System.out.println(email);
 
         // Zaktualizuj odpowiednie pole na podstawie nazwy pola
-        switch (fieldName) {
-            case "email":
-               // customUserDAO.updateUserEmail(email);
-                break;
-            case "username":
-                customUserDAO.updateUserName(email,newValue);
-                break;
-            case "age":
-                customUserDAO.updateUserAge(email,Integer.parseInt(newValue));
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid field name: " + fieldName);
+        if (fieldName.equals("age")){
+            customUserDAO.updateUserAge(email, Integer.parseInt(newValue));
+        }else {
+            customUserDAO.updateUserField(newValue,email,fieldName);
         }
 
-        return "sendData";
+        return "actionSuccess";
     }
 
     private String getLoggedInUserName() {

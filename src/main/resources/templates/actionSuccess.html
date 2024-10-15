@@ -2,17 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Error 401</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success!</title>
+    <link rel="stylesheet" th:href="@{/css/successRedirect.css}">
 </head>
-<body>
-<div class="error-container">
-    <h1>Error Page 401 – "Unauthorized"</h1>
-    <p>Authentication is required but was not provided or is invalid. The client must log in to access the resource</p>
-    <p>You will be redirected to the home page in <span id="countdown">10</span> seconds...</p>
+<body class="background-image" style="background-image: url('/images/background.jpg');">
+
+<div class="success-container">
+    <h1>Operation Successful!</h1>
+    <p>You will be redirected to the home page in <span id="countdown">5</span> seconds...</p>
 </div>
+
 <script>
     // time to redirect (in sec)
-    var countdownTime = 10;
+    var countdownTime = 5;
     var countdownElement = document.getElementById("countdown");
 
 
@@ -30,5 +33,6 @@
         }
     }, 1000);
 </script>
+
 </body>
 </html>

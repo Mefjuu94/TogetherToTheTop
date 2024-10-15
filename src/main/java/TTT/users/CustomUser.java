@@ -25,6 +25,7 @@ public class CustomUser {
     private int numbersOfTrips;
     @Column(nullable = false, columnDefinition = "int default 0")
     private int numbersOfAnnoucements;
+    private String city;
 
     // Lista wycieczek, których użytkownik jest właścicielem
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -38,7 +39,7 @@ public class CustomUser {
     public CustomUser() {
     }
 
-    public CustomUser(long id, String email, String password, String customUserName, int age, int numbersOfTrips, int numbersOfAnnoucements, List<Trip> tripsOwned, List<Trip> tripsParticipated) {
+    public CustomUser(long id, String email, String password, String customUserName, int age, int numbersOfTrips, int numbersOfAnnoucements, List<Trip> tripsOwned, List<Trip> tripsParticipated,String city) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -48,6 +49,7 @@ public class CustomUser {
         this.numbersOfAnnoucements = numbersOfAnnoucements;
         this.tripsOwned = tripsOwned;
         this.tripsParticipated = tripsParticipated;
+        this.city = city;
     }
 
     public long getId() {
@@ -122,17 +124,25 @@ public class CustomUser {
         this.tripsParticipated = tripsParticipated;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomUser that = (CustomUser) o;
-        return id == that.id && age == that.age && numbersOfTrips == that.numbersOfTrips && numbersOfAnnoucements == that.numbersOfAnnoucements && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(customUserName, that.customUserName) && Objects.equals(tripsOwned, that.tripsOwned) && Objects.equals(tripsParticipated, that.tripsParticipated);
+        return id == that.id && age == that.age && numbersOfTrips == that.numbersOfTrips && numbersOfAnnoucements == that.numbersOfAnnoucements && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(customUserName, that.customUserName) && Objects.equals(city, that.city) && Objects.equals(tripsOwned, that.tripsOwned) && Objects.equals(tripsParticipated, that.tripsParticipated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, customUserName, age, numbersOfTrips, numbersOfAnnoucements, tripsOwned, tripsParticipated);
+        return Objects.hash(id, email, password, customUserName, age, numbersOfTrips, numbersOfAnnoucements, city, tripsOwned, tripsParticipated);
     }
 
     @Override
@@ -145,6 +155,7 @@ public class CustomUser {
                 ", age=" + age +
                 ", numbersOfTrips=" + numbersOfTrips +
                 ", numbersOfAnnoucements=" + numbersOfAnnoucements +
+                ", city='" + city + '\'' +
                 ", tripsOwned=" + tripsOwned +
                 ", tripsParticipated=" + tripsParticipated +
                 '}';

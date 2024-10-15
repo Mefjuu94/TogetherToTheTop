@@ -136,18 +136,28 @@ public class CustomUserDAO {
         }
     }
 
-    public void updateUserName(String email, String newName) {
+    public void updateUserField(String value, String email,String field) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             CustomUser user = findCustomUserByEmail(email);
             if (user != null) {
-                user.setCustomUserName(newName);
+                switch (field){
+                    case "email":
+                        user.setEmail(value);
+                        break;
+                    case "username":
+                        user.setCustomUserName(value);
+                        break;
+                    case "city":
+                        user.setCity(value);
+                        break;
+                }
                 session.merge(user);
                 transaction.commit();
             } else {
-                System.out.println("User not found with email: " + email);
+                System.out.println("User not found");
             }
         } catch (Exception e) {
             if (transaction != null) {
@@ -177,33 +187,4 @@ public class CustomUserDAO {
             e.printStackTrace();
         }
     }
-
-    public void updateUserEmail(String email) {
-        Transaction transaction = null;
-
-        CustomUser customUser = findCustomUserByEmail(email);
-
-        if (customUser != null) {
-            try (Session session = sessionFactory.openSession()) {
-                transaction = session.beginTransaction();
-                CustomUser user = findCustomUserByEmail(email);
-                if (user != null) {
-                    user.setEmail(email);
-                    session.merge(user);
-                    transaction.commit();
-                }
-            } catch (Exception e) {
-                if (transaction != null) {
-                    transaction.rollback();
-                }
-                e.printStackTrace();
-            }
-        } else {
-        System.out.println("User not found with email: " + email);
-    }
-    }
-
-
-
-
 }
