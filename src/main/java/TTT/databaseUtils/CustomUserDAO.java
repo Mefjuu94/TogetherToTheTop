@@ -22,6 +22,7 @@ public class CustomUserDAO {
 
     public boolean saveUser(CustomUser customUser) {
 
+
         if (findCustomUserByEmail(customUser.getEmail()) != null) {
             return false;
         }
@@ -37,14 +38,18 @@ public class CustomUserDAO {
             customUser.setPassword(passwordEncoder.encode(customUser.getPassword()));
             session.merge(customUser);
             transaction.commit();
+
             System.out.println("user saved");
             return true;
         } catch (Exception e) {
             if (transaction != null) transaction.rollback(); // back transaction when is error
             e.printStackTrace();
             return false;
+        } finally {
+            session.close(); // close session
         }
     }
+
 
     public CustomUser findCustomUserByEmail(String email) {
         try {
@@ -112,6 +117,7 @@ public class CustomUserDAO {
             if (session != null) {
                 session.close();
             }
+
         }
     }
 
@@ -164,6 +170,7 @@ public class CustomUserDAO {
                 transaction.rollback();
             }
             e.printStackTrace();
+
         }
     }
 

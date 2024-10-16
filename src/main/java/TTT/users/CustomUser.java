@@ -50,6 +50,7 @@ public class CustomUser {
         this.tripsOwned = tripsOwned;
         this.tripsParticipated = tripsParticipated;
         this.city = city;
+
     }
 
     public long getId() {
@@ -158,6 +159,15 @@ public class CustomUser {
                 ", city='" + city + '\'' +
                 ", tripsOwned=" + tripsOwned +
                 ", tripsParticipated=" + tripsParticipated +
+                '}';
+    }
+
+    @Override
+    public String toString() {
+        return "CustomUser{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

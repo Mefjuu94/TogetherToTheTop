@@ -1,6 +1,5 @@
 package TTT.controller;
 
-
 import TTT.databaseUtils.CustomUserDAO;
 import TTT.databaseUtils.TripDAO;
 import TTT.trips.Trip;
@@ -13,11 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.util.List;
 
 @Controller
 public class CustomUserController {
+
 
     CustomUserDAO customUserDAO = new CustomUserDAO();
 
@@ -70,6 +69,11 @@ public class CustomUserController {
             return principal.toString();
         }
         return null;
+    }
+
+    @GetMapping("/user")
+    public String getMainPage() {
+        return "user";
     }
 
 }
