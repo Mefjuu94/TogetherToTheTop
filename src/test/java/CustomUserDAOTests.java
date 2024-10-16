@@ -1,48 +1,72 @@
+
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 import TTT.databaseUtils.CustomUserDAO;
 import TTT.users.CustomUser;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
+@Testcontainers
 public class CustomUserDAOTests {
+    private CustomUserDAO testObject;
+    private CustomUser testCustomUser = new CustomUser("test@mail.com", "12345678");
+    DockerImageName postgres = DockerImageName.parse("postgres:16");
+    @Container
+    PostgreSQLContainer postgresqlContainer;
 
-    CustomUserDAO testObject = new CustomUserDAO();
-    CustomUser testCustomUser = new CustomUser("test@mail.com","123");
+    public CustomUserDAOTests() {
+        this.postgresqlContainer = (PostgreSQLContainer)(new PostgreSQLContainer(this.postgres)).withDatabaseName("test_container").withUsername("test").withPassword("test").withReuse(true);
+    }
 
-    @Test
-    public void saveCustomUserTest(){
-        Assertions.assertTrue(testObject.saveUser(testCustomUser));
-        testObject.deleteCustomUser("test@mail.com");
+    @BeforeEach
+    public void emptyTest() {
+        int mappedPort = this.postgresqlContainer.getMappedPort(5432);
+        this.testObject = new CustomUserDAO(TestSessionFactoryCreator.getCustomUserSessionFactory(mappedPort));
+        System.out.println(mappedPort);
     }
 
     @Test
-    public void saveCustomUserTestFail(){
-        testObject.saveUser(testCustomUser);
-        Assertions.assertFalse(testObject.saveUser(testCustomUser));
+    public void saveCustomUserTest() {
+        Assertions.assertTrue(this.testObject.saveUser(this.testCustomUser));
+        this.testObject.deleteCustomUser(this.testCustomUser.getEmail());
     }
 
     @Test
-    public void findCustomUserTest(){
-        testObject.deleteCustomUser("test@mail.com"); // to avoid entityException
-        testObject.saveUser(testCustomUser);
-        Assertions.assertEquals(testCustomUser.getEmail(),testObject.findCustomUser("test@mail.com").getEmail());
+    public void saveCustomUserTestFail() {
+        this.testObject.saveUser(this.testCustomUser);
+        Assertions.assertFalse(this.testObject.saveUser(this.testCustomUser));
     }
 
     @Test
-    public void findCustomUserTestFail(){
-        testObject.saveUser(testCustomUser);
-        Assertions.assertNull(testObject.findCustomUser("testCustomUser@mail.com"));
-        testObject.deleteCustomUser("test@mail.com");
+    public void findCustomUserByEmailTest() {
+        this.testObject.saveUser(this.testCustomUser);
+        Assertions.assertEquals(this.testCustomUser.getEmail(), this.testObject.findCustomUserByEmail("test@mail.com").getEmail());
     }
 
     @Test
-    public void deleteCustomUserTest(){
-        testObject.deleteCustomUser("test@mail.com"); // to avoid entityException
-        testObject.saveUser(testCustomUser);
-        Assertions.assertTrue(testObject.deleteCustomUser("test@mail.com"));
+    public void findCustomUserByEmailTestFail() {
+        this.testObject.saveUser(this.testCustomUser);
+        Assertions.assertNull(this.testObject.findCustomUserByEmail("testCustomUser@mail.com"));
+        this.testObject.deleteCustomUser("test@mail.com");
     }
 
     @Test
-    public void deleteCustomUserTestFail(){
-        Assertions.assertFalse(testObject.deleteCustomUser("noCustomert@mail.com"));
+    public void deleteCustomUserTest() {
+        this.testObject.saveUser(this.testCustomUser);
+        Assertions.assertTrue(this.testObject.deleteCustomUser("test@mail.com"));
+    }
+
+    @Test
+    public void deleteCustomUserTestFail() {
+        Assertions.assertFalse(this.testObject.deleteCustomUser((String)null));
+        Assertions.assertFalse(this.testObject.deleteCustomUser("  "));
     }
 }

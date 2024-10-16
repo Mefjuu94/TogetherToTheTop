@@ -1,18 +1,24 @@
 package TTT;
 
 import TTT.databaseUtils.CustomUserDAO;
-import TTT.peaksAndSummitsHandler.PeaksAndSummitsHandler;
-import TTT.peaksAndSummitsHandler.Top;
-import TTT.databaseUtils.TopDAO;
 import TTT.users.CustomUser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
 public class TogetherToTheTopApplication {
+
+    static String city = "Praha";
+    static String APIKEY = "zjEFy9NsTMuP_e3U9_B0sDu_axPSSl28smWg1PXW4i0";
 
     public static void main(String[] args) throws IOException {
         SpringApplication.run(TogetherToTheTopApplication.class, args);
@@ -24,7 +30,6 @@ public class TogetherToTheTopApplication {
 //        for (int i = 0; i < PeaksAndSummitsHandler.polishSummits.size(); i++) {
 //            topDAO.addTop(PeaksAndSummitsHandler.polishSummits.get(i));
 //        }
-
 
         //work :D
 //        List<Top> rysy = topDAO.findSummitByName("Rysy");
@@ -60,6 +65,4 @@ public class TogetherToTheTopApplication {
 
 
     }
-
-
 }

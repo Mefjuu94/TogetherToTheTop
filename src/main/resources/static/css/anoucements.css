@@ -1,0 +1,102 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    position: relative;
+}
+
+.container {
+    max-width: 1200px;
+    min-width: 1000px;
+    margin: 0 auto;
+    z-index: 2;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    backdrop-filter: blur(3px);
+    max-height: 80vh; /* Dodaj maksymalną wysokość kontenera */
+    overflow-y: auto;  /* Włącz przewijanie w pionie, jeśli zawartość przekroczy wysokość */
+}
+
+h1 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #000;
+    text-align: center;
+}
+
+.announcement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.announcement-item {
+    display: flex; /* Ustawia flexbox dla ogłoszenia */
+    justify-content: space-between; /* Rozmieszcza elementy w wierszu */
+    align-items: center; /* Wyrównuje elementy do środka w osi Y */
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.announcement-item h2 {
+    color: #333;
+}
+
+.announcement-item p {
+    color: #555;
+}
+
+.announcement-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.announcement-item a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.announcement-item a:hover {
+    text-decoration: underline;
+}
+
+.announcement-content {
+    display: flex; /* Ustawia flexbox dla zawartości ogłoszenia */
+    justify-content: space-between; /* Rozmieszcza tekst i ikonę w wierszu */
+    width: 100%; /* Zajmuje pełną szerokość */
+}
+
+.owner-icon {
+    font-size: 1.5em; /* Ustaw rozmiar ikony */
+    color: #FFD700; /* Kolor ikony (złoty) */
+    margin-left: 10px; /* Przerwa między tekstem a ikoną */
+}
+
+.icon-image {
+    width: 24px; /* Szerokość ikony */
+    height: 24px; /* Wysokość ikony */
+}
+
+.icon-image-addme {
+    width: 24px; /* Szerokość ikony */
+    height: 24px; /* Wysokość ikony */
+}

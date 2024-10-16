@@ -13,5 +13,6 @@
         <property name="show_sql">true</property>
         <mapping class="TTT.peaksAndSummitsHandler.Top"/>
         <mapping class="TTT.users.CustomUser"/>
+        <mapping class="TTT.trips.Trip"/>
     </session-factory>
 </hibernate-configuration>

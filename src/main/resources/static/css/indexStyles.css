@@ -1,0 +1,211 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+body::before {
+    /*content: ""; !* Pseudo-element do efektu mgły *!*/
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    pointer-events: none;
+    z-index: 1;
+}
+
+
+.login-container,
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+}
+
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: right;
+}
+
+header .login-register a {
+    color: #fff;
+    margin-left: 10px;
+    text-decoration: none;
+}
+
+header .login-register a:hover {
+    text-decoration: underline;
+}
+
+.login-container {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    min-height: 30vh;
+}
+
+.container {
+    display: flex;
+    flex-direction: row; /* Ustaw kafelki w rzędzie */
+    justify-content: space-evenly; /* Równomiernie rozmieszczone */
+    align-items: center;
+    width: 100%;
+    padding: 20px; /* Dodatkowa przestrzeń wokół kontenera */
+}
+
+
+.tile {
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(3px);
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    text-align: center;
+    padding: 15px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 250px;
+    height: auto;
+    box-sizing: border-box;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    padding: 20px;
+}
+
+.gridLogin {
+    display: flex;
+    grid-gap: 20px;
+    padding: 20px;
+}
+
+.loginRegisterGrid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    padding: 20px;
+}
+
+.loginRegisterGrid .tile {
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    text-align: center;
+    padding: 15px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 250px;
+    height: auto;
+    box-sizing: border-box;
+}
+
+.loginRegisterGrid .tile:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #eaf2f8;
+}
+
+
+
+.tile:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #eaf2f8;
+}
+
+.tile img {
+    max-width: 100px;
+    margin-bottom: 10px;
+}
+
+.tile span {
+    display: block;
+    font-size: 18px;
+    color: #333;
+}
+
+
+.modal {
+    display: none; /* Ukryty domyślnie */
+    position: fixed; /* Pozycja na ekranie */
+    z-index: 1000; /* Na wierzchu */
+    left: 0;
+    top: 0;
+    width: 100%; /* Pełna szerokość */
+    height: 100%; /* Pełna wysokość */
+    overflow: auto; /* Włącz przewijanie, jeśli potrzeba */
+    background-color: rgba(0, 0, 0, 0.7); /* Ciemne tło z przezroczystością */
+}
+
+/* Zawartość modalu */
+.modal-content {
+    background-color: rgba(255, 255, 255, 0.5); /* Kolor tła z przezroczystością */
+    backdrop-filter: blur(5px); /* Efekt rozmycia tła */
+    margin: 15% auto; /* Wyśrodkowanie w pionie i poziomie */
+    padding: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.7); /* Przezroczyste obramowanie */
+    border-radius: 8px; /* Zaokrąglone rogi */
+    width: 80%; /* Szerokość modalu */
+    max-width: 500px; /* Maksymalna szerokość */
+}
+
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+label {
+    font-size: 16px;
+    color: #333;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="submit"] {
+    padding: 10px; /* Padding wewnętrzny */
+    border: 2px solid rgba(255, 255, 255, 0.7); /* Przezroczyste obramowanie */
+    border-radius: 5px; /* Zaokrąglone rogi */
+    font-size: 16px; /* Rozmiar czcionki */
+}
+
+/* Styl przycisku wysyłania */
+input[type="submit"] {
+    background-color: rgba(255, 255, 255, 0.5); /* Tło z przezroczystością */
+    cursor: pointer; /* Wskaźnik kursora */
+}
+
+input[type="submit"]:hover {
+    background-color: rgba(255, 255, 255, 0.7); /* Tło po najechaniu */
+}

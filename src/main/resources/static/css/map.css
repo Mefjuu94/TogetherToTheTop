@@ -1,0 +1,141 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+#sidebar {
+    width: 15%;
+    height: 100vh;
+    float: left;
+    background-color: #f8f8f8;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+#map {
+    width: 65%;
+    height: 100vh;
+    float: left;
+}
+#annoucement_information{
+    width: 19%;
+    height: 100vh;
+    float: right;
+    background-color: #f8f8f8;
+}
+
+
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+
+#sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+#sidebar ul li {
+    padding: 10px 0;
+    background-color: Grey; /* Tło rozwijanej listy */
+    border: 1px solid black; /* Ramka */
+}
+
+#sidebar ul li a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin: 5px 0;
+    border-radius: 4px;
+    background-color: #eee;
+}
+
+#sidebar ul li a:hover {
+    background-color: darkgreen;
+}
+
+.dropdown {
+    position: absolute; /* Umożliwia umiejscowienie nad innymi elementami */
+    background-color: Grey; /* Tło rozwijanej listy */
+    border: 1px solid black; /* Ramka */
+    z-index: 1000; /* Wyższy z-index, aby była nad innymi elementami */
+    max-height: 200px; /* Maksymalna wysokość, aby zachować proporcje */
+    overflow-y: auto; /* Przewijanie, gdy lista jest za długa */
+    display: none; /* Ukryta domyślnie */
+}
+
+.search-result-item {
+    padding: 8px; /* Padding dla pozycji */
+    cursor: pointer; /* Zmiana kursora na pointer */
+    border: 1px solid black; /* Ramka */
+
+}
+
+.search-result-item:hover {
+    background-color: darkgreen; /* Kolor tła przy najechaniu */
+}
+
+
+#add_announcement_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#add_announcement {
+    padding: 15px 30px; /* Większy przycisk */
+    font-size: 18px; /* Większy tekst */
+    background-color: grey;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border 0.3s ease;
+}
+
+#add_announcement:hover {
+    background-color: green;
+    border: 2px solid orange;
+}
+
+/*sekcja ogłoszenia*/
+
+
+h2 {
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.checkbox-group input {
+    margin-right: 10px;
+}
+
+
+
+

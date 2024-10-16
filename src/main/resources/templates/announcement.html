@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcements</title>
+    <link rel="stylesheet" th:href="@{/css/anoucements.css}">
+</head>
+<body style="background-image: url('/images/background.jpg');">
+
+<div class="container announcements-container">
+    <h1>Announcements</h1>
+    <div class="announcement-list">
+
+        <a th:href="@{'/trips/' + ${trips.id}}" class="announcement-item" th:each="trips : ${trips}">
+            <h2 th:text="${trips.destination}">Destynacja</h2>
+            <p th:text="${trips.tripDescription}">Opis ogłoszenia</p>
+           <span class="owner-icon">
+                <img th:if="${trips.ownerOfTrip.id == customUser.id and !tripsID.contains(trips.id)}" th:src="@{/images/announcement/owner.png}"
+                     alt="You are the owner of Trip" class="icon-image owner-icon">
+                <img th:if="${trips.ownerOfTrip.id != customUser.id and tripsID.contains(trips.id)}" th:src="@{/images/announcement/ok.png}"
+                      alt="You are already on this trip" class="icon-image flag-icon">
+                 <img th:if="${!tripsID.contains(trips.id) and trips.ownerOfTrip.id != customUser.id}" th:src="@{/images/announcement/add.png}"
+                     alt="Add me to trip" class="icon-image flag-icon">
+</span>
+        </a>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/announcement.js}"></script>
+</body>
+</html>

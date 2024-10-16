@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error 403</title>\
+    <link rel="stylesheet" th:href="@{/css/errorStyles.css}">
+</head>
+<body>
+<div class="error-container">
+    <h1>Error Page 403 – "Unauthorized"</h1>
+    <p>The server understands the request but refuses to execute it. The client does not have the appropriate permissions to access the resource, even after logging in</p>
+    <p>You will be redirected to the home page in <span id="countdown">10</span> seconds...</p>
+</div>
+<script>
+    // time to redirect (in sec)
+    var countdownTime = 10;
+    var countdownElement = document.getElementById("countdown");
+
+
+    var countdownInterval = setInterval(function () {
+        countdownTime--;
+        countdownElement.textContent = countdownTime;
+
+        if (countdownTime === 0) {
+            clearInterval(countdownInterval);
+
+            // actual URL
+            var currentURL = window.location.pathname;
+            window.location.href = '/'; //default
+
+        }
+    }, 1000);
+</script>
+</body>
+</html>
