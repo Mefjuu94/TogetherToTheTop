@@ -26,12 +26,15 @@ public class MapController {
                               @RequestParam("amountOfPeopleDriver") String amountOfPeopleDriver,
                               @RequestParam("isCheckedAnimals") String isCheckedAnimals,
                               @RequestParam("isCheckedGroup") String isCheckedGroup,
-                              @RequestParam("amountOfPeopleInGroup") String amountOfPeopleInGroup) {
+                              @RequestParam("amountOfPeopleInGroup") String amountOfPeopleInGroup,
+                              @RequestParam("destination") String destination) {
 
         String userEmail = getLoggedInUserName();
         CustomUserDAO customUserDAO = new CustomUserDAO();
         CustomUser customUser = customUserDAO.findCustomUserByEmail(userEmail);
         System.out.println(customUser.getCustomUserName());
+        int tripsCreated = customUser.getNumbersOfTrips() + 1; // get amount of trips created and add one to them
+        customUserDAO.updateUserStats(1,userEmail,"numberOfAnnouncements");
 
         int amountOfPeople = 0;
 
@@ -44,7 +47,7 @@ public class MapController {
 
         Trip trip = new Trip.TripBuilder()
                 .withTripDescription(description)
-                .withDestination("Destination...")
+                .withDestination(destination)
                 .withOwner(customUser)
                 .withTripDuration(allRouteDuration)
                 .withClosedGroup(Boolean.parseBoolean(isCheckedGroup))

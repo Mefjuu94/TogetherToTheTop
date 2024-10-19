@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeLogin = loginModal.querySelector(".close");
     const closeRegister = registerModal.querySelector(".close");
 
-
     if (loginButton) {
         loginButton.onclick = function (event) {
             event.preventDefault();

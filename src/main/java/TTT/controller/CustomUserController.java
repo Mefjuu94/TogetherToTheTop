@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
@@ -54,7 +53,18 @@ public class CustomUserController {
         model.addAttribute("rating",rating);
         model.addAttribute("rate",rate);
 
-        return "user";
+        return "myProfile";
+    }
+
+    @GetMapping("/findFriend")
+    public String findFriend(@RequestParam("friendName") String friendName, Model model) {
+
+        System.out.println("blabla findfriend");
+        CustomUser customUser = customUserDAO.findCustomUserByName(friendName);
+        System.out.println(customUser.getCustomUserName());
+        model.addAttribute("customUser",customUser);
+
+        return "announcement";
     }
 
     @PostMapping("/updateField")

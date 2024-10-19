@@ -3,8 +3,6 @@ package TTT.trips;
 import TTT.users.CustomUser;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,6 +50,7 @@ public class Trip {
         this.amountOfDriverPeople = builder.peopleInTheCar;
         this.ifTolerateAnimals = builder.tolerateAnimals;
         this.participantsId = builder.participantsId;
+
     }
 
     public Trip() {}
@@ -160,12 +159,12 @@ public class Trip {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Trip trip = (Trip) o;
-        return id == trip.id && closedGroup == trip.closedGroup && amountOfClosedGroup == trip.amountOfClosedGroup && peopleInTheCar == trip.peopleInTheCar && amountOfDriverPeople == trip.amountOfDriverPeople && ifTolerateAnimals == trip.ifTolerateAnimals && Objects.equals(tripDescription, trip.tripDescription) && Objects.equals(destination, trip.destination) && Objects.equals(tripDuration, trip.tripDuration) && Objects.equals(owner, trip.owner) && Objects.equals(participants, trip.participants);
+        return id == trip.id && closedGroup == trip.closedGroup && amountOfClosedGroup == trip.amountOfClosedGroup && peopleInTheCar == trip.peopleInTheCar && amountOfDriverPeople == trip.amountOfDriverPeople && ifTolerateAnimals == trip.ifTolerateAnimals && Objects.equals(tripDescription, trip.tripDescription) && Objects.equals(destination, trip.destination) && Objects.equals(tripDuration, trip.tripDuration) && Objects.equals(owner, trip.owner) && Objects.equals(participants, trip.participants) && Objects.equals(participantsId, trip.participantsId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tripDescription, destination, tripDuration, closedGroup, amountOfClosedGroup, peopleInTheCar, amountOfDriverPeople, ifTolerateAnimals, owner, participants);
+        return Objects.hash(id, tripDescription, destination, tripDuration, closedGroup, amountOfClosedGroup, peopleInTheCar, amountOfDriverPeople, ifTolerateAnimals, owner, participants, participantsId);
     }
 
     @Override
@@ -182,9 +181,9 @@ public class Trip {
                 ", ifTolerateAnimals=" + ifTolerateAnimals +
                 ", owner=" + owner +
                 ", participants=" + participants +
+                ", participantsId=" + participantsId +
                 '}';
     }
-
 
     // TripBuilder
     public static class TripBuilder {
@@ -252,5 +251,7 @@ public class Trip {
             this.participantsId = participantsId;
             return this;
         }
+
+
     }
 }

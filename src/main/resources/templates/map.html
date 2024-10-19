@@ -89,11 +89,7 @@
         </div>
     </form>
         <div>
-            <button id="save_announcement" type="button"
-                    th:arr1="${arr1}" th:arr2="${arr2}" th:arr3="${arr3}">
-                save announcement
-            </button>
-
+            <label for="destination"></label><input type="text" id="dest" placeholder="Your exact destination" />
         </div>
         <form id="saveForm"
             action="/sendData" method="POST">
@@ -107,6 +103,7 @@
             <input type="hidden" id="isCheckedAnimals" name="isCheckedAnimals">
             <input type="hidden" id="isCheckedGroup" name="isCheckedGroup">
             <input type="hidden" id="amountOfPeopleInGroup" name="amountOfPeopleInGroup">
+            <input type="hidden" id="destination" name="destination">
 <!--            must have! TOKEN-->
             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
             <button type="button" onclick="sendToJava()">

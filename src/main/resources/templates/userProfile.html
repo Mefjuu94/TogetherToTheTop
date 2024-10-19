@@ -13,7 +13,6 @@
     <h1>User Profile</h1>
 
     <div class="grid-container">
-        <!-- Edytowalne kafelki -->
         <div class="tile editable" data-field="username" data-label="Username">
             <h3>Username</h3>
             <p id="username-display" th:text="${customUser.getCustomUserName()}">Username</p>
@@ -26,8 +25,6 @@
             <h3>City</h3>
             <p id="city" th:text="${customUser.getCity()}">?</p>
         </div>
-
-        <!-- Nieedytowalne kafelki -->
         <div class="tile" data-field="email" data-label="Email">
             <h3>Email</h3>
             <p id="email-display" th:text="${customUser.getEmail()}">Email</p>

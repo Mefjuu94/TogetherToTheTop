@@ -13,8 +13,8 @@
     <div class="announcement-list">
 
         <a th:href="@{'/trips/' + ${trips.id}}" class="announcement-item" th:each="trips : ${trips}">
-            <h2 th:text="${trips.destination}">Destynacja</h2>
-            <p th:text="${trips.tripDescription}">Opis ogłoszenia</p>
+            <h2 th:text="${trips.destination}">Destination</h2>
+            <p th:text="${trips.owner.getCustomUserName()}">Creator Name</p>
            <span class="owner-icon">
                 <img th:if="${trips.owner.id == customUser.id}" th:src="@{/images/announcement/owner.png}"
                      alt="You are the owner of Trip" class="icon-image owner-icon">
@@ -22,7 +22,6 @@
                      alt="Add me to trip" class="icon-image flag-icon">
                 <img th:if="${trips.participantsId.contains(customUser.id)}" th:src="@{/images/announcement/ok.png}"
                       alt="You are already on this trip" class="icon-image flag-icon">
-
 </span>
         </a>
     </div>

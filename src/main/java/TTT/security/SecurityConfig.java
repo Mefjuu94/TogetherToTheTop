@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
@@ -31,10 +32,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
         security.
                 authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/user","/map","/sendData","/userProfile/","/updateField","/trips/","/addMe","/announcement", HttpMethod.POST).fullyAuthenticated()
+                        .requestMatchers("/user","/map","/sendData","/logout","/userProfile/","/updateField",
+                                "/trips/","/addMe","/announcement","/findFriend","/searchResults",
+                                HttpMethod.POST).fullyAuthenticated()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll().
-                        requestMatchers("/","/login","/register","/error/**")
+                        requestMatchers("/","/login","/logout","/register","/error/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin((form) -> form.loginPage("/login")
@@ -42,13 +45,6 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/")
                         .failureUrl("/login?error=true")
                         .permitAll());
-//                .logout((logout) -> logout
-//                .logoutUrl("/logout")  // URL do wylogowania /logout
-//                .logoutSuccessUrl("/login?logout=true")  // Po udanym wylogowaniu przekieruj na stronę logowania
-//                .invalidateHttpSession(true)  // Inwalidacja sesji
-//                .deleteCookies("JSESSIONID")  // Usunięcie ciasteczek sesji
-//                .permitAll());  // Pozwolenie wszystkim użytkownikom na dostęp do endpointu wylogowania
-
 
         return security.build();
     }
