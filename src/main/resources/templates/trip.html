@@ -49,12 +49,16 @@
         <!-- Właściciel i uczestnicy -->
         <div class="tile">
             <h3>Owner</h3>
-            <p th:text="${trip.ownerOfTrip.getCustomUserName()}">Owner Name</p>
+            <a th:href="@{'/userProfile/' + ${owner.getId()}}" class="owner-profile">
+                <p th:text="${owner.getCustomUserName()}">Owner Name</p>
+            </a>
         </div>
         <div class="tile">
             <h3>Participants</h3>
             <ul>
-                <li th:each="participant : ${trip.getParticipants()}" th:text="${participant.customUserName}">Participant 1</li>
+                <li th:each="participant : ${trip.getParticipants()}">
+                    <a th:href="@{'/userProfile/' +${participant.getId()}}" th:text="${participant.getCustomUserName()}">Participant</a>
+                </li>
             </ul>
         </div>
     </div>

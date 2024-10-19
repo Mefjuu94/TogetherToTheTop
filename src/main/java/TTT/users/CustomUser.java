@@ -35,6 +35,8 @@ public class CustomUser {
     @ManyToMany(mappedBy = "participants")
     private List<Trip> tripsParticipated; // Wycieczki, w których użytkownik uczestniczy
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserRating> ratings;
 
     public CustomUser() {
     }
@@ -133,17 +135,36 @@ public class CustomUser {
         this.city = city;
     }
 
+    public List<UserRating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<UserRating> ratings) {
+        this.ratings = ratings;
+    }
+
+    // Dodaj metodę pomocniczą do dodawania oceny
+    public void addRating(UserRating rating) {
+        ratings.add(rating);
+        rating.setUser(this);
+    }
+
+    public void removeRating(UserRating rating) {
+        ratings.remove(rating);
+        rating.setUser(null);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomUser that = (CustomUser) o;
-        return id == that.id && age == that.age && numbersOfTrips == that.numbersOfTrips && numbersOfAnnoucements == that.numbersOfAnnoucements && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(customUserName, that.customUserName) && Objects.equals(city, that.city) && Objects.equals(tripsOwned, that.tripsOwned) && Objects.equals(tripsParticipated, that.tripsParticipated);
+        return id == that.id && age == that.age && numbersOfTrips == that.numbersOfTrips && numbersOfAnnoucements == that.numbersOfAnnoucements && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(customUserName, that.customUserName) && Objects.equals(city, that.city) && Objects.equals(tripsOwned, that.tripsOwned) && Objects.equals(tripsParticipated, that.tripsParticipated) && Objects.equals(ratings, that.ratings);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, customUserName, age, numbersOfTrips, numbersOfAnnoucements, city, tripsOwned, tripsParticipated);
+        return Objects.hash(id, email, password, customUserName, age, numbersOfTrips, numbersOfAnnoucements, city, tripsOwned, tripsParticipated, ratings);
     }
 
     @Override
@@ -159,15 +180,8 @@ public class CustomUser {
                 ", city='" + city + '\'' +
                 ", tripsOwned=" + tripsOwned +
                 ", tripsParticipated=" + tripsParticipated +
-                '}';
-    }
-
-    @Override
-    public String toString() {
-        return "CustomUser{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
+                ", ratings=" + ratings +
                 '}';
     }
 }
+

@@ -45,9 +45,12 @@ public class CustomUserDAO {
             if (transaction != null) transaction.rollback(); // back transaction when is error
             e.printStackTrace();
             return false;
-        } finally {
-            session.close(); // close session
         }
+    }
+
+    public List<CustomUser> listAllUsers() {
+        Session session = sessionFactory.openSession();
+        return session.createQuery("SELECT a FROM CustomUser a", CustomUser.class).getResultList();
     }
 
 

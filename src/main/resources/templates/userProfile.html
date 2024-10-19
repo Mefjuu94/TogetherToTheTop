@@ -10,7 +10,7 @@
 <div class="background-image" style="background-image: url('/images/userProfile/backgroundUserProfile.jpg');"></div>
 
 <div class="profile-container">
-    <h1>My Profile</h1>
+    <h1>User Profile</h1>
 
     <div class="grid-container">
         <!-- Edytowalne kafelki -->
@@ -38,7 +38,7 @@
         </div>
         <div class="tile">
             <h3>Trips Owned</h3>
-            <p th:text="${numberOfTripsOwned}">?</p>
+            <p th:text="${customUser.numbersOfTrips}">?</p>
         </div>
         <div class="tile">
             <h3>Trips Participated</h3>
@@ -48,25 +48,6 @@
             <h3>Rating</h3>
             <p th:text="${rate}">?</p>
         </div>
-    </div>
-</div>
-
-<!-- Modal do edycji -->
-<div id="edit-modal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2 id="modal-header">Edit Information</h2> <!-- Nagłówek zmienia się dynamicznie -->
-        <form th:action="@{/updateField}" method="POST">
-            <input type="hidden" name="fieldName" id="fieldName"> <!-- Nazwa pola np. email, username -->
-            <div>
-                <label>
-                    <input type="text" name="newValue" id="field-value" placeholder="Enter new value" required>
-                </label>
-            </div>
-            <input type="submit" value="Save">
-            <!-- Token CSRF dla zabezpieczenia -->
-            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-        </form>
     </div>
 </div>
 

@@ -4,6 +4,7 @@ import TTT.users.CustomUser;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +37,8 @@ public class Trip {
             inverseJoinColumns = @JoinColumn(name = "user_id") // Kolumna dla CustomUser
     )
     private List<CustomUser> participants; // Lista uczestników
+    @ElementCollection
+    private List<Long> participantsId;
 
     // Prywatny konstruktor, używający buildera
     private Trip(TripBuilder builder) {
@@ -48,11 +51,13 @@ public class Trip {
         this.peopleInTheCar = builder.driverPeople;
         this.amountOfDriverPeople = builder.peopleInTheCar;
         this.ifTolerateAnimals = builder.tolerateAnimals;
+        this.participantsId = builder.participantsId;
     }
 
     public Trip() {}
 
     // Gettery i Settery
+
 
     public long getId() {
         return id;
@@ -76,14 +81,6 @@ public class Trip {
 
     public void setDestination(String destination) {
         this.destination = destination;
-    }
-
-    public CustomUser getOwnerOfTrip() {
-        return owner;
-    }
-
-    public void setOwnerOfTrip(CustomUser customUser) {
-        this.owner = customUser;
     }
 
     public String getTripDuration() {
@@ -114,8 +111,8 @@ public class Trip {
         return peopleInTheCar;
     }
 
-    public void setPeopleInTheCar(boolean driverPeople) {
-        this.peopleInTheCar = driverPeople;
+    public void setPeopleInTheCar(boolean peopleInTheCar) {
+        this.peopleInTheCar = peopleInTheCar;
     }
 
     public int getAmountOfDriverPeople() {
@@ -126,12 +123,36 @@ public class Trip {
         this.amountOfDriverPeople = amountOfDriverPeople;
     }
 
+    public boolean isIfTolerateAnimals() {
+        return ifTolerateAnimals;
+    }
+
+    public void setIfTolerateAnimals(boolean ifTolerateAnimals) {
+        this.ifTolerateAnimals = ifTolerateAnimals;
+    }
+
+    public CustomUser getOwner() {
+        return owner;
+    }
+
+    public void setOwner(CustomUser owner) {
+        this.owner = owner;
+    }
+
     public List<CustomUser> getParticipants() {
         return participants;
     }
 
     public void setParticipants(List<CustomUser> participants) {
         this.participants = participants;
+    }
+
+    public List<Long> getParticipantsId() {
+        return participantsId;
+    }
+
+    public void setParticipantsId(List<Long> participantsId) {
+        this.participantsId = participantsId;
     }
 
     @Override
@@ -164,6 +185,7 @@ public class Trip {
                 '}';
     }
 
+
     // TripBuilder
     public static class TripBuilder {
         private String tripDescription;
@@ -175,6 +197,7 @@ public class Trip {
         private int peopleInTheCar;
         private CustomUser owner;
         private boolean tolerateAnimals;
+        private List<Long> participantsId;
 
         public Trip build() {
             return new Trip(this); // Zwraca obiekt korzystający z danych buildera
@@ -222,6 +245,11 @@ public class Trip {
 
         public TripBuilder withAnimals(boolean tolerateAnimals) {
             this.tolerateAnimals = tolerateAnimals;
+            return this;
+        }
+
+        public TripBuilder withParticipantsIds(List<Long> participantsId) {
+            this.participantsId = participantsId;
             return this;
         }
     }

@@ -14,5 +14,6 @@
         <mapping class="TTT.peaksAndSummitsHandler.Top"/>
         <mapping class="TTT.users.CustomUser"/>
         <mapping class="TTT.trips.Trip"/>
+        <mapping class="TTT.users.UserRating"/>
     </session-factory>
 </hibernate-configuration>

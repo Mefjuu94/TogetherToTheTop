@@ -1,17 +1,13 @@
 package TTT;
 
 import TTT.databaseUtils.CustomUserDAO;
+import TTT.databaseUtils.UserRatingDAO;
 import TTT.users.CustomUser;
+import TTT.users.UserRating;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
@@ -23,46 +19,15 @@ public class TogetherToTheTopApplication {
     public static void main(String[] args) throws IOException {
         SpringApplication.run(TogetherToTheTopApplication.class, args);
 
-        TopDAO topDAO = new TopDAO();
-
-        //fill database from file
-//            PeaksAndSummitsHandler.readAndCreateObjectsFromXLSX();
-//        for (int i = 0; i < PeaksAndSummitsHandler.polishSummits.size(); i++) {
-//            topDAO.addTop(PeaksAndSummitsHandler.polishSummits.get(i));
-//        }
-
-        //work :D
-//        List<Top> rysy = topDAO.findSummitByName("Rysy");
-//        for (Top top : rysy) {
-//            System.out.println(top);
-//        }
-
-//        List<Top> myHeight = topDAO.findSummitByHeight(1800);
+//        CustomUserDAO customUserDAO = new CustomUserDAO();
+//        List<CustomUser> users = customUserDAO.listAllUsers();
+//        CustomUser a = users.get(1);
+//        CustomUser b = users.get(0);
+//        System.out.println(a.getCustomUserName() + " " + b.getCustomUserName());
 //
-//        for (Top top : myHeight) {
-//            System.out.println(top);
-//        }
-
-        CustomUser cs = new CustomUser("costam@mail.com","123");
-        CustomUserDAO dao = new CustomUserDAO();
-        dao.saveUser(cs);
-
-        System.out.println(dao.findCustomUser("costam@mail.com").getId());
-        System.out.println(dao.deleteCustomUser("costam@mail.com"));
-
-
-//        List<Top> summits = topDAO.findSummitByName("trzy");
-//
-//
-//        for (Top summit : summits) {
-//            System.out.println(summit);
-//        }
-
-       // System.out.println("Ilość szczytów: " + summits.size());
-
-
-
-
+//        UserRating rating = new UserRating(4,"Dobry kompan",a,b);
+//        UserRatingDAO userRatingDAO = new UserRatingDAO();
+//        System.out.println("Trying to rate: " + userRatingDAO.addRate(rating));
 
     }
 }

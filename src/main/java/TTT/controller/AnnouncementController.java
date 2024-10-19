@@ -4,6 +4,7 @@ import TTT.databaseUtils.CustomUserDAO;
 import TTT.databaseUtils.TripDAO;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
+import TTT.users.UserRating;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,27 +31,13 @@ public class AnnouncementController {
         CustomUserDAO customUserDAO = new CustomUserDAO();
 
         boolean flag = false;
-        List<Long> tripsID = new ArrayList<>();
 
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
-        for (int i = 0; i < trips.size() ; i++) {
-            List<CustomUser> participant = trips.get(i).getParticipants();
-            for (int j = 0; j < participant.size(); j++) {
-                if (participant.get(j).getId() == customUser.getId()){
-                    flag = true;
-                    break;
-                }
-                System.out.println(flag +  " " + trips.get(i).getId());
-                if (flag){
-                   tripsID.add(trips.get(i).getId()) ;
-                }
-            }
-        }
 
         model.addAttribute("trips", trips);
         model.addAttribute("customUser",customUser);
         model.addAttribute("flag",flag);
-        model.addAttribute("tripsID",tripsID);
+
 
         return "announcement";
     }
@@ -62,9 +49,36 @@ public class AnnouncementController {
 
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
         Trip trip = tripDAO.findTripID(id);
+        CustomUser owner = trip.getOwner();
         model.addAttribute("trip", trip);
         model.addAttribute("customUser", customUser);
+        model.addAttribute("owner", owner);
+
         return "trip";
+    }
+
+    @GetMapping("/userProfile/{id}")
+    public String getAnyUserProfile(@PathVariable Long id, Model model) {
+        CustomUserDAO customUserDAO = new CustomUserDAO();
+
+        CustomUser customUser = customUserDAO.findCustomUserByID(String.valueOf(id));
+        List<UserRating> rating = customUser.getRatings();
+        int rate = 0;
+
+        if (!rating.isEmpty()){
+            for (int i = 0; i < rating.size(); i++) {
+                rate += rating.get(i).getRating();
+            }
+            rate = rate/rating.size();
+        }else {
+            rate = 1;
+        }
+
+        model.addAttribute("customUser", customUser);
+        model.addAttribute("rating",rating);
+        model.addAttribute("rate",rate);
+
+        return "userProfile";
     }
 
     @PostMapping("/addMe")
@@ -87,13 +101,17 @@ public class AnnouncementController {
             }
         }
 
-        if (trip.getOwnerOfTrip().getId() == (customUser.getId())) {
+        if (trip.getOwner().getId() == (customUser.getId())) {
             newUserToTrip = true;
             System.out.println("You are owner of This Trip!");
         } else {
 
             // if user didnt exist in list add
             if (!newUserToTrip) {
+                List<Long> participantId = trip.getParticipantsId();
+                participantId.add(customUser.getId());
+                trip.setParticipantsId(participantId);
+
                 List<CustomUser> participants = trip.getParticipants();
                 participants.add(customUser);
                 trip.setParticipants(participants);
@@ -128,6 +146,5 @@ public class AnnouncementController {
         }
         return null;
     }
-
 
 }

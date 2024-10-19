@@ -31,7 +31,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
         security.
                 authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/user","/map","/sendData","/updateField","/trips/","/addMe","/announcement", HttpMethod.POST).fullyAuthenticated()
+                        .requestMatchers("/user","/map","/sendData","/userProfile/","/updateField","/trips/","/addMe","/announcement", HttpMethod.POST).fullyAuthenticated()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll().
                         requestMatchers("/","/login","/register","/error/**")
