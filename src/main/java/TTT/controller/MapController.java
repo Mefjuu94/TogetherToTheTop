@@ -2,6 +2,7 @@ package TTT.controller;
 
 import TTT.databaseUtils.CustomUserDAO;
 import TTT.databaseUtils.TripDAO;
+import TTT.trips.Comments;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
 import org.springframework.security.core.Authentication;
@@ -34,7 +35,8 @@ public class MapController {
         CustomUser customUser = customUserDAO.findCustomUserByEmail(userEmail);
         System.out.println(customUser.getCustomUserName());
         int tripsCreated = customUser.getNumbersOfTrips() + 1; // get amount of trips created and add one to them
-        customUserDAO.updateUserStats(1,userEmail,"numberOfAnnouncements");
+        customUserDAO.updateUserStats(tripsCreated,userEmail,"numberOfAnnouncements");
+
 
         int amountOfPeople = 0;
 
@@ -55,10 +57,10 @@ public class MapController {
                 .withDriverPeople(Boolean.parseBoolean(driverCheck))
                 .withAmountOfDriverPeople(amountOfPeople)
                 .withAnimals(Boolean.parseBoolean(isCheckedAnimals))
+//                .withWaypoints(waypoints)
                 .build();
 
         tripDAO.addAnnouncement(trip);
-
         //todo add distance
 
         return "actionSuccess";

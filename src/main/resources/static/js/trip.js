@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
     var tripId = document.getElementById("IDofTrip").textContent;
     var userId = document.getElementById("USER_id").textContent;
 
-
     addButton.onclick = function (event) {
         console.log("trip id " + tripId);
         console.log("my id: " + userId);
@@ -14,5 +13,15 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("saveForm").submit(); // Wysyła formularz
     }
 
+
+    const deleteButton = document.getElementById("delete_comment");
+
+    // Sprawdzenie, czy przycisk istnieje (ponieważ jest warunkowy)
+    if (deleteButton) {
+        // Dodanie event listenera na kliknięcie
+        deleteButton.addEventListener("click", function() {
+            console.log("delete button");
+        });
+    }
 
 });

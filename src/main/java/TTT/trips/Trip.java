@@ -34,6 +34,7 @@ public class Trip {
             joinColumns = @JoinColumn(name = "trip_id"), // Kolumna dla Trip
             inverseJoinColumns = @JoinColumn(name = "user_id") // Kolumna dla CustomUser
     )
+
     private List<CustomUser> participants; // Lista uczestników
     @ElementCollection
     private List<Long> participantsId;
@@ -50,6 +51,7 @@ public class Trip {
         this.amountOfDriverPeople = builder.peopleInTheCar;
         this.ifTolerateAnimals = builder.tolerateAnimals;
         this.participantsId = builder.participantsId;
+//        this.waypoints = builder.waypoints;
 
     }
 
@@ -154,6 +156,14 @@ public class Trip {
         this.participantsId = participantsId;
     }
 
+//    public String getWaypoints() {
+//        return waypoints;
+//    }
+//
+//    public void setWaypoints(String waypoints) {
+//        this.waypoints = waypoints;
+//    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -179,8 +189,7 @@ public class Trip {
                 ", peopleInTheCar=" + peopleInTheCar +
                 ", amountOfDriverPeople=" + amountOfDriverPeople +
                 ", ifTolerateAnimals=" + ifTolerateAnimals +
-                ", owner=" + owner +
-                ", participants=" + participants +
+                ", owner=" + owner.getCustomUserName() +
                 ", participantsId=" + participantsId +
                 '}';
     }
@@ -197,6 +206,7 @@ public class Trip {
         private CustomUser owner;
         private boolean tolerateAnimals;
         private List<Long> participantsId;
+        private String waypoints;
 
         public Trip build() {
             return new Trip(this); // Zwraca obiekt korzystający z danych buildera
@@ -249,6 +259,11 @@ public class Trip {
 
         public TripBuilder withParticipantsIds(List<Long> participantsId) {
             this.participantsId = participantsId;
+            return this;
+        }
+
+        public TripBuilder withWaypoints(String waypoints) {
+            this.waypoints = waypoints;
             return this;
         }
 

@@ -1,7 +1,9 @@
 package TTT.controller;
 
+import TTT.databaseUtils.CommentsDAO;
 import TTT.databaseUtils.CustomUserDAO;
 import TTT.databaseUtils.TripDAO;
+import TTT.trips.Comments;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
 import TTT.users.UserRating;
@@ -22,6 +24,7 @@ import java.util.List;
 public class AnnouncementController {
 
     TripDAO tripDAO = new TripDAO();
+    CommentsDAO commentsDAO = new CommentsDAO();
 
     @GetMapping("/announcement")
     public String getAnnouncementsPage(Model model) {
@@ -38,7 +41,6 @@ public class AnnouncementController {
         model.addAttribute("customUser",customUser);
         model.addAttribute("flag",flag);
 
-
         return "announcement";
     }
 
@@ -50,9 +52,22 @@ public class AnnouncementController {
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
         Trip trip = tripDAO.findTripID(id);
         CustomUser owner = trip.getOwner();
+        List<Comments> comments = commentsDAO.findByTripID(trip.getId());
+
+        boolean isParticipant = false;
+
+        for (int i = 0; i < trip.getParticipantsId().size(); i++) {
+            if (trip.getParticipantsId().get(i) == customUser.getId()) {
+                isParticipant = true;
+                break;
+            }
+        }
+
         model.addAttribute("trip", trip);
         model.addAttribute("customUser", customUser);
         model.addAttribute("owner", owner);
+        model.addAttribute("isParticipant", isParticipant);
+        model.addAttribute("comments", comments);
 
         return "trip";
     }
@@ -132,6 +147,23 @@ public class AnnouncementController {
             }
         }
         return "actionSuccess";
+    }
+
+    @PostMapping("/addComment")
+    public String addComment(@RequestParam long tripIdComment, @RequestParam String comment, @RequestParam long userIdComment,@RequestParam String userName) {
+
+
+        commentsDAO.addComment(new Comments(comment, userIdComment, tripIdComment,userName));
+
+        return "redirect:/trips/" + tripIdComment;
+    }
+
+    @PostMapping("/deleteComment")
+    public String deleteComment(@RequestParam String idComment,@RequestParam String tripID) {
+
+        commentsDAO.deleteComment(Long.parseLong(idComment));
+
+        return "redirect:/trips/" + tripID;
     }
 
     private String getLoggedInUserName() {

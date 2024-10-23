@@ -33,7 +33,7 @@ public class SecurityConfig {
         security.
                 authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/user","/map","/sendData","/logout","/userProfile/","/updateField",
-                                "/trips/","/addMe","/announcement","/findFriend","/searchResults",
+                                "/trips/","/addComment","/addMe","/announcement","/findFriend","/searchResults",
                                 HttpMethod.POST).fullyAuthenticated()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll().

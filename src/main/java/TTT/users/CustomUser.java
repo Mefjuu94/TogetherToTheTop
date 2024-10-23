@@ -179,8 +179,6 @@ public class CustomUser {
                 ", numbersOfAnnoucements=" + numbersOfAnnoucements +
                 ", city='" + city + '\'' +
                 ", tripsOwned=" + tripsOwned +
-                ", tripsParticipated=" + tripsParticipated +
-                ", ratings=" + ratings +
                 '}';
     }
 }

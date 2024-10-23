@@ -6,7 +6,8 @@
 }
 
 body, html {
-    height: 100%;
+    min-height: 100%;
+    overflow: auto;
 }
 
 .background-image {
@@ -83,3 +84,42 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+
+
+#commentSection {
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.comment-item {
+    margin: 0 auto; /* Wyśrodkowanie elementu */
+    max-width: 60%;
+    background-color: rgba(255, 255, 255, 0.9); /* Jasne tło jak kafelki */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Cień jak dla kafelków */
+}
+
+.comment-username {
+    font-weight: bold;
+    color: #007bff; /* Ten sam kolor co w kafelkach */
+    text-decoration: none;
+}
+
+.comment-username:hover {
+    text-decoration: underline;
+}
+
+.comment-text {
+    margin: 10px 0;
+    color: #555; /* Ten sam kolor co w kafelkach */
+}
+
+.comment-date {
+    display: block;
+    font-size: 0.85em;
+    color: #777;
+    margin-top: 10px;
+}
+

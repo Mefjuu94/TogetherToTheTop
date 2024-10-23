@@ -72,12 +72,46 @@
         <!--            must have! TOKEN-->
         <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
 
-    <div class="button-container">
-        <button id="add_button">Join to Trip</button>
-    </div>
+        <div id="button-container">
+        <button id="add_button" class="add_button"
+                th:if="!${trip.owner.getId() == customUser.getId() || isParticipant}">
+            Join to Trip
+        </button>
+        </div>
+    </form>
+
+    <form th:if="${isParticipant or customUser.getId() == trip.getOwner().getId()}" id="commentForm" action="/addComment" method="POST">
+        <label>
+            <textarea id="comment" name="comment" rows="4" cols="50"></textarea>
+        </label>
+        <input type="hidden" id="userIdComment" name="userIdComment" th:value="${customUser.getId()}">
+        <input type="hidden" id="userName" name="userName" th:value="${customUser.customUserName}">
+        <input type="hidden" id="tripIdComment" name="tripIdComment" th:value="${trip.getId()}">
+        <!--            must have! TOKEN-->
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+
+        <div id="commentButton-container">
+            <button id="addCommentButton" class="addCommentButton">
+                add comment
+            </button>
+        </div>
     </form>
 </div>
+<div id="commentSection">
+    <ul>
+        <li th:each="comment : ${comments}" class="comment-item">
+            <!-- Link do profilu użytkownika -->
+            <a th:href="@{'/userProfile/' + ${comment.getUserID()}}" class="comment-username" th:text="${comment.getNameOfComentator()}">User</a>
 
+            <!-- Komentarz użytkownika -->
+            <p class="comment-text" th:text="${comment.comment}">This is a comment text.</p>
+
+            <!-- Data komentarza -->
+            <span class="comment-date" th:text="${comment.getDateOfComment()}"></span>
+            <button th:if="${comment.getUserID() == customUser.getId()}" id="delete_comment">delete comment</button>
+        </li>
+    </ul>
+</div>
 
 
 
