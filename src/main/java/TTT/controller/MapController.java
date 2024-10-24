@@ -2,6 +2,7 @@ package TTT.controller;
 
 import TTT.databaseUtils.CustomUserDAO;
 import TTT.databaseUtils.TripDAO;
+import TTT.trips.Comments;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
 import org.springframework.security.core.Authentication;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.time.LocalDateTime;
 
 @Controller
 public class MapController {
@@ -26,12 +29,21 @@ public class MapController {
                               @RequestParam("amountOfPeopleDriver") String amountOfPeopleDriver,
                               @RequestParam("isCheckedAnimals") String isCheckedAnimals,
                               @RequestParam("isCheckedGroup") String isCheckedGroup,
-                              @RequestParam("amountOfPeopleInGroup") String amountOfPeopleInGroup) {
+                              @RequestParam("amountOfPeopleInGroup") String amountOfPeopleInGroup,
+                              @RequestParam("destination") String destination,
+                             @RequestParam("date") String date) {
 
+
+        System.out.println(date);
+        LocalDateTime dateTime = LocalDateTime.parse(date);
+        System.out.println("date formated: " + dateTime);
         String userEmail = getLoggedInUserName();
         CustomUserDAO customUserDAO = new CustomUserDAO();
         CustomUser customUser = customUserDAO.findCustomUserByEmail(userEmail);
         System.out.println(customUser.getCustomUserName());
+        int tripsCreated = customUser.getNumbersOfTrips() + 1; // get amount of trips created and add one to them
+        customUserDAO.updateUserStats(tripsCreated,userEmail,"numberOfAnnouncements");
+
 
         int amountOfPeople = 0;
 
@@ -44,7 +56,7 @@ public class MapController {
 
         Trip trip = new Trip.TripBuilder()
                 .withTripDescription(description)
-                .withDestination("Destination...")
+                .withDestination(destination)
                 .withOwner(customUser)
                 .withTripDuration(allRouteDuration)
                 .withClosedGroup(Boolean.parseBoolean(isCheckedGroup))
@@ -52,10 +64,11 @@ public class MapController {
                 .withDriverPeople(Boolean.parseBoolean(driverCheck))
                 .withAmountOfDriverPeople(amountOfPeople)
                 .withAnimals(Boolean.parseBoolean(isCheckedAnimals))
+                .withWaypoints(waypoints)
+                .withTripDataTime(dateTime)
                 .build();
 
         tripDAO.addAnnouncement(trip);
-
         //todo add distance
 
         return "actionSuccess";

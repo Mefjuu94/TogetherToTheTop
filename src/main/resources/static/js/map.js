@@ -644,6 +644,8 @@ function sendToJava() {
     const isCheckedAnimals = document.getElementById('animals').checked;
     const isCheckedGroup = document.getElementById('closedGroupCheckbox').checked;
     var amountOfPeopleInGroup = document.getElementById('peopleInput').value;
+    var dest = document.getElementById('dest').value;
+    var date = document.getElementById('dateTime').value;
 
 
     // Ustawianie wartości w polach ukrytych formularza
@@ -657,6 +659,8 @@ function sendToJava() {
     document.getElementById('isCheckedAnimals').bool = isCheckedAnimals;
     document.getElementById('isCheckedGroup').value = isCheckedGroup;
     document.getElementById('amountOfPeopleInGroup').value = amountOfPeopleInGroup;
+    document.getElementById('destination').value = dest;
+    document.getElementById('date').value = date;
 
     document.getElementById('saveForm').submit();
 }
