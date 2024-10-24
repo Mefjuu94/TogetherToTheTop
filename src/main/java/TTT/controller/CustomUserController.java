@@ -57,14 +57,13 @@ public class CustomUserController {
     }
 
     @GetMapping("/findFriend")
-    public String findFriend(@RequestParam("friendName") String friendName, Model model) {
+    public String findFriend(@RequestParam String friendName, Model model) {
 
-        System.out.println("blabla findfriend");
-        CustomUser customUser = customUserDAO.findCustomUserByName(friendName);
-        System.out.println(customUser.getCustomUserName());
-        model.addAttribute("customUser",customUser);
+        System.out.println("Search name: " + friendName);
+        List <CustomUser> customUsers = customUserDAO.findCustomUserByName(friendName);
+        model.addAttribute("customUser",customUsers);
 
-        return "announcement";
+        return "results";
     }
 
     @PostMapping("/updateField")

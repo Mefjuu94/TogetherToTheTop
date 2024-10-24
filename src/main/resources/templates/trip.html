@@ -18,12 +18,12 @@
             <p id="IDofTrip" th:text="${trip.id}">Trip ID</p>
         </div>
         <div class="tile">
-            <h3>Trip Description</h3>
-            <p th:text="${trip.tripDescription}">This is a trip description</p>
-        </div>
-        <div class="tile">
             <h3>Trip Duration</h3>
             <p th:text="${trip.tripDuration}">3 days</p>
+        </div>
+        <div class="tile">
+            <h3>Trip Time</h3>
+            <p th:text="${trip.getTripDateTime()}">now</p>
         </div>
 
         <!-- Grupa -->
@@ -42,7 +42,7 @@
             <p th:text="${trip.peopleInTheCar ? 'Yes' : 'No'}">No</p>
         </div>
         <div class="tile">
-            <h3>Amount of Driver People</h3>
+            <h3>Amount of People to take</h3>
             <p th:text="${trip.amountOfDriverPeople}">3</p>
         </div>
 
@@ -61,7 +61,6 @@
                 </li>
             </ul>
         </div>
-    </div>
 
     <form id="saveForm"
           action="/addMe" method="POST">
@@ -80,6 +79,19 @@
         </div>
     </form>
 
+
+</div>
+
+    <div id="description_container">
+    </div>
+    <div id="description">
+        <div class="tile">
+            <h3>Trip Description</h3>
+            <p th:text="${trip.tripDescription}">This is a trip description</p>
+        </div>
+    </div>
+    </div>
+<div id="comment_form">
     <form th:if="${isParticipant or customUser.getId() == trip.getOwner().getId()}" id="commentForm" action="/addComment" method="POST">
         <label>
             <textarea id="comment" name="comment" rows="4" cols="50"></textarea>
@@ -97,6 +109,8 @@
         </div>
     </form>
 </div>
+
+
 <div id="commentSection">
     <ul>
         <li th:each="comment : ${comments}" class="comment-item">
@@ -108,15 +122,14 @@
 
             <!-- Data komentarza -->
             <span class="comment-date" th:text="${comment.getDateOfComment()}"></span>
-            <button th:if="${comment.getUserID() == customUser.getId()}" id="delete_comment">delete comment</button>
+            <form th:action="@{/deleteComment}" method="post" th:if="${comment.getUserID() == customUser.getId()}">
+                <button type="submit">Delete Comment</button>
+                <input type="hidden" id="idComment" name="idComment" th:value="${comment.getID()}">
+                <input type="hidden" name="idOfTrip" th:value="${comment.getTripID()}">
+            </form>
         </li>
     </ul>
 </div>
-
-
-
-
-
 <script type="text/javascript" th:src="@{/js/trip.js}"></script>
 </body>
 </html>

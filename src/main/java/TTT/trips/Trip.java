@@ -3,6 +3,7 @@ package TTT.trips;
 import TTT.users.CustomUser;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ public class Trip {
     @GeneratedValue
     private long id;
 
+    @Column(length = 1000)
     public String tripDescription;
     public String destination;
     private String tripDuration;
@@ -22,6 +24,9 @@ public class Trip {
     private int amountOfDriverPeople;
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean ifTolerateAnimals;
+    private LocalDateTime tripDateTime;
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean tripVisible = true;
 
     // Właściciel wycieczki (ManyToOne)
     @ManyToOne
@@ -38,6 +43,8 @@ public class Trip {
     private List<CustomUser> participants; // Lista uczestników
     @ElementCollection
     private List<Long> participantsId;
+    @Column(length = 10000)
+    private String waypoints;
 
     // Prywatny konstruktor, używający buildera
     private Trip(TripBuilder builder) {
@@ -51,8 +58,8 @@ public class Trip {
         this.amountOfDriverPeople = builder.peopleInTheCar;
         this.ifTolerateAnimals = builder.tolerateAnimals;
         this.participantsId = builder.participantsId;
-//        this.waypoints = builder.waypoints;
-
+        this.waypoints = builder.waypoints;
+        this.tripDateTime = builder.tripDateTime;
     }
 
     public Trip() {}
@@ -156,13 +163,21 @@ public class Trip {
         this.participantsId = participantsId;
     }
 
-//    public String getWaypoints() {
-//        return waypoints;
-//    }
-//
-//    public void setWaypoints(String waypoints) {
-//        this.waypoints = waypoints;
-//    }
+    public String getWaypoints() {return waypoints;}
+
+    public void setWaypoints(String waypoints) {this.waypoints = waypoints;}
+
+    public LocalDateTime getTripDateTime() {return tripDateTime;}
+
+    public void setTripDateTime(LocalDateTime tripDateTime) {this.tripDateTime = tripDateTime;}
+
+    public boolean isTripVisible() {
+        return tripVisible;
+    }
+
+    public void setTripVisible(boolean tripVisible) {
+        this.tripVisible = tripVisible;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -177,6 +192,7 @@ public class Trip {
         return Objects.hash(id, tripDescription, destination, tripDuration, closedGroup, amountOfClosedGroup, peopleInTheCar, amountOfDriverPeople, ifTolerateAnimals, owner, participants, participantsId);
     }
 
+
     @Override
     public String toString() {
         return "Trip{" +
@@ -189,8 +205,10 @@ public class Trip {
                 ", peopleInTheCar=" + peopleInTheCar +
                 ", amountOfDriverPeople=" + amountOfDriverPeople +
                 ", ifTolerateAnimals=" + ifTolerateAnimals +
-                ", owner=" + owner.getCustomUserName() +
+                ", tripDateTime=" + tripDateTime +
+                ", owner=" + owner +
                 ", participantsId=" + participantsId +
+                ", waypoints='" + waypoints + '\'' +
                 '}';
     }
 
@@ -207,6 +225,7 @@ public class Trip {
         private boolean tolerateAnimals;
         private List<Long> participantsId;
         private String waypoints;
+        private LocalDateTime tripDateTime;
 
         public Trip build() {
             return new Trip(this); // Zwraca obiekt korzystający z danych buildera
@@ -267,6 +286,10 @@ public class Trip {
             return this;
         }
 
+        public TripBuilder withTripDataTime(LocalDateTime tripDateTime) {
+            this.tripDateTime = tripDateTime;
+            return this;
+        }
 
     }
 }

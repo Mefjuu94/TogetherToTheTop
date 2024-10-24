@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -30,6 +31,7 @@ public class AnnouncementController {
     public String getAnnouncementsPage(Model model) {
         TripDAO tripDAO = new TripDAO();
         ArrayList<Trip> trips = new ArrayList<>(tripDAO.listAllAnnouncements());
+        Collections.reverse(trips);
         String email = getLoggedInUserName();
         CustomUserDAO customUserDAO = new CustomUserDAO();
 
@@ -152,18 +154,26 @@ public class AnnouncementController {
     @PostMapping("/addComment")
     public String addComment(@RequestParam long tripIdComment, @RequestParam String comment, @RequestParam long userIdComment,@RequestParam String userName) {
 
-
         commentsDAO.addComment(new Comments(comment, userIdComment, tripIdComment,userName));
 
         return "redirect:/trips/" + tripIdComment;
     }
 
     @PostMapping("/deleteComment")
-    public String deleteComment(@RequestParam String idComment,@RequestParam String tripID) {
+    public String deleteComment(@RequestParam String idComment,@RequestParam String idOfTrip) {
 
-        commentsDAO.deleteComment(Long.parseLong(idComment));
+        long commentID = Long.parseLong(idComment);
 
-        return "redirect:/trips/" + tripID;
+        System.out.println(commentID);
+        System.out.println(idOfTrip);
+
+        if (commentsDAO.deleteComment(commentID)){
+            System.out.println("comment was deleted!");
+        }else {
+            System.out.println("something went wrong");
+        }
+
+        return "redirect:/trips/" + idOfTrip;
     }
 
     private String getLoggedInUserName() {

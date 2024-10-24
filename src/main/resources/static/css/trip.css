@@ -22,16 +22,31 @@ body, html {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 40%;
     margin: 0 auto;
     padding: 20px;
+    float:right;
+}
+
+.description_container {
+    max-width: 40%;
+    margin: 0 auto;
+    padding: 20px;
+    float:right;
+}
+
+.comment_form{
+    max-width: 40%;
+    margin: 0 auto;
+    padding: 20px;
+    float:right;
 }
 
 h1 {
     text-align: center;
     margin-bottom: 20px;
     font-size: 2.5rem;
-    color: #333;
+    color: black;
 }
 
 .grid-container {
@@ -56,7 +71,7 @@ h1 {
 }
 
 .tile p {
-    margin-bottom: 10px;
+    /*margin-bottom: 10px;*/
     color: #555;
 }
 

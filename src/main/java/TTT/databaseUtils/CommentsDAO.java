@@ -50,6 +50,13 @@ public class CommentsDAO {
     public boolean deleteComment(long id) {
 
         Session session = null;
+        Comments comment = findCommentID(id);
+
+        if (comment == null){
+            System.out.println("no comment with this ID!");
+            return false;
+        }
+
         try {
             session = sessionFactory.openSession();
             session.beginTransaction();
@@ -58,7 +65,7 @@ public class CommentsDAO {
             CriteriaDelete<Comments> delete = cb.createCriteriaDelete(Comments.class);
 
             Root<Comments> authorRoot = delete.from(Comments.class);
-            delete.where(cb.equal(authorRoot.get("ID"), Comments.class));
+            delete.where(cb.equal(authorRoot.get("id"), id));
 
             session.createMutationQuery(delete).executeUpdate();
             session.getTransaction().commit();
@@ -74,6 +81,7 @@ public class CommentsDAO {
                 session.close();
             }
         }
+
     }
 
     public List<Comments> listAllAnnouncements() {

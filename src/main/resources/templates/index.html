@@ -19,7 +19,7 @@
             </div>
             <div th:if="${#authorization.expression('isAuthenticated()')}">
                 <a href="#" th:href="@{logout}" th:method="post">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <img src="/images/mainMenu_png/user-logout.png" alt="User Profile">
                     <span>Logout</span>
                 </a>
@@ -33,17 +33,16 @@
                 </a>
             </div>
             <div th:if="${#authorization.expression('isAuthenticated()')}">
-                <a href="/findFriend" id="findFriend">
-                    <img src="/images/mainMenu_png/find_friend.png" alt="Find Friend">
-                    <span>Find Friend</span>
-                </a>
-                <input type="text" id="searchFriend" placeholder="Search user by name..." />
-                <form id="saveForm"
-                      action="/findFriend" method="POST">
-                    <input type="hidden" id="friendName" name="friendName">
+                <form id="saveForm" th:action="@{/findFriend}" method="GET">
+                    <button type="submit" id="findFriend" style="border: none; background: none;">
+                        <img src="/images/mainMenu_png/find_friend.png" alt="Find Friend">
+                        <span>Find Friend</span>
+                    </button>
+                    <input type="text" id="friendName" name="friendName" placeholder="Search user by name..." required/>
                     <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                 </form>
             </div>
+
         </div>
     </main>
 </div>
@@ -53,10 +52,10 @@
         <!-- Kafelki menu -->
         <div class="tile">
             <div th:if="${not #authorization.expression('isAuthenticated()')}">
-            <a href="/login">
-                <img src="/images/mainMenu_png/user-profile_not_active.png" alt="User Profile">
-                <span>Login to view user profile</span>
-            </a>
+                <a href="/login">
+                    <img src="/images/mainMenu_png/user-profile_not_active.png" alt="User Profile">
+                    <span>Login to view user profile</span>
+                </a>
             </div>
             <div th:if="${#authorization.expression('isAuthenticated()')}">
                 <a href="/user">
@@ -67,7 +66,7 @@
         </div>
         <div class="tile">
             <div th:if="${#authorization.expression('isAuthenticated()')}">
-                <a href="/map" >
+                <a href="/map">
                     <img src="/images/mainMenu_png/map.png" alt="Plan Trip">
                     <span>Plan a trip</span>
                 </a>
@@ -93,10 +92,10 @@
         </div>
         <div class="tile">
             <div th:if="${#authorization.expression('isAuthenticated()')}">
-            <a href="/announcement">
-                <img src="/images/mainMenu_png/announcement.png" alt="Announcements">
-                <span>Announcement</span>
-            </a>
+                <a href="/announcement">
+                    <img src="/images/mainMenu_png/announcement.png" alt="Announcements">
+                    <span>Announcement</span>
+                </a>
             </div>
             <div th:if="${not #authorization.expression('isAuthenticated()')}">
                 <a href="/login" id="announcementButton">

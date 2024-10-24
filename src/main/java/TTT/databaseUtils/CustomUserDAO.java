@@ -84,14 +84,14 @@ public class CustomUserDAO {
         return null;
     }
 
-    public CustomUser findCustomUserByName(String name) {
+    public List<CustomUser> findCustomUserByName(String name) {
         try {
             Session session = sessionFactory.openSession();
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
             Root<CustomUser> root = userQuery.from(CustomUser.class);
             userQuery.select(root).where(cb.equal(root.get("customUserName"), name));
-            CustomUser results = session.createQuery(userQuery).getSingleResultOrNull();
+            List <CustomUser> results = session.createQuery(userQuery).getResultList();
             return results;
         } catch (PersistenceException | IllegalArgumentException e) {
             System.out.println("No entity found with email: " + name);
