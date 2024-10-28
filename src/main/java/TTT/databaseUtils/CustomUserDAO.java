@@ -90,7 +90,7 @@ public class CustomUserDAO {
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
             Root<CustomUser> root = userQuery.from(CustomUser.class);
-            userQuery.select(root).where(cb.equal(root.get("customUserName"), name));
+            userQuery.select(root).where(cb.equal(cb.lower(root.get("customUserName")), name.toLowerCase()));
             List <CustomUser> results = session.createQuery(userQuery).getResultList();
             return results;
         } catch (PersistenceException | IllegalArgumentException e) {

@@ -79,6 +79,19 @@
         </div>
     </form>
 
+        <form id="gpxFile"
+              action="/downloadGpx" method="GET">
+            <input type="hidden" id="trip_Identity" name="trip_Identity" th:value="${trip.getId()}">
+            <!--            must have! TOKEN-->
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+
+            <div id="download_button-container">
+                <button id="download_button" class="download_button">
+                        Download GPX
+                </button>
+            </div>
+        </form>
+
 
 </div>
 
@@ -130,6 +143,11 @@
         </li>
     </ul>
 </div>
+
+<link href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.min.css" rel="stylesheet"></link>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-gpx@1.7.0/gpx.min.js"></script>
+<div id="map"></div>
 <script type="text/javascript" th:src="@{/js/trip.js}"></script>
 </body>
 </html>

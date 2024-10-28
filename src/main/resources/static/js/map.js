@@ -6,6 +6,7 @@ let tempCoordinates = null;
 let savedMarker = null;
 let allRouteDuration = null;
 let coordinatesOfTrip = null;
+let jsonGeometryWaypoints = [];
 
 // Initialize the map
 const map = new maplibregl.Map({
@@ -291,7 +292,14 @@ async function route() {
     if (json.geometry) {
         const source = map.getSource('route-geometry');
         source.setData(json.geometry);
+
+        // console.log(json.geometry);
+        console.log(json.geometry.geometry);
+
+        getArraryOfCoordinates(json.geometry);
+
         document.getElementById('distance').textContent = `${(json.length / 1000).toFixed(2)} km`;
+
         let durationInSeconds = json.duration;
         let hours = Math.floor(durationInSeconds / 3600);
         let minutes = Math.floor((durationInSeconds % 3600) / 60);
@@ -305,6 +313,13 @@ async function route() {
         map.fitBounds(bbox(json.geometry.geometry.coordinates), {padding: 40});
         allRouteDuration = `${hours}h ${minutes}m ${seconds}s`;
     }
+}
+
+function getArraryOfCoordinates(feature) {
+    jsonGeometryWaypoints = []; // reste table
+        feature.geometry.coordinates.forEach(coordinate => {
+            jsonGeometryWaypoints.push("[" + coordinate + "]");
+        });
 }
 
 // Add click event to store coordinates
@@ -614,16 +629,6 @@ let arr1 = null;
 let arr2 = null;
 let arr3 = null;
 
-
-document.getElementById('save_announcement').onclick = function () {
-    arr1 = this.getAttribute('arr1');
-    arr2 = this.getAttribute('arr2');
-    arr3 = this.getAttribute('arr3');
-    // tu powinno wypisać być "moje koordynaty" w konsoli przeglądarki
-    console.log(arr1);
-    getJavaScript(arr1, arr2, arr3);
-};
-
 function getJavaScript(arr1, arr2, arr3) {
     arr1 = waypoints;
     arr2 = coordinatesOfTrip;
@@ -646,7 +651,7 @@ function sendToJava() {
     var amountOfPeopleInGroup = document.getElementById('peopleInput').value;
     var dest = document.getElementById('dest').value;
     var date = document.getElementById('dateTime').value;
-
+    var textContentOfDistance = document.getElementById('distance').textContent;
 
     // Ustawianie wartości w polach ukrytych formularza
     document.getElementById('waypoints').value = JSON.stringify(waypoints1);
@@ -661,6 +666,8 @@ function sendToJava() {
     document.getElementById('amountOfPeopleInGroup').value = amountOfPeopleInGroup;
     document.getElementById('destination').value = dest;
     document.getElementById('date').value = date;
+    document.getElementById('distanceOfTrip').value = textContentOfDistance;
+    document.getElementById('jsonGeometryWaypoints').value = jsonGeometryWaypoints;
 
     document.getElementById('saveForm').submit();
 }

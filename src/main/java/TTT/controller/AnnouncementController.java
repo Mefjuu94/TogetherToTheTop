@@ -7,6 +7,12 @@ import TTT.trips.Comments;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
 import TTT.users.UserRating;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +23,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,8 +52,8 @@ public class AnnouncementController {
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
 
         model.addAttribute("trips", trips);
-        model.addAttribute("customUser",customUser);
-        model.addAttribute("flag",flag);
+        model.addAttribute("customUser", customUser);
+        model.addAttribute("flag", flag);
 
         return "announcement";
     }
@@ -74,6 +86,43 @@ public class AnnouncementController {
         return "trip";
     }
 
+    @GetMapping("/downloadGpx")
+    public ResponseEntity<Resource> downloadFile(@RequestParam String trip_Identity) {
+        Trip trip = tripDAO.findTripID(Long.parseLong(trip_Identity));
+
+        String filePath = "src/main/resources/routes/" + trip.getOwner().getId() + "_" + trip.getTripDateTime().toString().replace(":", "_") + "_route.gpx";
+
+        // if didnbt exist write new file gpx
+        File file = new File(filePath);
+        if (!file.exists()) {
+            try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+                fileOutputStream.write(trip.getGpxFile());
+            } catch (IOException e) {
+                System.out.println("Błąd przy zapisywaniu pliku: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(null);
+            }
+        }
+
+        // check if exist and preapare for download
+        Path path = Paths.get(filePath);
+        if (!Files.exists(path)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        // Pobranie pliku jako zasób
+        Resource fileResource = new FileSystemResource(file);
+
+        String fileName = trip.getOwner().getId() + "_" + trip.getTripDateTime().toString().replace(":", "_") + "_route.gpx";
+
+        // set answer HTTP
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM) //  OCTET_STREAM for binary Files
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .body(fileResource);
+
+    }
+
     @GetMapping("/userProfile/{id}")
     public String getAnyUserProfile(@PathVariable Long id, Model model) {
         CustomUserDAO customUserDAO = new CustomUserDAO();
@@ -82,18 +131,18 @@ public class AnnouncementController {
         List<UserRating> rating = customUser.getRatings();
         int rate = 0;
 
-        if (!rating.isEmpty()){
+        if (!rating.isEmpty()) {
             for (int i = 0; i < rating.size(); i++) {
                 rate += rating.get(i).getRating();
             }
-            rate = rate/rating.size();
-        }else {
+            rate = rate / rating.size();
+        } else {
             rate = 1;
         }
 
         model.addAttribute("customUser", customUser);
-        model.addAttribute("rating",rating);
-        model.addAttribute("rate",rate);
+        model.addAttribute("rating", rating);
+        model.addAttribute("rate", rate);
 
         return "userProfile";
     }
@@ -152,24 +201,24 @@ public class AnnouncementController {
     }
 
     @PostMapping("/addComment")
-    public String addComment(@RequestParam long tripIdComment, @RequestParam String comment, @RequestParam long userIdComment,@RequestParam String userName) {
+    public String addComment(@RequestParam long tripIdComment, @RequestParam String comment, @RequestParam long userIdComment, @RequestParam String userName) {
 
-        commentsDAO.addComment(new Comments(comment, userIdComment, tripIdComment,userName));
+        commentsDAO.addComment(new Comments(comment, userIdComment, tripIdComment, userName));
 
         return "redirect:/trips/" + tripIdComment;
     }
 
     @PostMapping("/deleteComment")
-    public String deleteComment(@RequestParam String idComment,@RequestParam String idOfTrip) {
+    public String deleteComment(@RequestParam String idComment, @RequestParam String idOfTrip) {
 
         long commentID = Long.parseLong(idComment);
 
         System.out.println(commentID);
         System.out.println(idOfTrip);
 
-        if (commentsDAO.deleteComment(commentID)){
+        if (commentsDAO.deleteComment(commentID)) {
             System.out.println("comment was deleted!");
-        }else {
+        } else {
             System.out.println("something went wrong");
         }
 

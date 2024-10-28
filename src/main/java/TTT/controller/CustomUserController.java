@@ -18,15 +18,14 @@ import java.util.List;
 @Controller
 public class CustomUserController {
 
-
     CustomUserDAO customUserDAO = new CustomUserDAO();
+    TripDAO tripDAO = new TripDAO();
 
     @GetMapping("/user")
     public String getMainPage(Model model) {
         String email = getLoggedInUserName();
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
 
-        TripDAO tripDAO = new TripDAO();
         List<Trip> trips = tripDAO.listAllAnnouncements();
 
         int numberOfTripsOwned = 0;
@@ -62,6 +61,28 @@ public class CustomUserController {
         System.out.println("Search name: " + friendName);
         List <CustomUser> customUsers = customUserDAO.findCustomUserByName(friendName);
         model.addAttribute("customUser",customUsers);
+
+        return "results";
+    }
+
+    @GetMapping("/tripsOwned")
+    public String getTripsOWned(@RequestParam String userID, Model model) {
+
+        System.out.println(userID);
+        List<Trip> trips = tripDAO.listAllAnnouncementsByUserId(Long.valueOf(userID));
+        model.addAttribute("trips",trips);
+
+        return "results";
+    }
+
+
+
+    @GetMapping("/tripsParticipated")
+    public String getTripsWhereParticipated(@RequestParam String userID, Model model) {
+
+        System.out.println(userID);
+        List<Trip> trips = tripDAO.ListTripWhereParticipated(Long.parseLong(userID));
+        model.addAttribute("trips",trips);
 
         return "results";
     }

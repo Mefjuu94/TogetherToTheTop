@@ -32,18 +32,28 @@
             <h3>Email</h3>
             <p id="email-display" th:text="${customUser.getEmail()}">Email</p>
         </div>
+
         <div class="tile">
             <h3>Number of Trips</h3>
             <p th:text="${customUser.getNumbersOfTrips()}">numbers</p>
         </div>
-        <div class="tile">
-            <h3>Trips Owned</h3>
-            <p th:text="${numberOfTripsOwned}">?</p>
-        </div>
-        <div class="tile">
-            <h3>Trips Participated</h3>
-            <p>?</p>
-        </div>
+
+        <form action="/tripsOwned" methods="post">
+            <input type="hidden" name="userID" th:value="${customUser.getId()}">
+            <div class="tile" onclick="this.closest('form').submit()">
+                <h3>Trips Owned</h3>
+                <p th:text="${numberOfTripsOwned}">?</p>
+            </div>
+        </form>
+
+        <form action="/tripsParticipated" methods="post">
+            <input type="hidden" name="userID" th:value="${customUser.getId()}">
+            <div class="tile" onclick="this.closest('form').submit()">
+                <h3>Trips Participated</h3>
+                <p th:text="${customUser.getNumbersOfTrips()}">?</p>
+            </div>
+        </form>
+
         <div class="tile">
             <h3>Rating</h3>
             <p th:text="${rate}">?</p>
@@ -65,11 +75,10 @@
             </div>
             <input type="submit" value="Save">
             <!-- Token CSRF dla zabezpieczenia -->
-            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
         </form>
     </div>
 </div>
-
 
 
 <script type="text/javascript" th:src="@{/js/userProfile.js}"></script>

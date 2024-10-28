@@ -138,3 +138,7 @@ button:hover {
     margin-top: 10px;
 }
 
+#map {
+    height: 40vh;
+    width: 50%;
+}

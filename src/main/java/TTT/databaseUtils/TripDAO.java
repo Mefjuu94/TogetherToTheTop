@@ -12,6 +12,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TripDAO {
@@ -21,7 +26,7 @@ public class TripDAO {
     public boolean addAnnouncement(Trip trip) {
 
         Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.merge(trip);
             transaction.commit();
@@ -48,6 +53,7 @@ public class TripDAO {
         }
         return null;
     }
+
 
     public boolean deleteTrip(Trip trip) {
 
@@ -85,6 +91,37 @@ public class TripDAO {
     public List<Trip> listAllAnnouncements() {
         Session session = sessionFactory.openSession();
         return session.createQuery("SELECT a FROM Trip a", Trip.class).getResultList();
+    }
+
+    public List<Trip> ListTripWhereParticipated(long id) {
+        Session session = sessionFactory.openSession();
+        List<Trip> trips = session.createQuery("SELECT a FROM Trip a", Trip.class).getResultList();
+
+        List<Trip> results = new ArrayList<Trip>();
+        for (Trip trip : trips) {
+            for (long userId : trip.getParticipantsId())
+                if (id == userId) {
+                    results.add(trip);
+                }
+        }
+
+        return results;
+    }
+
+    public List<Trip> listAllAnnouncementsByUserId(Long userId) {
+        Session session = sessionFactory.openSession();
+        return session.createQuery("SELECT a FROM Trip a WHERE a.owner.id = :userId", Trip.class)
+                .setParameter("userId", userId)
+                .getResultList();
+    }
+
+
+    public List<Trip> listAllAnnouncementsByDestination(String destination) {
+        Session session = sessionFactory.openSession();
+        //search ignoring Upper/lowercase [ILIKE]!
+        return session.createQuery("SELECT a FROM Trip a WHERE a.destination ILIKE:destination ", Trip.class)
+                .setParameter("destination", destination)
+                .getResultList();
     }
 
     public Trip findTripID(long id) {
