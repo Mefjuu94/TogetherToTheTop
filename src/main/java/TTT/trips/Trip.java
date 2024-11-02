@@ -23,7 +23,7 @@ public class Trip {
     private int amountOfClosedGroup;
     private boolean peopleInTheCar;
     private int amountOfDriverPeople;
-    private String distanseOfTrip;
+    private String distanceOfTrip;
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean ifTolerateAnimals;
     private LocalDateTime tripDateTime;
@@ -43,8 +43,6 @@ public class Trip {
     )
 
     private List<CustomUser> participants; // Lista uczestników
-    @ElementCollection
-    private List<Long> participantsId;
     @Column(length = 10000)
     private String waypoints;
 
@@ -71,10 +69,9 @@ public class Trip {
         this.peopleInTheCar = builder.driverPeople;
         this.amountOfDriverPeople = builder.peopleInTheCar;
         this.ifTolerateAnimals = builder.tolerateAnimals;
-        this.participantsId = builder.participantsId;
         this.waypoints = builder.waypoints;
         this.tripDateTime = builder.tripDateTime;
-        this.distanseOfTrip = builder.distanseOfTrip;
+        this.distanceOfTrip = builder.distanceOfTrip;
         this.gpxFile = builder.gpxFile;
     }
 
@@ -171,13 +168,7 @@ public class Trip {
         this.participants = participants;
     }
 
-    public List<Long> getParticipantsId() {
-        return participantsId;
-    }
 
-    public void setParticipantsId(List<Long> participantsId) {
-        this.participantsId = participantsId;
-    }
 
     public String getWaypoints() {return waypoints;}
 
@@ -195,12 +186,12 @@ public class Trip {
         this.tripVisible = tripVisible;
     }
 
-    public String getDistanseOfTrip() {
-        return distanseOfTrip;
+    public String getDistanceOfTrip() {
+        return distanceOfTrip;
     }
 
-    public void setDistanseOfTrip(String distanseOfTrip) {
-        this.distanseOfTrip = distanseOfTrip;
+    public void setDistanceOfTrip(String distanceOfTrip) {
+        this.distanceOfTrip = distanceOfTrip;
     }
 
     @Override
@@ -208,12 +199,12 @@ public class Trip {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Trip trip = (Trip) o;
-        return id == trip.id && closedGroup == trip.closedGroup && amountOfClosedGroup == trip.amountOfClosedGroup && peopleInTheCar == trip.peopleInTheCar && amountOfDriverPeople == trip.amountOfDriverPeople && distanseOfTrip == trip.distanseOfTrip && ifTolerateAnimals == trip.ifTolerateAnimals && tripVisible == trip.tripVisible && Objects.equals(tripDescription, trip.tripDescription) && Objects.equals(destination, trip.destination) && Objects.equals(tripDuration, trip.tripDuration) && Objects.equals(tripDateTime, trip.tripDateTime) && Objects.equals(owner, trip.owner) && Objects.equals(participants, trip.participants) && Objects.equals(participantsId, trip.participantsId) && Objects.equals(waypoints, trip.waypoints) && Objects.deepEquals(gpxFile, trip.gpxFile);
+        return id == trip.id && closedGroup == trip.closedGroup && amountOfClosedGroup == trip.amountOfClosedGroup && peopleInTheCar == trip.peopleInTheCar && amountOfDriverPeople == trip.amountOfDriverPeople && ifTolerateAnimals == trip.ifTolerateAnimals && tripVisible == trip.tripVisible && Objects.equals(tripDescription, trip.tripDescription) && Objects.equals(destination, trip.destination) && Objects.equals(tripDuration, trip.tripDuration) && Objects.equals(distanceOfTrip, trip.distanceOfTrip) && Objects.equals(tripDateTime, trip.tripDateTime) && Objects.equals(owner, trip.owner) && Objects.equals(participants, trip.participants) && Objects.equals(waypoints, trip.waypoints) && Objects.deepEquals(gpxFile, trip.gpxFile);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tripDescription, destination, tripDuration, closedGroup, amountOfClosedGroup, peopleInTheCar, amountOfDriverPeople, distanseOfTrip, ifTolerateAnimals, tripDateTime, tripVisible, owner, participants, participantsId, waypoints, Arrays.hashCode(gpxFile));
+        return Objects.hash(id, tripDescription, destination, tripDuration, closedGroup, amountOfClosedGroup, peopleInTheCar, amountOfDriverPeople, distanceOfTrip, ifTolerateAnimals, tripDateTime, tripVisible, owner, participants, waypoints, Arrays.hashCode(gpxFile));
     }
 
     @Override
@@ -228,11 +219,10 @@ public class Trip {
                 ", amountOfClosedGroup=" + amountOfClosedGroup +
                 ", peopleInTheCar=" + peopleInTheCar +
                 ", amountOfDriverPeople=" + amountOfDriverPeople +
-                ", distanseOfTrip=" + distanseOfTrip +
+                ", distanceOfTrip=" + distanceOfTrip +
                 ", ifTolerateAnimals=" + ifTolerateAnimals +
                 ", tripDateTime=" + tripDateTime +
                 ", tripVisible=" + tripVisible +
-                ", participantsId=" + participantsId +
                 '}';
     }
 
@@ -247,10 +237,9 @@ public class Trip {
         private int peopleInTheCar;
         private CustomUser owner;
         private boolean tolerateAnimals;
-        private List<Long> participantsId;
         private String waypoints;
         private LocalDateTime tripDateTime;
-        private String distanseOfTrip;
+        private String distanceOfTrip;
         private byte[] gpxFile;
 
         public Trip build() {
@@ -302,11 +291,6 @@ public class Trip {
             return this;
         }
 
-        public TripBuilder withParticipantsIds(List<Long> participantsId) {
-            this.participantsId = participantsId;
-            return this;
-        }
-
         public TripBuilder withWaypoints(String waypoints) {
             this.waypoints = waypoints;
             return this;
@@ -317,8 +301,8 @@ public class Trip {
             return this;
         }
 
-        public TripBuilder withDistanseOfTrip(String distanseOfTrip) {
-            this.distanseOfTrip = distanseOfTrip;
+        public TripBuilder withDistanceOfTrip(String distanceOfTrip) {
+            this.distanceOfTrip = distanceOfTrip;
             return this;
         }
 

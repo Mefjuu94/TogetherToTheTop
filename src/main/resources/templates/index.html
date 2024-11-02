@@ -60,7 +60,7 @@
             <div th:if="${#authorization.expression('isAuthenticated()')}">
                 <a href="/user">
                     <img src="/images/mainMenu_png/user-profile.png" alt="User Profile">
-                    <span>Login to view user profile</span>
+                    <span>my profile</span>
                 </a>
             </div>
         </div>
@@ -78,18 +78,7 @@
                 </a>
             </div>
         </div>
-        <div class="tile">
-            <a href="#" id="aboutButton">
-                <img src="/images/mainMenu_png/about.png" alt="About">
-                <span>About "TTT" Project</span>
-            </a>
-        </div>
-        <div class="tile">
-            <a href="#" id="contactButton">
-                <img src="/images/mainMenu_png/contact.png" alt="Contact">
-                <span>Contact</span>
-            </a>
-        </div>
+
         <div class="tile">
             <div th:if="${#authorization.expression('isAuthenticated()')}">
                 <a href="/announcement">
@@ -104,6 +93,42 @@
                 </a>
             </div>
         </div>
+
+        <div class="tile">
+            <a href="#" id="contactButton">
+                <img src="/images/mainMenu_png/contact.png" alt="Contact">
+                <span>Contact</span>
+            </a>
+        </div>
+
+        <div class="tile">
+            <div th:if="${not #authorization.expression('isAuthenticated()')}">
+                <a href="/login">
+                    <img src="/images/mainMenu_png/findTrip_noActive.png" alt="Find Trip">
+                    <span>Login to Find Trip!</span>
+                </a>
+            </div>
+
+            <div th:if="${#authorization.expression('isAuthenticated()')}">
+                <form id="Form" th:action="@{/findTrip}" method="GET">
+                    <button type="submit" id="find_Trip" style="border: none; background: none;">
+                        <img src="/images/mainMenu_png/findTripColor_active.png" alt="Find Trip">
+                        <span>I want to go...</span>
+                    </button>
+                    <input type="text" id="tripDestination" name="tripDestination"
+                           placeholder="Search trip by destination..." required/>
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                </form>
+            </div>
+        </div>
+
+        <div class="tile">
+            <a href="#" id="aboutButton">
+                <img src="/images/mainMenu_png/about.png" alt="About">
+                <span>About "TTT" Project</span>
+            </a>
+        </div>
+
     </main>
 </div>
 
@@ -177,7 +202,7 @@
     <div class="modal-content">
         <span class="close">&times;</span>
         <h2>Contact</h2>
-        <p>Contatct with me.</p>
+        <p><img src="/images/mainMenu_png/mail.png" alt="" class="mail-icon"> Contatct with me.</p>
     </div>
 </div>
 <div th:if="${not #authorization.expression('isAuthenticated()')}">

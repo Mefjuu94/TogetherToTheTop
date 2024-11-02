@@ -641,6 +641,7 @@ function getJavaScript(arr1, arr2, arr3) {
 function sendToJava() {
 // Pobieranie danych, z danych globalnych waypoints itp
     var waypoints1 = waypoints;
+    var waypointsLength = waypoints.length;
     var coords2 = coordinatesOfTrip;
     var duration3 = allRouteDuration;
     var description = document.getElementById('description').value;
@@ -668,6 +669,7 @@ function sendToJava() {
     document.getElementById('date').value = date;
     document.getElementById('distanceOfTrip').value = textContentOfDistance;
     document.getElementById('jsonGeometryWaypoints').value = jsonGeometryWaypoints;
+    document.getElementById('waypointsLength').value = waypoints.length;
 
     document.getElementById('saveForm').submit();
 }

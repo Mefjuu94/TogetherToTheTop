@@ -1,3 +1,154 @@
+/** {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    box-sizing: border-box;*/
+/*    font-family: Arial, sans-serif;*/
+/*}*/
+
+/*body, html {*/
+/*    min-height: 100%;*/
+/*    overflow: auto;*/
+/*    display: flex;*/
+/*}*/
+
+/*.background-image {*/
+/*    position: -ms-device-fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    background-size: cover;*/
+/*    background-position: center;*/
+/*    z-index: -1;*/
+/*}*/
+
+/*.container {*/
+/*    max-width: 40%;*/
+/*    margin: 0 auto;*/
+/*    padding: 20px;*/
+/*    float:right;*/
+/*}*/
+
+/*.description_container {*/
+/*    max-width: 40%;*/
+/*    margin: 0 auto;*/
+/*    padding: 20px;*/
+/*    float:right;*/
+/*}*/
+
+/*.comment_form{*/
+/*    max-width: 40%;*/
+/*    margin: 0 auto;*/
+/*    padding: 20px;*/
+/*    float:right;*/
+/*}*/
+
+/*h1 {*/
+/*    text-align: center;*/
+/*    margin-bottom: 20px;*/
+/*    font-size: 2.5rem;*/
+/*    color: black;*/
+/*}*/
+
+/*.grid-container {*/
+/*    display: grid;*/
+/*    grid-template-columns: 1fr 1fr; !* Dwie kolumny *!*/
+/*    grid-gap: 20px;*/
+/*    padding: 20px;*/
+/*}*/
+
+/*!* Styl dla kafelków *!*/
+/*.tile {*/
+/*    background-color: rgba(255, 255, 255, 0.9);*/
+/*    padding: 20px;*/
+/*    border-radius: 10px;*/
+/*    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);*/
+/*    text-align: left;*/
+/*}*/
+
+
+
+/*.tile h3 {*/
+/*    margin-bottom: 10px;*/
+/*    color: #007bff;*/
+/*}*/
+
+/*.tile p {*/
+/*    !*margin-bottom: 10px;*!*/
+/*    color: #555;*/
+/*}*/
+
+/*.tile span {*/
+/*    display: block;*/
+/*    font-weight: bold;*/
+/*}*/
+
+/*.button-container {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    margin-top: 20px;*/
+/*}*/
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+
+
+/*#commentSection {*/
+/*    margin-top: 20px;*/
+/*    padding: 20px;*/
+/*    position: absolute;*/
+/*}*/
+
+/*.comment-item {*/
+/*    margin: 0 auto; !* Wyśrodkowanie elementu *!*/
+/*    max-width: 60%;*/
+/*    background-color: rgba(255, 255, 255, 0.9); !* Jasne tło jak kafelki *!*/
+/*    padding: 20px;*/
+/*    border-radius: 10px;*/
+/*    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); !* Cień jak dla kafelków *!*/
+/*}*/
+
+/*.comment-username {*/
+/*    font-weight: bold;*/
+/*    color: #007bff; !* Ten sam kolor co w kafelkach *!*/
+/*    text-decoration: none;*/
+/*}*/
+
+/*.comment-username:hover {*/
+/*    text-decoration: underline;*/
+/*}*/
+
+/*.comment-text {*/
+/*    margin: 10px 0;*/
+/*    color: #555; !* Ten sam kolor co w kafelkach *!*/
+/*}*/
+
+/*.comment-date {*/
+/*    display: block;*/
+/*    font-size: 0.85em;*/
+/*    color: #777;*/
+/*    margin-top: 10px;*/
+/*}*/
+
+/*#map {*/
+/*    height: 40vh;*/
+/*    width: 30%;*/
+/*}*/
+
+
+/* Reset and basic styles */
 * {
     margin: 0;
     padding: 0;
@@ -22,123 +173,104 @@ body, html {
 }
 
 .container {
-    max-width: 40%;
     margin: 0 auto;
     padding: 20px;
-    float:right;
 }
 
-.description_container {
-    max-width: 40%;
-    margin: 0 auto;
-    padding: 20px;
-    float:right;
-}
-
-.comment_form{
-    max-width: 40%;
-    margin: 0 auto;
-    padding: 20px;
-    float:right;
-}
-
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 2.5rem;
-    color: black;
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Dwie kolumny */
-    grid-gap: 20px;
-    padding: 20px;
-}
-
-/* Styl dla kafelków */
-.tile {
+.tileCenter {
     background-color: rgba(255, 255, 255, 0.9);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    text-align: left;
+    text-align: center;
+    max-width: 60%;
+    margin: 20px auto;
 }
 
-.tile h3 {
-    margin-bottom: 10px;
-    color: #007bff;
+/* Main grid layout */
+.big-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 50px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
-.tile p {
-    /*margin-bottom: 10px;*/
-    color: #555;
+/* Left, center, and right grid columns */
+.left-grid {
+    float: left;
 }
 
-.tile span {
-    display: block;
-    font-weight: bold;
+.center-grid #map {
+    height: 400px;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
-
-.button-container {
+.download_button-container{
     display: flex;
-    justify-content: center;
-    margin-top: 20px;
+    justify-content: center; /* Wyśrodkowanie poziome */
+    align-items: center; /* Wyśrodkowanie pionowe */
+    height: 100%; /* Opcjonalnie, dostosuj wysokość div do potrzeb */
+}
+.download_button{
+    margin: 0 auto; /* Centrowanie z marginesami automatycznymi */
+    display: block; /* Zapewnia kompatybilność z margin: auto */
 }
 
-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-
-
-#commentSection {
-    margin-top: 20px;
+.right-grid .info-container {
     padding: 20px;
+    border-radius: 10px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.tile {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.Participants-tile {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    display: inline-block; /* Ustawienie szerokości według zawartości */
+}
+
+#description {
+    margin-top: 20px;
+}
+
+#button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Comments Section */
+#commentSection {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    max-width: 80%;
+    margin: 0 auto;
+    overflow-y: auto;
+    max-height: 300px;
 }
 
 .comment-item {
-    margin: 0 auto; /* Wyśrodkowanie elementu */
-    max-width: 60%;
-    background-color: rgba(255, 255, 255, 0.9); /* Jasne tło jak kafelki */
-    padding: 20px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Cień jak dla kafelków */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
-.comment-username {
-    font-weight: bold;
-    color: #007bff; /* Ten sam kolor co w kafelkach */
-    text-decoration: none;
-}
 
-.comment-username:hover {
-    text-decoration: underline;
-}
-
-.comment-text {
-    margin: 10px 0;
-    color: #555; /* Ten sam kolor co w kafelkach */
-}
-
-.comment-date {
-    display: block;
-    font-size: 0.85em;
-    color: #777;
-    margin-top: 10px;
-}
-
-#map {
-    height: 40vh;
-    width: 50%;
-}

@@ -2,7 +2,6 @@ package TTT.controller;
 
 import TTT.databaseUtils.CustomUserDAO;
 import TTT.databaseUtils.TripDAO;
-import TTT.trips.Comments;
 import TTT.trips.GPX;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
@@ -27,7 +25,6 @@ public class MapController {
 
     @PostMapping("/sendData")
     public String createTrip(@RequestParam("waypoints") String waypoints,
-                              @RequestParam("coordinatesOfTrip") String coordinatesOfTrip,
                               @RequestParam("allRouteDuration") String allRouteDuration,
                               @RequestParam("descriptionOfTrip") String description,
                               @RequestParam("driverCheck") String driverCheck,
@@ -38,7 +35,8 @@ public class MapController {
                               @RequestParam("destination") String destination,
                              @RequestParam("distanceOfTrip") String distanceOfTrip,
                              @RequestParam("date") String date,
-                             @RequestParam("jsonGeometryWaypoints") String jsonGeometryWaypoints) throws IOException {
+                             @RequestParam("jsonGeometryWaypoints") String jsonGeometryWaypoints,
+                             @RequestParam("waypointsLength") String waypointsLength) throws IOException {
 
         LocalDateTime dateTime = LocalDateTime.parse(date);
         String userEmail = getLoggedInUserName();
@@ -47,6 +45,8 @@ public class MapController {
         String userID = String.valueOf(customUser.getId());
         int tripsCreated = customUser.getNumbersOfTrips() + 1; // get amount of trips created and add one to them
         customUserDAO.updateUserStats(tripsCreated,userEmail,"numberOfAnnouncements");
+
+        int numberOfWaypoints = Integer.parseInt(waypointsLength);
 
         int amountOfPeople = 0;
 
@@ -60,12 +60,14 @@ public class MapController {
         byte[] gpxFile = null;
         String filePath = "src/main/resources/routes/" + userID + "_" + date.replace(":","_") +"_route.gpx";
         try {
-            gpx.makeGPX(jsonGeometryWaypoints, filePath);
+            gpx.makeGPX(jsonGeometryWaypoints,numberOfWaypoints , filePath);
             gpxFile = Files.readAllBytes(Paths.get(filePath));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+        System.out.println("duration: " + allRouteDuration);
+        System.out.println("DISTANCE    : " + distanceOfTrip);
 
         Trip trip = new Trip.TripBuilder()
                 .withTripDescription(description)
@@ -79,7 +81,7 @@ public class MapController {
                 .withAnimals(Boolean.parseBoolean(isCheckedAnimals))
                 .withWaypoints(waypoints)
                 .withTripDataTime(dateTime)
-                .withDistanseOfTrip(distanceOfTrip)
+                .withDistanceOfTrip(distanceOfTrip)
                 .withGpxFile(gpxFile)
                 .build();
 

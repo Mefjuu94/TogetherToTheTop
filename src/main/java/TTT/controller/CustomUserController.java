@@ -65,6 +65,16 @@ public class CustomUserController {
         return "results";
     }
 
+    @GetMapping("/findTrip")
+    public String findTrip(@RequestParam String tripDestination, Model model) {
+
+        System.out.println("Search Trip: " + tripDestination);
+        List <Trip> trips = tripDAO.findTrip(tripDestination);
+        model.addAttribute("trips",trips);
+
+        return "results";
+    }
+
     @GetMapping("/tripsOwned")
     public String getTripsOWned(@RequestParam String userID, Model model) {
 
@@ -76,12 +86,11 @@ public class CustomUserController {
     }
 
 
-
     @GetMapping("/tripsParticipated")
     public String getTripsWhereParticipated(@RequestParam String userID, Model model) {
 
         System.out.println(userID);
-        List<Trip> trips = tripDAO.ListTripWhereParticipated(Long.parseLong(userID));
+        List<CustomUser> trips = tripDAO.ListTripWhereParticipated(Long.parseLong(userID));
         model.addAttribute("trips",trips);
 
         return "results";

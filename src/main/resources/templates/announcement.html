@@ -17,10 +17,10 @@
             <span class="owner-icon">
                 <img th:if="${trips.owner.id == customUser.id}" th:src="@{/images/announcement/owner.png}"
                      alt="You are the owner of Trip" class="icon-image owner-icon">
-               <img th:if="${trips.owner.id != customUser.id and !trips.participantsId.contains(customUser.id)}"
+               <img th:if="${trips.owner.id != customUser.id and !trips.participants.contains(customUser.id)}"
                     th:src="@{/images/announcement/add.png}"
                     alt="Add me to trip" class="icon-image flag-icon">
-                <img th:if="${trips.participantsId.contains(customUser.id)}" th:src="@{/images/announcement/ok.png}"
+                <img th:if="${trips.participants.contains(customUser.id)}" th:src="@{/images/announcement/ok.png}"
                      alt="You are already on this trip" class="icon-image flag-icon">
             </span>
         </a>

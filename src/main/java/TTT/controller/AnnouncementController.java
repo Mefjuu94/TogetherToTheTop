@@ -70,8 +70,8 @@ public class AnnouncementController {
 
         boolean isParticipant = false;
 
-        for (int i = 0; i < trip.getParticipantsId().size(); i++) {
-            if (trip.getParticipantsId().get(i) == customUser.getId()) {
+        for (int i = 0; i < trip.getParticipants().size(); i++) {
+            if (trip.getParticipants().get(i).getId() == customUser.getId()) {
                 isParticipant = true;
                 break;
             }
@@ -167,36 +167,25 @@ public class AnnouncementController {
             }
         }
 
-        if (trip.getOwner().getId() == (customUser.getId())) {
-            newUserToTrip = true;
-            System.out.println("You are owner of This Trip!");
-        } else {
+        // if user didnt exist in list add
+        if (!newUserToTrip) {
+            List<CustomUser> participants = trip.getParticipants();
+            participants.add(customUser);
+            trip.setParticipants(participants);
 
-            // if user didnt exist in list add
-            if (!newUserToTrip) {
-                List<Long> participantId = trip.getParticipantsId();
-                participantId.add(customUser.getId());
-                trip.setParticipantsId(participantId);
+            List<Trip> userTrips = customUser.getTripsParticipated();
+            userTrips.add(trip);
+            customUser.setTripsParticipated(userTrips);
 
-                List<CustomUser> participants = trip.getParticipants();
-                participants.add(customUser);
-                trip.setParticipants(participants);
+            // Zapisz zmiany w bazie danych
+            tripDAO.updateTripParticipants(Long.parseLong(tripId), trip);
 
-                List<Trip> userTrips = customUser.getTripsParticipated();
-                userTrips.add(trip);
-                customUser.setTripsParticipated(userTrips);
+            String email = getLoggedInUserName();
+            customUserDAO.updateUserTrips(email, userTrips);
 
-                // Zapisz zmiany w bazie danych
-                tripDAO.updateTripParticipants(Long.parseLong(tripId), trip);
-
-                String email = getLoggedInUserName();
-                customUserDAO.updateUserTrips(email, userTrips);
-
-                System.out.println("User " + userId + " added to trip " + tripId);
-            } else {
-                System.out.println("User " + userId + " is already a participant of trip " + tripId);
-            }
+            System.out.println("User " + userId + " added to trip " + tripId);
         }
+
         return "actionSuccess";
     }
 
@@ -223,6 +212,31 @@ public class AnnouncementController {
         }
 
         return "redirect:/trips/" + idOfTrip;
+    }
+
+    @PostMapping("/delete_participant")
+    public String deleteParticipant(@RequestParam String user_Identity,@RequestParam String tripId) {
+
+        long userID = Long.parseLong(user_Identity);
+        long tripID = Long.parseLong(tripId);
+
+        Trip trip = tripDAO.findTripID(tripID);
+        List<CustomUser> participants = trip.getParticipants();
+        List<CustomUser> newParticipants = new ArrayList<>();
+
+        for (CustomUser participant : participants) {
+            long id = participant.getId();
+            if (id == userID) {
+                System.out.println("this user should be deleted!");
+            } else {
+                newParticipants.add(participant);
+            }
+        }
+
+        trip.setParticipants(newParticipants);
+        tripDAO.updateTripParticipants(Long.parseLong(tripId), trip);
+
+        return "redirect:/trips/" + tripID;
     }
 
     private String getLoggedInUserName() {

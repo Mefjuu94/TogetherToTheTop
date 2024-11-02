@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TripDAO {
 
@@ -39,14 +40,26 @@ public class TripDAO {
         }
     }
 
-    public Trip findTrip(String destination) {
+    public List <Trip> findTrip(String destination) {
         try {
             Session session = sessionFactory.openSession();
             CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaQuery<Trip> userQuery = cb.createQuery(Trip.class);
-            Root<Trip> root = userQuery.from(Trip.class);
-            userQuery.select(root).where(cb.equal(root.get("destination"), destination));
-            Trip results = session.createQuery(userQuery).getSingleResultOrNull();
+            CriteriaQuery<Trip> cq = cb.createQuery(Trip.class);
+            Root<Trip> root = cq.from(Trip.class);
+            cq.select(root);
+
+            List <Trip> preResults = session.createQuery(cq).getResultList();
+            List <Trip> results = new ArrayList<>();
+            for (Trip preResult : preResults) {
+                String[] tag = preResult.getDestination().split("[ ,]+");
+                for (String s : tag) {
+                    System.out.println(s);
+                    if (Objects.equals(s.toLowerCase(), destination.toLowerCase())) {
+                        results.add(preResult);
+                        break;
+                    }
+                }
+            }
             return results;
         } catch (PersistenceException | IllegalArgumentException e) {
             System.out.println("No entity found with destination: " + destination);
@@ -93,15 +106,16 @@ public class TripDAO {
         return session.createQuery("SELECT a FROM Trip a", Trip.class).getResultList();
     }
 
-    public List<Trip> ListTripWhereParticipated(long id) {
-        Session session = sessionFactory.openSession();
-        List<Trip> trips = session.createQuery("SELECT a FROM Trip a", Trip.class).getResultList();
 
-        List<Trip> results = new ArrayList<Trip>();
-        for (Trip trip : trips) {
-            for (long userId : trip.getParticipantsId())
-                if (id == userId) {
-                    results.add(trip);
+
+    public List<CustomUser> ListTripWhereParticipated(long id) {
+        Session session = sessionFactory.openSession();
+        List<CustomUser> users = session.createQuery("SELECT a.participants FROM Trip a", CustomUser.class).getResultList();
+
+        List<CustomUser> results = new ArrayList<CustomUser>();
+        for (CustomUser user : users) {
+                if (id == user.getId()) {
+                    results.add(user);
                 }
         }
 
@@ -115,14 +129,6 @@ public class TripDAO {
                 .getResultList();
     }
 
-
-    public List<Trip> listAllAnnouncementsByDestination(String destination) {
-        Session session = sessionFactory.openSession();
-        //search ignoring Upper/lowercase [ILIKE]!
-        return session.createQuery("SELECT a FROM Trip a WHERE a.destination ILIKE:destination ", Trip.class)
-                .setParameter("destination", destination)
-                .getResultList();
-    }
 
     public Trip findTripID(long id) {
         try {
