@@ -22,9 +22,10 @@
      <!-- Sekcja wyświetlania wycieczek, jeśli w modelu są wycieczki -->
      <div class="announcement-list" th:if="${trips != null}">
          <a th:href="@{'/trips/' + ${trip.getId()}}" th:each="trip : ${trips}" class="announcement-item">
-             <h2 th:text="${trip.getDestination()}">Destination</h2>
-             <p th:text="${trip.getTripDuration()}">Destination</p>
+             <h3 th:text="${trip.getDestination()}">Destination</h3>
+             <p th:text="${trip.getTripDuration()}">Duration</p>
              <p th:text="${trip.getTripDateTime()}">time</p>
+             <p th:if="${trip.isTripVisible()} ? 'Trip is active' : 'Trip is hidden'">active or not</p>
          </a>
      </div>
  </div>

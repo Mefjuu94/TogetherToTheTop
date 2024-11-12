@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const loginModal = document.getElementById("loginModal");
     const registerModal = document.getElementById("registerModal");
 
-
     const loginButton = document.querySelector(".gridLogin .tile a[href='/login']");
     const registerButton = document.querySelector(".gridLogin .tile a[href='/register']");
 
@@ -16,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const closeLogin = loginModal.querySelector(".close");
     const closeRegister = registerModal.querySelector(".close");
+
 
     if (loginButton) {
         loginButton.onclick = function (event) {
@@ -119,6 +119,30 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Pobieramy element `usersData` i odczytujemy jego atrybut `data-users`
+    const usersDataElement = document.getElementById("usersData");
+    const users = JSON.parse(usersDataElement.getAttribute("data-users") || "[]");
+
+
+    // Podpięcie funkcji walidującej do zdarzenia `input` w polu e-mail w modalu rejestracji
+    let emailInput = document.getElementById("emailInput");
+
+    emailInput.addEventListener('input', function() {
+        const emailValue = emailInput.value; // Teraz pobieramy wartość podczas wpisywania
+        const validationMessage = document.getElementById("emailValidationMessage");
+        console.log("Wpisano coś: " + emailValue);
+
+        // Sprawdzamy, czy e-mail już istnieje
+        const emailTaken = users.some(user => user.email === emailInput);
+
+        if (emailTaken) {
+            validationMessage.style.display = "block";
+            validationMessage.textContent = "Ten adres e-mail jest już zajęty!";
+        } else {
+            validationMessage.style.display = "none";
+            validationMessage.textContent = "";
+        }
+    } );
 
 
 });

@@ -13,6 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -47,10 +50,28 @@ public class CustomUserController {
             rate = 1;
         }
 
+        List<Object[]> obejcts = tripDAO.listAllTripParticipantIds();
+        List<Trip> tripsParticipated = new ArrayList<>();
+
+        for (int i = 0; i < obejcts.size(); i++) {
+            String s1 = Arrays.toString(obejcts.get(i));
+            String s = s1.replaceAll("[\\[\\]\\s]", "");
+            String[] split = s.split(",");
+            long tripID = Long.parseLong(split[0]);
+            long user_id = Long.parseLong(split[1]);
+            System.out.println("trip id = " + tripID);
+            System.out.println("user id = " + user_id);
+            if (user_id == customUser.getId()){
+                Trip trip = tripDAO.findTripID(tripID);
+                tripsParticipated.add(trip);
+            }
+        }
+
         model.addAttribute("customUser",customUser);
         model.addAttribute("numberOfTripsOwned",numberOfTripsOwned);
         model.addAttribute("rating",rating);
         model.addAttribute("rate",rate);
+        model.addAttribute("tripsParticipated",tripsParticipated);
 
         return "myProfile";
     }
@@ -90,7 +111,23 @@ public class CustomUserController {
     public String getTripsWhereParticipated(@RequestParam String userID, Model model) {
 
         System.out.println(userID);
-        List<CustomUser> trips = tripDAO.ListTripWhereParticipated(Long.parseLong(userID));
+        List<Object[]> obejcts = tripDAO.listAllTripParticipantIds();
+        List<Trip> trips = new ArrayList<>();
+
+        for (int i = 0; i < obejcts.size(); i++) {
+            String s1 = Arrays.toString(obejcts.get(i));
+            String s = s1.replaceAll("[\\[\\]\\s]", "");
+            String[] split = s.split(",");
+            long tripID = Long.parseLong(split[0]);
+            long user_id = Long.parseLong(split[1]);
+            System.out.println("trip id = " + tripID);
+            System.out.println("user id = " + user_id);
+            if (user_id == Long.parseLong(userID)){
+                Trip trip = tripDAO.findTripID(tripID);
+                trips.add(trip);
+            }
+        }
+
         model.addAttribute("trips",trips);
 
         return "results";
@@ -98,7 +135,7 @@ public class CustomUserController {
 
     @PostMapping("/updateField")
     public String updateField(@RequestParam("fieldName") String fieldName,
-                              @RequestParam("newValue") String newValue) {
+                              @RequestParam("newValue") String newValue, Model model) {
 
         String email = getLoggedInUserName();
         System.out.println(email);
@@ -109,6 +146,9 @@ public class CustomUserController {
         }else {
             customUserDAO.updateUserField(newValue,email,fieldName);
         }
+
+        String nextPage = "/myProfile/";
+        model.addAttribute("nextPage", nextPage);
 
         return "actionSuccess";
     }

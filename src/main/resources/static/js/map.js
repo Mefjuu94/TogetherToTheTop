@@ -317,9 +317,9 @@ async function route() {
 
 function getArraryOfCoordinates(feature) {
     jsonGeometryWaypoints = []; // reste table
-        feature.geometry.coordinates.forEach(coordinate => {
-            jsonGeometryWaypoints.push("[" + coordinate + "]");
-        });
+    feature.geometry.coordinates.forEach(coordinate => {
+        jsonGeometryWaypoints.push("[" + coordinate + "]");
+    });
 }
 
 // Add click event to store coordinates
@@ -625,21 +625,56 @@ peopleInput.addEventListener('input', function () {
     }
 });
 
-let arr1 = null;
-let arr2 = null;
-let arr3 = null;
+var destInput = document.getElementById('dest');
+destInput.addEventListener('input', function () {
+    
+    if (destInput.value !== ''){
+        document.getElementById('destination-div').style.backgroundColor = "green";
+    }else {
+        document.getElementById('destination-div').style.backgroundColor = "#c0392b";
+    }
+    checkInputs();
+});
 
-function getJavaScript(arr1, arr2, arr3) {
-    arr1 = waypoints;
-    arr2 = coordinatesOfTrip;
-    arr3 = allRouteDuration;
-    console.log("Route Waypoints:", arr1);
-    console.log("coords:", arr2)
-    console.log("Duration:", arr3)
+var timeInput = document.getElementById('time');
+timeInput.addEventListener('input', function () {
+
+    if (timeInput.value !== ''){
+        document.getElementById('time').style.backgroundColor = "green";
+    }
+    checkInputs();
+});
+
+var descInput = document.getElementById('description');
+descInput.addEventListener('input', function () {
+
+    console.log("sprawdzam! descrition");
+    
+    if (destInput.length > 0){
+        document.getElementById('description').style.backgroundColor = 'green';
+    }
+    checkInputs();
+});
+
+var submitButton = document.getElementById('add_announcement');
+
+// Funkcja do sprawdzania, czy oba warunki są spełnione
+function checkInputs() {
+
+    console.log("sprawdzam!");
+    if (destInput.length > 0 && timeInput.length > 0 && descInput.length > 0) {
+        // Jeśli tak, przycisk staje się zielony
+        submitButton.style.backgroundColor = "green";
+    } else {
+        // W przeciwnym razie przycisk wraca do domyślnego koloru (np. szarego)
+        submitButton.style.backgroundColor = "#ccc";
+    }
 }
+
 
 function sendToJava() {
 // Pobieranie danych, z danych globalnych waypoints itp
+
     var waypoints1 = waypoints;
     var waypointsLength = waypoints.length;
     var coords2 = coordinatesOfTrip;
@@ -670,6 +705,12 @@ function sendToJava() {
     document.getElementById('distanceOfTrip').value = textContentOfDistance;
     document.getElementById('jsonGeometryWaypoints').value = jsonGeometryWaypoints;
     document.getElementById('waypointsLength').value = waypoints.length;
+    
+    if (date.length < 1 || dest.length < 1 || description.length < 1 ){
+        alert("fulfill description, destination, date and time of trip!")
+    }else {
+        console.log("wysyłam")
+        document.getElementById('saveForm').submit();
+    }
 
-    document.getElementById('saveForm').submit();
 }

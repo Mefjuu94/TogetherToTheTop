@@ -106,22 +106,6 @@ public class TripDAO {
         return session.createQuery("SELECT a FROM Trip a", Trip.class).getResultList();
     }
 
-
-
-    public List<CustomUser> ListTripWhereParticipated(long id) {
-        Session session = sessionFactory.openSession();
-        List<CustomUser> users = session.createQuery("SELECT a.participants FROM Trip a", CustomUser.class).getResultList();
-
-        List<CustomUser> results = new ArrayList<CustomUser>();
-        for (CustomUser user : users) {
-                if (id == user.getId()) {
-                    results.add(user);
-                }
-        }
-
-        return results;
-    }
-
     public List<Trip> listAllAnnouncementsByUserId(Long userId) {
         Session session = sessionFactory.openSession();
         return session.createQuery("SELECT a FROM Trip a WHERE a.owner.id = :userId", Trip.class)
@@ -143,6 +127,12 @@ public class TripDAO {
             System.out.println("No entity found with destination: " + id);
         }
         return null;
+    }
+
+    public List<Object[]> listAllTripParticipantIds() {
+        Session session = sessionFactory.openSession();
+        return session.createNativeQuery("SELECT trip_id, user_id FROM trip_participants", Object[].class)
+                .getResultList();
     }
 
     public void updateTripParticipants(long idTrip, Trip trip) {

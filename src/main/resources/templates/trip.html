@@ -20,11 +20,19 @@
         <!-- Left grid: Participants list -->
         <div class="left-grid">
             <div class="Participants-tile">
-                <h3>Participants</h3>
+                <h3 th:text="'Participants' + ' ' +  ${trip.getParticipants().size()} + '/' + ${trip.amountOfClosedGroup}">Participants</h3>
                 <ul th:if="${trip.getOwner().getId() != customUser.getId()}">
                     <li th:each="participant : ${trip.getParticipants()}">
                         <a th:href="@{'/userProfile/' +${participant.getId()}}"
                            th:text="${participant.getCustomUserName()}">Participant</a>
+                    <div th:if="${participant.getId() == customUser.getId()}"><form id="delete_participant_clone"
+                                                                                    action="/delete_participant" method="POST">
+                        <input type="hidden"  name="user_Identity" th:value="${participant.getId()}">
+                        <input type="hidden"  name="tripId" th:value="${trip.getId()}">
+                        <!--            must have! TOKEN-->
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                        <button>delete me from trip</button>
+                    </form></div>
                     </li>
                 </ul>
                 <ul th:if="${trip.getOwner().getId() == customUser.getId()}">
@@ -131,6 +139,7 @@
 
     <!-- Comments Section -->
     <div id="commentSection" th:if="${isParticipant or customUser.getId() == trip.getOwner().getId()}">
+        <div><h3>Comments</h3></div>
         <div id="comment_form">
             <form id="commentForm"
                   action="/addComment" method="POST">

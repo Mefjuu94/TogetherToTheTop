@@ -10,13 +10,16 @@
 
 <div class="success-container">
     <h1>Operation Successful!</h1>
-    <p>You will be redirected to the home page in <span id="countdown">3</span> seconds...</p>
+    <p>You will be redirected in <span id="countdown">3</span> seconds...</p>
 </div>
+
+<input type="hidden" th:value="${nextPage}" id="nextPage">
 
 <script>
     // time to redirect (in sec)
     var countdownTime = 3;
     var countdownElement = document.getElementById("countdown");
+    var nextPage = document.getElementById("nextPage").value;
 
 
     var countdownInterval = setInterval(function () {
@@ -28,7 +31,7 @@
 
             // actual URL
             var currentURL = window.location.pathname;
-            window.location.href = '/'; //default
+            window.location.href = nextPage; //default
 
         }
     }, 1000);

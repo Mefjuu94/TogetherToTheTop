@@ -5,24 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <link rel="stylesheet" href="/css/userPanelStyles.css">
+<!--    href="/css/userPanelStyles.css"-->
 </head>
 <body>
 <div class="background-image" style="background-image: url('/images/userProfile/backgroundUserProfile.jpg');"></div>
+<!--url('/images/userProfile/backgroundUserProfile.jpg');"-->
 
 <div class="profile-container">
     <h1>My Profile</h1>
 
     <div class="grid-container">
         <!-- Edytowalne kafelki -->
-        <div class="tile editable" data-field="username" data-label="Username">
+        <div class="tile-editable" data-field="username" data-label="Username">
             <h3>Username</h3>
             <p id="username-display" th:text="${customUser.getCustomUserName()}">Username</p>
         </div>
-        <div class="tile editable" data-field="age" data-label="Age">
+
+        <div class="tile" data-field="ID" data-label="id">
+            <h3>User ID</h3>
+            <p id="user-id" th:text="${customUser.getId()}">User ID</p>
+        </div>
+
+        <div class="tile-editable" data-field="age" data-label="Age">
             <h3>Age</h3>
             <p id="age-display" th:text="${customUser.getAge()}">?</p>
         </div>
-        <div class="tile editable" data-field="city" data-label="city">
+
+        <div class="tile-editable" data-field="city" data-label="city">
             <h3>City</h3>
             <p id="city" th:text="${customUser.getCity()}">?</p>
         </div>
@@ -34,23 +43,23 @@
         </div>
 
         <div class="tile">
-            <h3>Number of Trips</h3>
+            <h3>Total Trips</h3>
             <p th:text="${customUser.getNumbersOfTrips()}">numbers</p>
         </div>
 
-        <form action="/tripsOwned" methods="post">
+        <form action="/tripsOwned" method="GET">
             <input type="hidden" name="userID" th:value="${customUser.getId()}">
             <div class="tile" onclick="this.closest('form').submit()">
-                <h3>Trips Owned</h3>
+                <h3>Trips Created</h3>
                 <p th:text="${numberOfTripsOwned}">?</p>
             </div>
         </form>
 
-        <form action="/tripsParticipated" methods="post">
+        <form action="/tripsParticipated" method="GET">
             <input type="hidden" name="userID" th:value="${customUser.getId()}">
             <div class="tile" onclick="this.closest('form').submit()">
                 <h3>Trips Participated</h3>
-                <p th:text="${customUser.getNumbersOfTrips()}">?</p>
+                <p th:text="${tripsParticipated.size()}">?</p>
             </div>
         </form>
 
@@ -79,7 +88,6 @@
         </form>
     </div>
 </div>
-
 
 <script type="text/javascript" th:src="@{/js/userProfile.js}"></script>
 </body>

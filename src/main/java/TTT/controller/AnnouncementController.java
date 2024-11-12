@@ -29,9 +29,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class AnnouncementController {
@@ -50,10 +48,27 @@ public class AnnouncementController {
         boolean flag = false;
 
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
+        List<Object[]> obejcts = tripDAO.listAllTripParticipantIds();
+        List<String> tripsAndIDs = new ArrayList<>();
+
+        for (int i = 0; i < obejcts.size(); i++) {
+
+            String s1 = Arrays.toString(obejcts.get(i));
+            String s = s1.replaceAll("[\\[\\]\\s]", "");
+            String[] split = s.split(",");
+            String tripID = split[0];
+            String userID = split[1];
+            System.out.println("trip id = " + tripID);
+            System.out.println("user id = " + userID);
+            tripsAndIDs.add(userID + "," + tripID);
+        }
+
 
         model.addAttribute("trips", trips);
         model.addAttribute("customUser", customUser);
         model.addAttribute("flag", flag);
+        model.addAttribute("tripsAndIDs", tripsAndIDs);
+
 
         return "announcement";
     }
@@ -130,7 +145,6 @@ public class AnnouncementController {
         CustomUser customUser = customUserDAO.findCustomUserByID(String.valueOf(id));
         List<UserRating> rating = customUser.getRatings();
         int rate = 0;
-
         if (!rating.isEmpty()) {
             for (int i = 0; i < rating.size(); i++) {
                 rate += rating.get(i).getRating();
@@ -140,15 +154,43 @@ public class AnnouncementController {
             rate = 1;
         }
 
+        List<Trip> trips = tripDAO.listAllAnnouncements();
+
+        int numberOfTripsOwned = 0;
+        for (int i = 0; i < trips.size(); i++) {
+            if (trips.get(i).getOwner().getId() == customUser.getId()){
+                numberOfTripsOwned ++;
+            }
+        }
+
+        List<Object[]> obejcts = tripDAO.listAllTripParticipantIds();
+        List<Trip> tripsParticipated = new ArrayList<>();
+
+        for (int i = 0; i < obejcts.size(); i++) {
+            String s1 = Arrays.toString(obejcts.get(i));
+            String s = s1.replaceAll("[\\[\\]\\s]", "");
+            String[] split = s.split(",");
+            long tripID = Long.parseLong(split[0]);
+            long user_id = Long.parseLong(split[1]);
+            System.out.println("trip id = " + tripID);
+            System.out.println("user id = " + user_id);
+            if (user_id == customUser.getId()){
+                Trip trip = tripDAO.findTripID(tripID);
+                tripsParticipated.add(trip);
+            }
+        }
+
         model.addAttribute("customUser", customUser);
         model.addAttribute("rating", rating);
         model.addAttribute("rate", rate);
+        model.addAttribute("tripsParticipated",tripsParticipated);
+        model.addAttribute("numberOfTripsOwned",numberOfTripsOwned);
 
         return "userProfile";
     }
 
     @PostMapping("/addMe")
-    public String addMeToTrip(@RequestParam String tripId, @RequestParam String userId) {
+    public String addMeToTrip(@RequestParam String tripId, @RequestParam String userId,Model model) {
 
         System.out.println("get data trip ID: " + tripId);
         System.out.println("get data user ID: " + userId);
@@ -172,6 +214,9 @@ public class AnnouncementController {
             List<CustomUser> participants = trip.getParticipants();
             participants.add(customUser);
             trip.setParticipants(participants);
+            //add number to trips participated
+            int changeNumberOfTrips = customUser.getNumbersOfTrips();
+            customUser.setNumbersOfTrips(changeNumberOfTrips + 1);
 
             List<Trip> userTrips = customUser.getTripsParticipated();
             userTrips.add(trip);
@@ -186,19 +231,25 @@ public class AnnouncementController {
             System.out.println("User " + userId + " added to trip " + tripId);
         }
 
+        String nextPage = "/trips/" + tripId;
+        model.addAttribute("nextPage",nextPage);
+
         return "actionSuccess";
     }
 
     @PostMapping("/addComment")
-    public String addComment(@RequestParam long tripIdComment, @RequestParam String comment, @RequestParam long userIdComment, @RequestParam String userName) {
+    public String addComment(@RequestParam long tripIdComment, @RequestParam String comment, @RequestParam long userIdComment, @RequestParam String userName,Model model) {
 
         commentsDAO.addComment(new Comments(comment, userIdComment, tripIdComment, userName));
 
-        return "redirect:/trips/" + tripIdComment;
+        String nextPage = "/trips/" + tripIdComment;
+        model.addAttribute("nextPage",nextPage);
+
+        return "actionSuccess";
     }
 
     @PostMapping("/deleteComment")
-    public String deleteComment(@RequestParam String idComment, @RequestParam String idOfTrip) {
+    public String deleteComment(@RequestParam String idComment, @RequestParam String idOfTrip, Model model) {
 
         long commentID = Long.parseLong(idComment);
 
@@ -211,11 +262,14 @@ public class AnnouncementController {
             System.out.println("something went wrong");
         }
 
-        return "redirect:/trips/" + idOfTrip;
+        String page = "/trips/" + idOfTrip;
+        model.addAttribute("page",page);
+
+        return "actionSuccess";
     }
 
     @PostMapping("/delete_participant")
-    public String deleteParticipant(@RequestParam String user_Identity,@RequestParam String tripId) {
+    public String deleteParticipant(@RequestParam String user_Identity,@RequestParam String tripId,Model model) {
 
         long userID = Long.parseLong(user_Identity);
         long tripID = Long.parseLong(tripId);
@@ -236,7 +290,10 @@ public class AnnouncementController {
         trip.setParticipants(newParticipants);
         tripDAO.updateTripParticipants(Long.parseLong(tripId), trip);
 
-        return "redirect:/trips/" + tripID;
+        String nextPage = "/trips/" + tripId;
+        model.addAttribute("nextPage",nextPage);
+
+        return "actionSuccess";
     }
 
     private String getLoggedInUserName() {

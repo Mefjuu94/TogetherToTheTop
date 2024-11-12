@@ -170,7 +170,7 @@
         <form th:action="@{/register}" method="post">
             <div>
                 <label>
-                    <input type="email" name="email" placeholder="Email" required/>
+                    <input type="email" name="email" id="emailInput" placeholder="Email" required/>
                 </label>
                 <i class="bx bxs-envelope"></i>
             </div>
@@ -184,6 +184,8 @@
         </form>
     </div>
 </div>
+<div th:when="${users}" id="usersData" data-users="[[${users}]]" style="display: none;"></div>
+
 
 
 <div id="aboutModal" class="modal">
