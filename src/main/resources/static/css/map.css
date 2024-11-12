@@ -135,7 +135,6 @@ html, body {
 }
 
 #add_announcement:hover {
-    background-color: green;
     border: 2px solid orange;
 }
 

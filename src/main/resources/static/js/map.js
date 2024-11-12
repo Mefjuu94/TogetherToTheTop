@@ -497,19 +497,7 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
     }
 });
 
-// Add event listener to button to add this POI as a waypoint
-document.addEventListener('DOMContentLoaded', () => {
-    addToRouteBtn.addEventListener('click', () => {
-        if (poi.name) {
-            waypoints.push({coords: poi.coords, name: poi.name || 'Nieznany'});
-            updateWaypointsList();  // update list of route points
-            route();
-            console.log(`Point added ${poi.name} (${poi.coords.join(', ')}) to route`);
-        } else {
-            console.log("No name for this point.");
-        }
-    });
-});
+
 
 
 document.getElementById('addSavedWaypointBtn').addEventListener('click', () => {
@@ -625,92 +613,123 @@ peopleInput.addEventListener('input', function () {
     }
 });
 
-var destInput = document.getElementById('dest');
-destInput.addEventListener('input', function () {
-    
-    if (destInput.value !== ''){
+
+///////////////////////////////////////////////////////////////////////
+var activeSendButton = false;
+
+var descriptionInput = document.getElementById('description');
+var descriptionBool = false;
+
+descriptionInput.addEventListener('input', function () {
+    if (descriptionInput.value !== '') {
+        document.getElementById('description').style.backgroundColor = 'green';
+        descriptionBool = true;
+    } else {
+        document.getElementById('description').style.backgroundColor = '#c0392b';
+        descriptionBool = false;
+    }
+    checkInputs();
+});
+
+var destinationInput = document.getElementById('dest');
+var destinationBool = false;
+
+destinationInput.addEventListener('input', function () {
+    if (destinationInput.value !== '') {
         document.getElementById('destination-div').style.backgroundColor = "green";
-    }else {
+        destinationBool = true;
+    } else {
         document.getElementById('destination-div').style.backgroundColor = "#c0392b";
+        destinationBool = false;
     }
     checkInputs();
 });
 
 var timeInput = document.getElementById('time');
+var timeBool = false;
+
 timeInput.addEventListener('input', function () {
-
-    if (timeInput.value !== ''){
+    if (timeInput.value !== '') {
         document.getElementById('time').style.backgroundColor = "green";
-    }
-    checkInputs();
-});
-
-var descInput = document.getElementById('description');
-descInput.addEventListener('input', function () {
-
-    console.log("sprawdzam! descrition");
-    
-    if (destInput.length > 0){
-        document.getElementById('description').style.backgroundColor = 'green';
+        timeBool = true;
+    } else {
+        document.getElementById('time').style.backgroundColor = "#c0392b";
+        timeBool = false;
     }
     checkInputs();
 });
 
 var submitButton = document.getElementById('add_announcement');
 
-// Funkcja do sprawdzania, czy oba warunki są spełnione
+// Funkcja do sprawdzania, czy wszystkie pola są wypełnione
 function checkInputs() {
 
-    console.log("sprawdzam!");
-    if (destInput.length > 0 && timeInput.length > 0 && descInput.length > 0) {
-        // Jeśli tak, przycisk staje się zielony
+    if (descriptionBool && destinationBool && timeBool) {
+        activeSendButton = true;
         submitButton.style.backgroundColor = "green";
+        submitButton.disabled = false;
     } else {
-        // W przeciwnym razie przycisk wraca do domyślnego koloru (np. szarego)
+        activeSendButton = false;
         submitButton.style.backgroundColor = "#ccc";
+        submitButton.disabled = true;
     }
 }
-
 
 function sendToJava() {
-// Pobieranie danych, z danych globalnych waypoints itp
 
-    var waypoints1 = waypoints;
-    var waypointsLength = waypoints.length;
-    var coords2 = coordinatesOfTrip;
-    var duration3 = allRouteDuration;
-    var description = document.getElementById('description').value;
-    const isCheckedDriver = document.getElementById('driver').checked;
-    var amountOfPeopleDriver = document.getElementById('DriverPeopleInput').value;
-    const isCheckedAnimals = document.getElementById('animals').checked;
-    const isCheckedGroup = document.getElementById('closedGroupCheckbox').checked;
-    var amountOfPeopleInGroup = document.getElementById('peopleInput').value;
-    var dest = document.getElementById('dest').value;
-    var date = document.getElementById('dateTime').value;
-    var textContentOfDistance = document.getElementById('distance').textContent;
+    if(activeSendButton) {
 
-    // Ustawianie wartości w polach ukrytych formularza
-    document.getElementById('waypoints').value = JSON.stringify(waypoints1);
-    document.getElementById('coordinatesOfTrip').value = JSON.stringify(coords2);
-    document.getElementById('allRouteDuration').value = duration3;
+        var waypoints1 = waypoints;
+        var waypointsLength = waypoints.length;
+        var coords2 = coordinatesOfTrip;
+        var duration3 = allRouteDuration;
+        var description = document.getElementById('description').value;
+        const isCheckedDriver = document.getElementById('driver').checked;
+        var amountOfPeopleDriver = document.getElementById('DriverPeopleInput').value;
+        const isCheckedAnimals = document.getElementById('animals').checked;
+        const isCheckedGroup = document.getElementById('closedGroupCheckbox').checked;
+        var amountOfPeopleInGroup = document.getElementById('peopleInput').value;
+        var dest = document.getElementById('dest').value;
+        var date = document.getElementById('dateTime').value;
+        var textContentOfDistance = document.getElementById('distance').textContent;
 
-    document.getElementById('descriptionOfTrip').value = description;
-    document.getElementById('driverCheck').value = isCheckedDriver;
-    document.getElementById('amountOfPeopleDriver').value = amountOfPeopleDriver;
-    document.getElementById('isCheckedAnimals').bool = isCheckedAnimals;
-    document.getElementById('isCheckedGroup').value = isCheckedGroup;
-    document.getElementById('amountOfPeopleInGroup').value = amountOfPeopleInGroup;
-    document.getElementById('destination').value = dest;
-    document.getElementById('date').value = date;
-    document.getElementById('distanceOfTrip').value = textContentOfDistance;
-    document.getElementById('jsonGeometryWaypoints').value = jsonGeometryWaypoints;
-    document.getElementById('waypointsLength').value = waypoints.length;
-    
-    if (date.length < 1 || dest.length < 1 || description.length < 1 ){
-        alert("fulfill description, destination, date and time of trip!")
-    }else {
-        console.log("wysyłam")
-        document.getElementById('saveForm').submit();
+        // Ustawianie wartości w polach ukrytych formularza
+        document.getElementById('waypoints').value = JSON.stringify(waypoints1);
+        document.getElementById('coordinatesOfTrip').value = JSON.stringify(coords2);
+        document.getElementById('allRouteDuration').value = duration3;
+
+        document.getElementById('descriptionOfTrip').value = description;
+        document.getElementById('driverCheck').value = isCheckedDriver;
+        document.getElementById('amountOfPeopleDriver').value = amountOfPeopleDriver;
+        document.getElementById('isCheckedAnimals').bool = isCheckedAnimals;
+        document.getElementById('isCheckedGroup').value = isCheckedGroup;
+        document.getElementById('amountOfPeopleInGroup').value = amountOfPeopleInGroup;
+        document.getElementById('destination').value = dest;
+        document.getElementById('date').value = date;
+        document.getElementById('distanceOfTrip').value = textContentOfDistance;
+        document.getElementById('jsonGeometryWaypoints').value = jsonGeometryWaypoints;
+        document.getElementById('waypointsLength').value = waypoints.length;
+
+        if (date.length < 1 || dest.length < 1 || description.length < 1) {
+            alert("fulfill description, destination, date and time of trip!")
+        } else {
+            console.log("wysyłam")
+            document.getElementById('saveForm').submit();
+        }
     }
-
 }
+
+
+// Add event listener to button to add this POI as a waypoint
+// document.addEventListener('DOMContentLoaded', () => {
+//     addToRouteBtn.addEventListener('click', () => {
+//         if (poi.name) {
+//             waypoints.push({coords: poi.coords, name: poi.name || 'Nieznany'});
+//             updateWaypointsList();  // update list of route points
+//             route();
+//             console.log(`Point added ${poi.name} (${poi.coords.join(', ')}) to route`);
+//         } else {
+//             console.log("No name for this point.");
+//         }
+//     });
+// });
