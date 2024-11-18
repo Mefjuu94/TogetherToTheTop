@@ -21,7 +21,7 @@
     <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
     <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet"/>
 
-    <link type="text/css" href="/static/css/map.css" rel="stylesheet"/>
+    <link type="text/css" th:href="@{/css/map.css}" rel="stylesheet"/>
     <!--    th:href="@{/css/map.css}"   || href="/static/css/map.css"-->
 
 </head>
@@ -168,7 +168,7 @@
 <!-- Leaflet MarkerCluster (for marker clustering) -->
 <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
-<script type="text/javascript" src="/static/js/map.js"></script>
+<script type="text/javascript" th:src="@{/js/map.js}"></script>
 <!-- src="/static/js/map.js"  || th:src="@{/js/map.js}"-->
 </body>
 </html>

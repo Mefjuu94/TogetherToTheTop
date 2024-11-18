@@ -84,9 +84,9 @@ public class CommentsDAO {
 
     }
 
-    public List<Comments> listAllAnnouncements() {
+    public List<Comments> listAllComments() {
         Session session = sessionFactory.openSession();
-        return session.createQuery("SELECT a FROM Trip a", Comments.class).getResultList();
+        return session.createQuery("SELECT a FROM Comments a", Comments.class).getResultList();
     }
 
     public Comments findCommentID(long id) {

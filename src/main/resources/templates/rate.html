@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate</title>
+    <link rel="stylesheet" href="/css/rate.css">
+    <!--    th:href="@{/css/rate.css}"   href="/static/css/rate.css"  -->
+</head>
+<body style="background-image: url('/images/tripBackground.jpg');">
+
+<div class="container">
+    <h1>Rate user:</h1>
+
+    <div class="announcement-list" th:each="user : ${users}">
+        <form th:action="@{/addRate}" method="post">
+        <div class="announcement-item" th:if="${user.id != me.getId()}">
+
+            <div id="destination" class="small-grid">
+                <div id="dest1"><h2>User Name:</h2></div>
+                <div id="dest2"><p th:text="${user.getCustomUserName()}">Name</p></div>
+                <input type="hidden" id="userId-${iter.index}" name="userId" th:value="${user.getId()}">
+
+            </div>
+
+            <div id="distance" class="small-grid">
+                <div id="dist1"><h2>Describe user behavior:</h2></div>
+                <div id="dist2">
+                    <label>
+                        <input id="behavior" class="behavior" name="behavior" type="text"
+                               placeholder="Describe behavior">
+                    </label>
+                </div>
+            </div>
+
+            <div id="Creator" class="small-grid">
+                <div id="creat1"><h2>Rate User 1-10 :</h2></div>
+                <div id="creat2">
+                    <label>
+                        <input id="rate" class="rate" name="rate" type="number" min="1" max="10" placeholder="1-10">
+                    </label>
+                </div>
+            </div>
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                <button onclick="this.closest('form').submit()">Approve Comment</button>
+        </div>
+            </form>
+    </div>
+</div>
+
+
+<script type="text/javascript" th:src="@{/js/rate.js}"></script>
+<!--th:src="@{/js/rate.js}"-->
+</body>
+</html>

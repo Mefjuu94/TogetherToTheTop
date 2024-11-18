@@ -13,6 +13,10 @@ java {
     }
 }
 
+springBoot {
+    mainClass.set('TTT.TogetherToTheTopApplication')
+}
+
 repositories {
     mavenCentral()
 }

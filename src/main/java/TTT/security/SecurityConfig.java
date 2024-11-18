@@ -32,14 +32,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
         security.
                 authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/user","/map","/sendData","/logout","/userProfile/","/updateField",
+                        .requestMatchers("/map","/sendData","/logout","/userProfile/","/updateField",
                                 "/trips/","/addComment","/addMe","/announcement","/findFriend","/searchResults",
                                 "/tripsOwned","/tripsParticipated","resources/**","/downloadGpx","/delete_participant",
-                                "/findTrip",
+                                "/findTrip","/myProfile","/addRate",
                                 HttpMethod.POST).fullyAuthenticated()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll().
-                        requestMatchers("/","/login","/logout","/register","/error/**")
+                        requestMatchers("/","/login","/logout","/register","/error/**","/usersEmails")
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin((form) -> form.loginPage("/login")

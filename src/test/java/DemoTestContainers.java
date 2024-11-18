@@ -24,7 +24,7 @@ public class DemoTestContainers {
     @BeforeEach
     public void emptyTest() {
         int mappedPort = this.postgresqlContainer.getMappedPort(5432);
-        new CustomUserDAO(TestSessionFactoryCreator.getCustomUserSessionFactory(mappedPort));
+//        new CustomUserDAO(TestSessionFactoryCreator.getCustomUserSessionFactory(mappedPort));
         System.out.println(mappedPort);
         Assertions.assertTrue(true);
     }

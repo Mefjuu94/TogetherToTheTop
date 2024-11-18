@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Announcements</title>
+    <title>Results</title>
     <link rel="stylesheet" th:href="@{/css/anoucements.css}">
 </head>
 <body style="background-image: url('/images/tripBackground.jpg');">
@@ -25,7 +25,8 @@
              <h3 th:text="${trip.getDestination()}">Destination</h3>
              <p th:text="${trip.getTripDuration()}">Duration</p>
              <p th:text="${trip.getTripDateTime()}">time</p>
-             <p th:if="${trip.isTripVisible()} ? 'Trip is active' : 'Trip is hidden'">active or not</p>
+             <p th:if="${trip.isTripVisible()}" th:text="'Trip is active'">active or not</p>
+             <p th:unless="${trip.isTripVisible()}" th:text="'Trip is hidden'">active or not</p>
          </a>
      </div>
  </div>

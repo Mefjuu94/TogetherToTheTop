@@ -58,7 +58,7 @@
                 </a>
             </div>
             <div th:if="${#authorization.expression('isAuthenticated()')}">
-                <a href="/user">
+                <a href="/myProfile">
                     <img src="/images/mainMenu_png/user-profile.png" alt="User Profile">
                     <span>my profile</span>
                 </a>
@@ -171,6 +171,7 @@
             <div>
                 <label>
                     <input type="email" name="email" id="emailInput" placeholder="Email" required/>
+                    <span id="message"></span>
                 </label>
                 <i class="bx bxs-envelope"></i>
             </div>
@@ -180,12 +181,10 @@
                 </label>
                 <i class="bx bxs-lock-alt"></i>
             </div>
-            <input type="submit" value="Register"/>
+            <input type="submit" id="submitRegister" value="Register"/>
         </form>
     </div>
 </div>
-<div th:when="${users}" id="usersData" data-users="[[${users}]]" style="display: none;"></div>
-
 
 
 <div id="aboutModal" class="modal">
@@ -213,6 +212,8 @@
 <div th:if="${#authorization.expression('isAuthenticated()')}">
     <p>Hello, you are logged!</p>
 </div>
+<input th:value="${users}"
+    id="usersData" typeof="hidden" type="hidden">
 <script type="text/javascript" th:src="@{/js/index.js}"></script>
 </body>
 </html>

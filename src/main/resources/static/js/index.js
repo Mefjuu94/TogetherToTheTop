@@ -1,3 +1,4 @@
+let passwordValidation = false;
 document.addEventListener("DOMContentLoaded", function () {
     const contactModal = document.getElementById("contactModal");
     const aboutModal = document.getElementById("aboutModal");
@@ -20,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (loginButton) {
         loginButton.onclick = function (event) {
             event.preventDefault();
+
             loginModal.style.display = "block";
         }
     }
@@ -119,31 +121,67 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Pobieramy element `usersData` i odczytujemy jego atrybut `data-users`
-    const usersDataElement = document.getElementById("usersData");
-    const users = JSON.parse(usersDataElement.getAttribute("data-users") || "[]");
-
-
-    // Podpięcie funkcji walidującej do zdarzenia `input` w polu e-mail w modalu rejestracji
-    let emailInput = document.getElementById("emailInput");
-
-    emailInput.addEventListener('input', function() {
-        const emailValue = emailInput.value; // Teraz pobieramy wartość podczas wpisywania
-        const validationMessage = document.getElementById("emailValidationMessage");
-        console.log("Wpisano coś: " + emailValue);
-
-        // Sprawdzamy, czy e-mail już istnieje
-        const emailTaken = users.some(user => user.email === emailInput);
-
-        if (emailTaken) {
-            validationMessage.style.display = "block";
-            validationMessage.textContent = "Ten adres e-mail jest już zajęty!";
-        } else {
-            validationMessage.style.display = "none";
-            validationMessage.textContent = "";
-        }
-    } );
-
-
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    function toggleSubmitButton() {
+        if (passwordValidation) {
+            document.getElementById("submitRegister").disabled = false;  // Odblokowanie przycisku
+        } else {
+            document.getElementById("submitRegister").disabled = true;   // Zablokowanie przycisku
+        }
+    }
+
+
+    const usersDataString = document.getElementById("usersData").value;
+
+// Usunięcie nawiasów kwadratowych i cudzysłowów, a następnie podzielenie po przecinkach
+    const usersData2 = usersDataString.replace(/[\[\]" ]/g, '');
+    const usersData1 =  usersData2.trim();
+    const usersData = usersData1.split(',')
+
+
+    let emailInput = document.getElementById("emailInput");
+    let passwordInput = document.getElementById("passwordInput");
+
+    emailInput.addEventListener('input', function() {
+
+        let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        // Sprawdzamy, czy e-mail pasuje do wyrażenia regularnego
+        if (emailRegex.test(emailInput.value)) {
+            for (let i = 0; i < usersData.length; i++) {
+                if (emailInput.value === usersData[i]) {
+                    document.getElementById("emailInput").style.borderColor = "red";
+                } else {
+                    document.getElementById("emailInput").style.borderColor = "default";
+                }
+            }
+            document.getElementById("emailInput").style.borderColor = "green";
+        }else{
+            document.getElementById("emailInput").style.borderColor = "red";
+        }
+
+    });
+
+    passwordInput.addEventListener('input', function() {
+
+        let passwordValue = passwordInput.value;
+
+        // Warunki do sprawdzenia
+        let hasUpperCase = /[A-Z]/.test(passwordValue);      // Sprawdza obecność wielkich liter
+        let hasNumber = /[0-9]/.test(passwordValue);          // Sprawdza obecność cyfr
+        let hasMinLength = passwordValue.length >= 8;         // Sprawdza długość co najmniej 8 znaków
+
+        // Sprawdzenie, czy wszystkie warunki są spełnione
+        if (hasUpperCase && hasNumber && hasMinLength) {
+            document.getElementById("passwordInput").style.borderColor = "green"
+            passwordValidation = true;
+        } else {
+            document.getElementById("passwordInput").style.borderColor = "red"
+            passwordValidation = false;
+        }
+
+        toggleSubmitButton();
+    });
+});

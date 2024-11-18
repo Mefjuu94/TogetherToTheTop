@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
@@ -40,7 +41,20 @@ public class AnnouncementController {
     @GetMapping("/announcement")
     public String getAnnouncementsPage(Model model) {
         TripDAO tripDAO = new TripDAO();
-        ArrayList<Trip> trips = new ArrayList<>(tripDAO.listAllAnnouncements());
+        ArrayList<Trip> rawtrips = new ArrayList<>(tripDAO.listAllAnnouncements());
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ArrayList<Trip> trips = new ArrayList<>();
+        for (int i = 0; i < rawtrips.size(); i++) {
+            if (localDateTime.isAfter(rawtrips.get(i).getTripDateTime())){
+                System.out.println("ten trip: " + rawtrips.get(i).getDestination() + " jest już odbyta!");
+            }else {
+                trips.add(rawtrips.get(i));
+            }
+        }
+
+
+
         Collections.reverse(trips);
         String email = getLoggedInUserName();
         CustomUserDAO customUserDAO = new CustomUserDAO();
