@@ -1,21 +1,15 @@
 package TTT.databaseUtils;
 
 import TTT.trips.Trip;
-import TTT.users.CustomUser;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
-import org.apache.poi.ss.formula.functions.T;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -135,7 +129,7 @@ public class TripDAO {
                 .getResultList();
     }
 
-    public void updateTripParticipants(long idTrip, Trip trip) {
+    public void updateTrip(long idTrip, Trip trip) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {

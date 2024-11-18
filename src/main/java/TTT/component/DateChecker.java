@@ -2,7 +2,6 @@ package TTT.component;
 
 import TTT.databaseUtils.TripDAO;
 import TTT.trips.Trip;
-import TTT.users.CustomUser;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -13,24 +12,20 @@ import java.util.List;
 public class DateChecker {
     TripDAO tripDAO = new TripDAO();
 
-    @Scheduled(fixedRate = 6 * 60 * 60 * 1000) // Co 6 godzin
+    @Scheduled(fixedRate = 60000 * 15) // 60000 = 1 minute // Co 6 godzin 6 * 60 * 60 * 1000
     public void checkDatesToRateUsersAndVisible() {
+        System.out.println("checking dates!");
         List<Trip> entities = tripDAO.listAllAnnouncements();
 
         for (Trip entity : entities) {
+            if (entity.getTripDateTime() == null) {
+                entity.setTripVisible(false);
+            }
             if (entity.getTripDateTime().isBefore(LocalDateTime.now())) {
                 entity.setTripVisible(false);
-                System.out.println("Trip id: " + entity.getId() +  " will be no longer avaible because is after date");
-
-                List <CustomUser> participants = entity.getParticipants();
-
-                for (CustomUser participant : participants){
-                    
-                }
-
+                tripDAO.updateTrip(entity.getId(),entity);
+                System.out.println("Trip id: " + entity.getId() + " will be no longer avaible because is after date");
             }
         }
-
-
     }
 }
