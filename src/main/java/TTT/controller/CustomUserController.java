@@ -6,10 +6,6 @@ import TTT.databaseUtils.UserRatingDAO;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
 import TTT.users.UserRating;
-import org.apache.poi.ss.formula.functions.Rate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,10 +21,11 @@ public class CustomUserController {
 
     CustomUserDAO customUserDAO = new CustomUserDAO();
     TripDAO tripDAO = new TripDAO();
+    MethodsHandler methodsHandler = new MethodsHandler();
 
     @GetMapping("/myProfile")
     public String getMainPage(Model model) {
-        String email = getLoggedInUserName();
+        String email = methodsHandler.getLoggedInUserName();
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
 
         List<Trip> trips = tripDAO.listAllAnnouncements();
@@ -53,21 +50,7 @@ public class CustomUserController {
         }
 
         List<Object[]> obejcts = tripDAO.listAllTripParticipantIds();
-        List<Trip> tripsParticipated = new ArrayList<>();
-
-        for (int i = 0; i < obejcts.size(); i++) {
-            String s1 = Arrays.toString(obejcts.get(i));
-            String s = s1.replaceAll("[\\[\\]\\s]", "");
-            String[] split = s.split(",");
-            long tripID = Long.parseLong(split[0]);
-            long user_id = Long.parseLong(split[1]);
-            System.out.println("trip id = " + tripID);
-            System.out.println("user id = " + user_id);
-            if (user_id == customUser.getId()) {
-                Trip trip = tripDAO.findTripID(tripID);
-                tripsParticipated.add(trip);
-            }
-        }
+        List<Trip> tripsParticipated = methodsHandler.listOfTrips(obejcts, customUser);
 
         model.addAttribute("customUser", customUser);
         model.addAttribute("numberOfTripsOwned", numberOfTripsOwned);
@@ -112,7 +95,7 @@ public class CustomUserController {
     public String getUsersToRate(Model model) {
         System.out.println("rate view:");
 
-        String email = getLoggedInUserName();
+        String email = methodsHandler.getLoggedInUserName();
         CustomUser me = customUserDAO.findCustomUserByEmail(email);
 
         List<Object[]> participantsIDs = tripDAO.listAllTripParticipantIds();
@@ -128,7 +111,7 @@ public class CustomUserController {
             long tripID = Long.parseLong(split[0]);
             long user_id = Long.parseLong(split[1]);
 
-            if (me.getId() == user_id){
+            if (me.getId() == user_id) {
                 tripsWhereParticipated.add(tripDAO.findTripID(tripID));
             }
         }
@@ -140,14 +123,12 @@ public class CustomUserController {
             if (!trip.isTripVisible()) {
                 usersTemp.addAll(trip.getParticipants());
             }
-
         }
 
         UserRatingDAO userRatingDAO = new UserRatingDAO();
         List<UserRating> ratingList = userRatingDAO.listAllARatings();
 
         //check if user already rate participant from trip.
-
         for (int i = 0; i < usersTemp.size(); i++) {
             CustomUser participant = usersTemp.get(i);
 
@@ -166,14 +147,8 @@ public class CustomUserController {
             }
         }
 
-
-        for (int i = 0; i < users.size(); i++) {
-        System.out.println(users.get(i).getCustomUserName());
-        }
-
         model.addAttribute("users", users);
-        model.addAttribute("me",me);
-
+        model.addAttribute("me", me);
 
         return "rate";
     }
@@ -183,20 +158,20 @@ public class CustomUserController {
                                  @RequestParam String behavior,
                                  Model model) {
 
-        String email = getLoggedInUserName();
+        String email = methodsHandler.getLoggedInUserName();
         System.out.println(email);
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
 
         CustomUser userToRate = customUserDAO.findCustomUserByID(userId);
         int rateInt = Integer.parseInt(rate);
 
-        UserRating userRating = new UserRating(rateInt,behavior,userToRate,customUser);
+        UserRating userRating = new UserRating(rateInt, behavior, userToRate, customUser);
         UserRatingDAO userRatingDAO = new UserRatingDAO();
 
         userRatingDAO.addRate(userRating);
 
         String nextPage = "/rate";
-        model.addAttribute("nextPage",nextPage);
+        model.addAttribute("nextPage", nextPage);
 
         return "actionSuccess";
     }
@@ -206,22 +181,8 @@ public class CustomUserController {
     public String getTripsWhereParticipated(@RequestParam String userID, Model model) {
 
         List<Object[]> obejcts = tripDAO.listAllTripParticipantIds();
-        List<Trip> trips = new ArrayList<>();
-
-
-        for (int i = 0; i < obejcts.size(); i++) {
-            String s1 = Arrays.toString(obejcts.get(i));
-            String s = s1.replaceAll("[\\[\\]\\s]", "");
-            String[] split = s.split(",");
-            long tripID = Long.parseLong(split[0]);
-            long user_id = Long.parseLong(split[1]);
-            System.out.println("trip id = " + tripID);
-            System.out.println("user id = " + user_id);
-            if (user_id == Long.parseLong(userID)) {
-                Trip trip = tripDAO.findTripID(tripID);
-                trips.add(trip);
-            }
-        }
+        CustomUser customUser = customUserDAO.findCustomUserByID(userID);
+        List<Trip> trips = methodsHandler.listOfTrips(obejcts, customUser);
 
         model.addAttribute("trips", trips);
 
@@ -232,10 +193,10 @@ public class CustomUserController {
     public String updateField(@RequestParam("fieldName") String fieldName,
                               @RequestParam("newValue") String newValue, Model model) {
 
-        String email = getLoggedInUserName();
+        String email = methodsHandler.getLoggedInUserName();
         System.out.println(email);
 
-        // Zaktualizuj odpowiednie pole na podstawie nazwy pola
+        // update field
         if (fieldName.equals("age")) {
             customUserDAO.updateUserAge(email, Integer.parseInt(newValue));
         } else {
@@ -248,18 +209,6 @@ public class CustomUserController {
         return "actionSuccess";
     }
 
-    private String getLoggedInUserName() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserDetails userDetails) {
-                return userDetails.getUsername();
-            }
-            return principal.toString();
-        }
-        return null;
-    }
-
     @PostMapping("/rate")
     public String saveRating(
             @RequestParam("userId") CustomUser userId,
@@ -268,10 +217,9 @@ public class CustomUserController {
             @RequestParam("me") CustomUser me) {
         UserRatingDAO ratingDAO = new UserRatingDAO();
 
-        // Wywołanie serwisu do zapisania danych
-        ratingDAO.addRate(new UserRating(rate,behavior,userId,me));
+        ratingDAO.addRate(new UserRating(rate, behavior, userId, me));
 
-        // Przekierowanie po zapisaniu
+
         return "redirect:/success";
     }
 }

@@ -11,7 +11,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class CustomUserDAO {
         customUser.setCustomUserName("yourName");
 
         Transaction transaction = null;
-        try(Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             customUser.setPassword(passwordEncoder.encode(customUser.getPassword()));
             session.merge(customUser);
@@ -91,7 +90,7 @@ public class CustomUserDAO {
             CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
             Root<CustomUser> root = userQuery.from(CustomUser.class);
             userQuery.select(root).where(cb.equal(cb.lower(root.get("customUserName")), name.toLowerCase()));
-            List <CustomUser> results = session.createQuery(userQuery).getResultList();
+            List<CustomUser> results = session.createQuery(userQuery).getResultList();
             return results;
         } catch (PersistenceException | IllegalArgumentException e) {
             System.out.println("No entity found with email: " + name);
@@ -159,14 +158,14 @@ public class CustomUserDAO {
         }
     }
 
-    public void updateUserField(String value, String email,String field) {
+    public void updateUserField(String value, String email, String field) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             CustomUser user = findCustomUserByEmail(email);
             if (user != null) {
-                switch (field){
+                switch (field) {
                     case "email":
                         user.setEmail(value);
                         break;
@@ -212,14 +211,14 @@ public class CustomUserDAO {
         }
     }
 
-    public void updateUserStats(int value, String email,String field) {
+    public void updateUserStats(int value, String email, String field) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             CustomUser user = findCustomUserByEmail(email);
             if (user != null) {
-                switch (field){
+                switch (field) {
                     case "numberOfAnnouncements":
                         int number = user.getNumbersOfAnnoucements();
                         user.setNumbersOfAnnoucements(number + value);

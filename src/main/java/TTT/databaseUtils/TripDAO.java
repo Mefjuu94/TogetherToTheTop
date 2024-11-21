@@ -34,7 +34,7 @@ public class TripDAO {
         }
     }
 
-    public List <Trip> findTrip(String destination) {
+    public List<Trip> findTrip(String destination) {
         try {
             Session session = sessionFactory.openSession();
             CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -42,8 +42,8 @@ public class TripDAO {
             Root<Trip> root = cq.from(Trip.class);
             cq.select(root);
 
-            List <Trip> preResults = session.createQuery(cq).getResultList();
-            List <Trip> results = new ArrayList<>();
+            List<Trip> preResults = session.createQuery(cq).getResultList();
+            List<Trip> results = new ArrayList<>();
             for (Trip preResult : preResults) {
                 String[] tag = preResult.getDestination().split("[ ,]+");
                 for (String s : tag) {

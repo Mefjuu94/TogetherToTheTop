@@ -1,12 +1,8 @@
 package TTT.databaseUtils;
 
-import TTT.trips.Trip;
-import TTT.users.CustomUser;
 import TTT.users.UserRating;
-import jakarta.persistence.PersistenceException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
-import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,7 +17,7 @@ public class UserRatingDAO {
     public boolean addRate(UserRating rate) {
 
         Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.merge(rate);
             transaction.commit();
@@ -35,7 +31,7 @@ public class UserRatingDAO {
     }
 
 
-    public boolean deleteRate(Long id,UserRating rating) {
+    public boolean deleteRate(Long id, UserRating rating) {
 
         if (rating == null || id == null) {
             return false;

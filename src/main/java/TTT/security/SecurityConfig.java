@@ -1,6 +1,5 @@
 package TTT.security;
 
-import TTT.users.CustomUser;
 import jakarta.ws.rs.HttpMethod;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -10,12 +9,8 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -32,14 +27,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
         security.
                 authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/map","/sendData","/logout","/userProfile/","/updateField",
-                                "/trips/","/addComment","/addMe","/announcement","/findFriend","/searchResults",
-                                "/tripsOwned","/tripsParticipated","resources/**","/downloadGpx","/delete_participant",
-                                "/findTrip","/myProfile","/addRate",
+                        .requestMatchers("/map", "/sendData", "/logout", "/userProfile/", "/updateField",
+                                "/trips/", "/addComment", "/addMe", "/announcement", "/findFriend", "/searchResults",
+                                "/tripsOwned", "/tripsParticipated", "resources/**", "/downloadGpx", "/delete_participant",
+                                "/findTrip", "/myProfile", "/addRate",
                                 HttpMethod.POST).fullyAuthenticated()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll().
-                        requestMatchers("/","/login","/logout","/register","/error/**","/usersEmails")
+                        requestMatchers("/", "/login", "/logout", "/register", "/error/**", "/usersEmails")
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin((form) -> form.loginPage("/login")
@@ -53,7 +48,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public DaoAuthenticationProvider authProvider(){
+    public DaoAuthenticationProvider authProvider() {
         DaoAuthenticationProvider dao = new DaoAuthenticationProvider();
         dao.setUserDetailsService(securityService);
         dao.setPasswordEncoder(encoder);
