@@ -159,13 +159,26 @@ public class CustomUser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomUser that = (CustomUser) o;
-        return id == that.id && age == that.age && numbersOfTrips == that.numbersOfTrips && numbersOfAnnoucements == that.numbersOfAnnoucements && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(customUserName, that.customUserName) && Objects.equals(city, that.city) && Objects.equals(tripsOwned, that.tripsOwned) && Objects.equals(tripsParticipated, that.tripsParticipated) && Objects.equals(ratings, that.ratings);
+        return id == that.id &&
+                age == that.age &&
+                numbersOfTrips == that.numbersOfTrips &&
+                numbersOfAnnoucements == that.numbersOfAnnoucements &&
+                Objects.equals(email, that.email) &&
+                Objects.equals(password, that.password) &&
+                Objects.equals(customUserName, that.customUserName) &&
+                Objects.equals(city, that.city) &&
+                Objects.equals(tripsOwned, that.tripsOwned) &&
+                Objects.equals(tripsParticipated, that.tripsParticipated) &&
+                Objects.equals(ratings, that.ratings);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, customUserName, age, numbersOfTrips, numbersOfAnnoucements, city, tripsOwned, tripsParticipated, ratings);
+        return Objects.hash(id, email, password, customUserName, age, numbersOfTrips,
+                numbersOfAnnoucements, city, tripsOwned, tripsParticipated, ratings);
     }
+
+
 
     @Override
     public String toString() {

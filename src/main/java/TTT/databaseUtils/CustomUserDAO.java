@@ -29,7 +29,7 @@ public class CustomUserDAO {
         if (findCustomUserByEmail(customUser.getEmail()) != null) {
             return false;
         }
-        if (customUser.getPassword().length() < 8) {
+        if (customUser.getPassword() == null || customUser.getPassword().length() < 8 ) {
             return false;
         }
 
@@ -142,7 +142,7 @@ public class CustomUserDAO {
         }
     }
 
-    public void updateUserTrips(String email, List<Trip> trips) {
+    public Boolean updateUserTrips(String email, List<Trip> trips) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {
@@ -152,15 +152,19 @@ public class CustomUserDAO {
                 user.setTripsParticipated(trips);
                 session.merge(user);
                 transaction.commit();
+                return true;
             } else {
                 System.out.println("User not found with email: " + email);
+                return false;
             }
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
+            return false;
         }
+
     }
 
     public void updateUserField(String value, String email, String field) {
@@ -195,8 +199,11 @@ public class CustomUserDAO {
         }
     }
 
-    public void updateUserAge(String email, int age) {
+    public Boolean updateUserAge(String email, int age) {
         Transaction transaction = null;
+        if (age > 120){
+            return false;
+        }
 
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -205,18 +212,21 @@ public class CustomUserDAO {
                 user.setAge(age);
                 session.merge(user);
                 transaction.commit();
+                return true;
             } else {
                 System.out.println("User not found with email: " + email);
+                return false;
             }
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
+            return false;
         }
     }
 
-    public void updateUserStats(int value, String email, String field) {
+    public Boolean updateUserStats(int value, String email, String field) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {
@@ -231,15 +241,17 @@ public class CustomUserDAO {
                 }
                 session.merge(user);
                 transaction.commit();
+                return true;
             } else {
                 System.out.println("User not found");
+                return false;
             }
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
-
+            return false;
         }
     }
 }
