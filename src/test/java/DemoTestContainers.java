@@ -18,13 +18,14 @@ public class DemoTestContainers {
     PostgreSQLContainer postgresqlContainer;
 
     public DemoTestContainers() {
-        this.postgresqlContainer = (PostgreSQLContainer)(new PostgreSQLContainer(this.postgres)).withDatabaseName("test_container").withUsername("test").withPassword("test").withReuse(true);
+        this.postgresqlContainer = (PostgreSQLContainer)(new PostgreSQLContainer(this.postgres))
+                .withDatabaseName("test_container").withUsername("test").withPassword("test").withReuse(true);
     }
 
     @BeforeEach
     public void emptyTest() {
         int mappedPort = this.postgresqlContainer.getMappedPort(5432);
-//        new CustomUserDAO(TestSessionFactoryCreator.getCustomUserSessionFactory(mappedPort));
+        new CustomUserDAO(TestSessionFactoryCreator.getCustomUserSessionFactory(mappedPort));
         System.out.println(mappedPort);
         Assertions.assertTrue(true);
     }
