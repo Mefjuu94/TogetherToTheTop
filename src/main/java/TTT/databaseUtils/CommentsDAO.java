@@ -14,11 +14,19 @@ import java.util.List;
 
 public class CommentsDAO {
 
-    private final SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
+    private SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
+
+    public CommentsDAO(){}
+    public CommentsDAO(SessionFactory testSessionFactory){
+        this.sessionFactory = testSessionFactory;
+    }
 
     public boolean addComment(Comments comment) {
 
         Transaction transaction = null;
+        if (comment == null){
+            return false;
+        }
         try (Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
             session.merge(comment);
@@ -32,7 +40,7 @@ public class CommentsDAO {
         }
     }
 
-    public List<Comments> findByTripID(Long ID) {
+    public List<Comments> findCommentsByTripID(Long ID) {
         try {
             Session session = sessionFactory.openSession();
             CriteriaBuilder cb = session.getCriteriaBuilder();

@@ -111,7 +111,8 @@ public class CustomUserDAOTests {
 
     @Test
     public void findCustomUserByIDTestFail() {
-        Assertions.assertNull(testObject.findCustomUserByID("1"));
+        this.testObject.saveUser(this.testCustomUser);
+        Assertions.assertNull(testObject.findCustomUserByID("999"));
     }
 
     @Test
@@ -225,13 +226,69 @@ public class CustomUserDAOTests {
     }
 
 
-    //TODO
-//    @Test
-//    public void updateUserStatsTest() {
-//        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
-//                "Adam", 99, 0, 0, new ArrayList<>(),
-//                new ArrayList<>(), "city");
-//        testObject.saveUser(customUser);
-//        Assertions.assertTrue(updateUserStatsTest(,"test@mail.com",));
-//    }
+    @Test
+    public void updateUserStatsTest() {
+        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
+                "Adam", 99, 0, 0, new ArrayList<>(),
+                new ArrayList<>(), "city");
+        testObject.saveUser(customUser);
+        Assertions.assertTrue(testObject.updateUserStats(2, "test@mail.com","numberOfAnnouncements"));
+        Assertions.assertEquals(testObject.findCustomUserByEmail("test@mail.com").getNumbersOfAnnoucements(),2);
+    }
+
+    @Test
+    public void updateUserStatsTestFail() {
+        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
+                "Adam", 99, 0, 0, new ArrayList<>(),
+                new ArrayList<>(), "city");
+        testObject.saveUser(customUser);
+        Assertions.assertFalse(testObject.updateUserStats(2, "mail.com","numberOfAnnouncements")); //no user = null
+        Assertions.assertFalse(testObject.updateUserStats(-2, "test@mail.com","numberOfAnnouncements"));
+        Assertions.assertFalse(testObject.updateUserStats(-2, "test@mail.com","something"));
+    }
+
+    @Test
+    public void updateUserFieldEmailTest(){
+        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
+                "Adam", 99, 0, 0, new ArrayList<>(),
+                new ArrayList<>(), "city");
+        testObject.saveUser(customUser);
+        //email
+        Assertions.assertTrue(testObject.updateUserField("mail@mail.com","test@mail.com","email"));
+    }
+
+    @Test
+    public void updateUserFieldUsernameTest(){
+        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
+                "Adam", 99, 0, 0, new ArrayList<>(),
+                new ArrayList<>(), "city");
+        testObject.saveUser(customUser);
+        //username
+        Assertions.assertTrue(testObject.updateUserField("MyNewName","test@mail.com","username"));
+    }
+
+    @Test
+    public void updateUserFieldCityTest(){
+        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
+                "Adam", 99, 0, 0, new ArrayList<>(),
+                new ArrayList<>(), "city");
+        testObject.saveUser(customUser);
+        //city
+        Assertions.assertTrue(testObject.updateUserField("Warsaw","test@mail.com","city"));
+    }
+
+    @Test
+    public void updateUserFieldTestFail(){
+        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
+                "Adam", 99, 0, 0, new ArrayList<>(),
+                new ArrayList<>(), "city");
+        testObject.saveUser(customUser);
+        //email
+        Assertions.assertFalse(testObject.updateUserField("mail.test@mail.com","mail.com","email")); //invalid email
+        //username
+        Assertions.assertFalse(testObject.updateUserField("MyNewName","test@mail.com","user")); // invalid field
+        //city
+        Assertions.assertFalse(testObject.updateUserField(null,"test@mail.com","city")); // null value
+    }
+
 }

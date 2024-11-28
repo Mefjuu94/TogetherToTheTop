@@ -89,7 +89,7 @@ public class AnnouncementController {
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
         Trip trip = tripDAO.findTripID(id);
         CustomUser owner = trip.getOwner();
-        List<Comments> comments = commentsDAO.findByTripID(trip.getId());
+        List<Comments> comments = commentsDAO.findCommentsByTripID(trip.getId());
 
         boolean isParticipant = false;
 

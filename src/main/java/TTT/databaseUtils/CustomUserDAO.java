@@ -19,8 +19,8 @@ public class CustomUserDAO {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
 
-    public CustomUserDAO(){}
-    public CustomUserDAO(SessionFactory testSessionFactory){
+    public CustomUserDAO() {}
+    public CustomUserDAO(SessionFactory testSessionFactory) {
         this.sessionFactory = testSessionFactory;
     }
 
@@ -29,7 +29,7 @@ public class CustomUserDAO {
         if (findCustomUserByEmail(customUser.getEmail()) != null) {
             return false;
         }
-        if (customUser.getPassword() == null || customUser.getPassword().length() < 8 ) {
+        if (customUser.getPassword() == null || customUser.getPassword().length() < 8) {
             return false;
         }
 
@@ -167,13 +167,13 @@ public class CustomUserDAO {
 
     }
 
-    public void updateUserField(String value, String email, String field) {
+    public Boolean updateUserField(String value, String email, String field) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             CustomUser user = findCustomUserByEmail(email);
-            if (user != null) {
+            if (user != null && value != null) {
                 switch (field) {
                     case "email":
                         user.setEmail(value);
@@ -184,24 +184,29 @@ public class CustomUserDAO {
                     case "city":
                         user.setCity(value);
                         break;
+                    default:
+                        System.out.println("Wrong field!");
+                        return false;
                 }
                 session.merge(user);
                 transaction.commit();
+                return true;
             } else {
                 System.out.println("User not found");
+                return false;
             }
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
-
+            return false;
         }
     }
 
     public Boolean updateUserAge(String email, int age) {
         Transaction transaction = null;
-        if (age > 120){
+        if (age > 120) {
             return false;
         }
 
@@ -232,7 +237,7 @@ public class CustomUserDAO {
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             CustomUser user = findCustomUserByEmail(email);
-            if (user != null) {
+            if (user != null && value > 0) {
                 switch (field) {
                     case "numberOfAnnouncements":
                         int number = user.getNumbersOfAnnoucements();

@@ -18,19 +18,19 @@ public class Comments {
     private String comment;
     private long userID;
     private long tripID;
-    private String nameOfComentator;
+    private String nameOfCommentator;
 
     private LocalDateTime createdDate;
 
     public Comments() {
     }
 
-    public Comments(String comment, long userID, long tripID,String nameOfComentator) {
+    public Comments(String comment, long userID, long tripID,String nameOfCommentator) {
         this.comment = comment;
         this.userID = userID;
         this.tripID = tripID;
         this.createdDate = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
-        this.nameOfComentator = nameOfComentator;
+        this.nameOfCommentator = nameOfCommentator;
     }
 
     public Long getID() {
@@ -74,11 +74,11 @@ public class Comments {
     }
 
     public String getNameOfComentator() {
-        return nameOfComentator;
+        return nameOfCommentator;
     }
 
     public void setNameOfComentator(String nameOfComentator) {
-        this.nameOfComentator = nameOfComentator;
+        this.nameOfCommentator = nameOfComentator;
     }
 
     @Override
@@ -86,12 +86,12 @@ public class Comments {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Comments comments = (Comments) o;
-        return userID == comments.userID && tripID == comments.tripID && Objects.equals(ID, comments.ID) && Objects.equals(comment, comments.comment) && Objects.equals(nameOfComentator, comments.nameOfComentator) && Objects.equals(createdDate, comments.createdDate);
+        return userID == comments.userID && tripID == comments.tripID && Objects.equals(ID, comments.ID) && Objects.equals(comment, comments.comment) && Objects.equals(nameOfCommentator, comments.nameOfCommentator) && Objects.equals(createdDate, comments.createdDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ID, comment, userID, tripID, nameOfComentator, createdDate);
+        return Objects.hash(ID, comment, userID, tripID, nameOfCommentator, createdDate);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class Comments {
                 ", comment='" + comment + '\'' +
                 ", userID=" + userID +
                 ", tripID=" + tripID +
-                ", nameOfComentator='" + nameOfComentator + '\'' +
+                ", nameOfComentator='" + nameOfCommentator + '\'' +
                 ", createdDate=" + createdDate +
                 '}';
     }
