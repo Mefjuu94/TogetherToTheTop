@@ -22,7 +22,6 @@ public class CustomUserDAO {
 
     public boolean saveUser(CustomUser customUser) {
 
-
         if (findCustomUserByEmail(customUser.getEmail()) != null) {
             return false;
         }
@@ -45,9 +44,12 @@ public class CustomUserDAO {
             if (transaction != null) transaction.rollback(); // back transaction when is error
             e.printStackTrace();
             return false;
-        } finally {
-            session.close(); // close session
         }
+    }
+
+    public List<CustomUser> listAllUsers() {
+        Session session = sessionFactory.openSession();
+        return session.createQuery("SELECT a FROM CustomUser a", CustomUser.class).getResultList();
     }
 
 
@@ -78,6 +80,21 @@ public class CustomUserDAO {
             return results;
         } catch (PersistenceException | IllegalArgumentException e) {
             System.out.println("No entity found with email: " + ID);
+        }
+        return null;
+    }
+
+    public List<CustomUser> findCustomUserByName(String name) {
+        try {
+            Session session = sessionFactory.openSession();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
+            Root<CustomUser> root = userQuery.from(CustomUser.class);
+            userQuery.select(root).where(cb.equal(cb.lower(root.get("customUserName")), name.toLowerCase()));
+            List <CustomUser> results = session.createQuery(userQuery).getResultList();
+            return results;
+        } catch (PersistenceException | IllegalArgumentException e) {
+            System.out.println("No entity found with email: " + name);
         }
         return null;
     }
@@ -192,6 +209,33 @@ public class CustomUserDAO {
                 transaction.rollback();
             }
             e.printStackTrace();
+        }
+    }
+
+    public void updateUserStats(int value, String email,String field) {
+        Transaction transaction = null;
+
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            CustomUser user = findCustomUserByEmail(email);
+            if (user != null) {
+                switch (field){
+                    case "numberOfAnnouncements":
+                        int number = user.getNumbersOfAnnoucements();
+                        user.setNumbersOfAnnoucements(number + value);
+                        break;
+                }
+                session.merge(user);
+                transaction.commit();
+            } else {
+                System.out.println("User not found");
+            }
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+
         }
     }
 }

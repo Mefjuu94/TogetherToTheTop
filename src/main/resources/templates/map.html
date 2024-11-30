@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Integracja z Mapy.cz</title>
-    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Trip creator</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
     <meta name="_csrf" content="TWÓJ_TOKEN_CSRF">
 
 
     <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
 
     <!-- Leaflet Locate Control CSS (for user location) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol@0.72.0/dist/L.Control.Locate.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol@0.72.0/dist/L.Control.Locate.min.css"/>
 
     <!-- Leaflet MarkerCluster CSS (for marker clustering) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
 
     <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
-    <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+    <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet"/>
 
-    <link type="text/css" th:href="@{/css/map.css}" rel="stylesheet" />
+    <link type="text/css" th:href="@{/css/map.css}" rel="stylesheet"/>
+    <!--    th:href="@{/css/map.css}"   || href="/static/css/map.css"-->
 
 </head>
 <body>
@@ -29,77 +30,110 @@
 
     <div id="sidebar">
         <h3>Route Planner</h3>
-        <div><button id="locateMeBtn">Locate me 📍</button></div>
-        <label for="searchInput"></label><input type="text" id="searchInput" placeholder="Search..." />
+        <div id="locateMeBtn-div">
+            <button id="locateMeBtn">Locate me 📍</button>
+        </div>
+        <label for="searchInput"></label><input type="text" id="searchInput" placeholder="Search..."/>
         <button id="searchBtn">Search</button>
         <div id="searchResults" class="dropdown"></div>
-        <div>Waypoints :</div>
-        <div id="waypointsContainer">
-            <ul id="waypointsList"></ul>
-        </div>
+
         <div id="routeInfo">
             <p><strong>Distance:</strong> <span id="distance"></span></p>
             <p><strong>Duration:</strong> <span id="duration"></span></p>
-            <button id="addSavedWaypointBtn">Add Saved Waypoint</button>
+
         </div>
         <div id="poiFilters">
-            <label><input type="checkbox" id="restaurant" > Restaurants 🍽️</label><br>
-            <label><input type="checkbox" id="cafe" > Cafes ☕</label><br>
+            <label><input type="checkbox" id="restaurant"> Restaurants 🍽️</label><br>
+            <label><input type="checkbox" id="cafe"> Cafes ☕</label><br>
             <label><input type="checkbox" id="parking" checked> Parking 🅿️</label><br>
             <label><input type="checkbox" id="school" checked> Schools 🏫</label><br>
             <label><input type="checkbox" id="hospital" checked> Hospitals 🏥</label><br>
             <label><input type="checkbox" id="peak" checked> Peaks ⛰️</label><br> <!-- Added Peaks checkbox -->
-            <label><input type="checkbox" id="generalPoi" > General POIs 📍</label><br> <!-- Added General POIs checkbox -->
+            <label><input type="checkbox" id="generalPoi"> General POIs 📍</label><br>
+            <!-- Added General POIs checkbox -->
         </div>
-        <label for="searchInput"></label><input type="text" id="searchDestination" placeholder="Search..." />
-        <button id="searchDestinationBtn">Search</button>
+
+        <button id="addSavedWaypointBtn">Add Saved Waypoint</button>
+        <div id="waypoints-section">
+            <div id="points"><h3>Waypoints :</h3></div>
+            <div id="waypointsContainer">
+                <ul id="waypointsList"></ul>
+            </div>
+        </div>
+
+
     </div>
-
+    
     <div id="map"></div>
+<!--    <img src="/static/images/mainMenu_png/map.png">   -->
+
     <!-- Sekcja ogłoszenia -->
-    <div id="annoucement_information">
-    <h2>Annoucement information</h2>
+    <div id="announcement_information">
+        <h2>Announcement information</h2>
         <div>
-        <p th:each="tekst: ${array}"
-                th:text="${tekst}"></p>
+            <p th:each="tekst: ${array}"
+               th:text="${tekst}"></p>
         </div>
-    <form>
-        <!-- Sekcja opisu -->
-        <div class="form-group">
-            <label for="description">describe your trip:</label>
-            <textarea id="description" rows="6" placeholder="Description of destination, route, etc."></textarea>
-        </div>
+        <form>
+            <!-- describe section -->
+            <div class="form-group">
+                <label for="description">describe your trip:</label>
+                <textarea id="description" rows="6"
+                          placeholder="Description of destination, route, etc. max 1000 signs!"></textarea>
+            </div>
 
-        <!-- Checkboxy z opcjami -->
-        <div class="checkbox-group">
-            <label>
-                <input type="checkbox" id="driver"> I am driving a vehicle and I can take someone with me
-            </label>
-            <label id="DriverPeopleInputLabel" style="display: none;">
-                specify number of people: <input type="text" id="DriverPeopleInput" min="1" max="99" placeholder="amount of people 1-99" value="1">
-            </label>
+            <!-- Checkbox sextion -->
+            <div class="checkbox-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="driver"> I am driving a vehicle and I can take someone with me
+                    </label>
+                    <label id="DriverPeopleInputLabel" style="display: none;">
+                        specify number of people: <input type="text" id="DriverPeopleInput" min="1" max="99"
+                                                         placeholder="amount of people 1-99" value="1">
+                    </label>
+                </div>
 
-            <label><input type="checkbox" id="animals"> I tolerate animals</label>
-            <label>
-                <input type="checkbox" id="closedGroupCheckbox"> Closed group (limiting the number of people)
-            </label>
-            <label id="peopleInputLabel" style="display: none;" >
-                specify number of people: <input type="text" min="1" max="99" required id="peopleInput" placeholder="amount of people 1-99" value="1">
-            </label>
+                <div class="checkbox">
+                    <label><input type="checkbox" id="animals"> I tolerate animals</label>
+                </div>
+                    <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="closedGroupCheckbox"> Closed group (limiting the number of people)
+                    </label>
+
+                    <label id="peopleInputLabel" style="display: none;">specify number of people: <input type="text" min="1" max="99" required id="peopleInput"
+                                                         placeholder="amount of people 1-99" value="1">
+                    </label>
+                </div>
+            </div>
+
+        </form>
+        <div id="destination-div">
+            <label id="destination-label">Destination:</label>
+            <label for="destination"></label><input type="text" id="dest" placeholder="Your exact destination"/>
         </div>
-    </form>
+        <div id="time">
+            <div>
+                <label>Set time of Your Trip </label>
+            </div>
+            <div>
+                <label for="date"><input type="datetime-local" id="dateTime" name="date"></label>
+            </div>
+        </div>
         <div>
-            <button id="save_announcement" type="button"
-                    th:arr1="${arr1}" th:arr2="${arr2}" th:arr3="${arr3}">
-                save announcement
+            <button id="add_announcement" type="button" onclick="sendToJava()">
+                Add announcement
             </button>
-
         </div>
+
         <form id="saveForm"
-            action="/sendData" method="POST">
+              action="/sendData" method="POST">
+
             <input type="hidden" id="waypoints" name="waypoints">
             <input type="hidden" id="coordinatesOfTrip" name="coordinatesOfTrip">
             <input type="hidden" id="allRouteDuration" name="allRouteDuration">
+            <input type="hidden" id="distanceOfTrip" name="distanceOfTrip">
 
             <input type="hidden" id="descriptionOfTrip" name="descriptionOfTrip">
             <input type="hidden" id="driverCheck" name="driverCheck">
@@ -107,11 +141,15 @@
             <input type="hidden" id="isCheckedAnimals" name="isCheckedAnimals">
             <input type="hidden" id="isCheckedGroup" name="isCheckedGroup">
             <input type="hidden" id="amountOfPeopleInGroup" name="amountOfPeopleInGroup">
-<!--            must have! TOKEN-->
+            <input type="hidden" id="destination" name="destination">
+            <input type="hidden" id="date" name="date">
+            <input type="hidden" id="jsonGeometryWaypoints" name="jsonGeometryWaypoints">
+            <input type="hidden" id="waypointsLength" name="waypointsLength">
+            <!--            must have! TOKEN-->
             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-            <button type="button" onclick="sendToJava()">
-            Add announcement</button>
+
         </form>
+
     </div>
 </div>
 
@@ -131,6 +169,7 @@
 <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
 <script type="text/javascript" th:src="@{/js/map.js}"></script>
+<!-- src="/static/js/map.js"  || th:src="@{/js/map.js}"-->
 </body>
 </html>
 

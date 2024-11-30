@@ -6,6 +6,7 @@ let tempCoordinates = null;
 let savedMarker = null;
 let allRouteDuration = null;
 let coordinatesOfTrip = null;
+let jsonGeometryWaypoints = [];
 
 // Initialize the map
 const map = new maplibregl.Map({
@@ -291,7 +292,14 @@ async function route() {
     if (json.geometry) {
         const source = map.getSource('route-geometry');
         source.setData(json.geometry);
+
+        // console.log(json.geometry);
+        console.log(json.geometry.geometry);
+
+        getArraryOfCoordinates(json.geometry);
+
         document.getElementById('distance').textContent = `${(json.length / 1000).toFixed(2)} km`;
+
         let durationInSeconds = json.duration;
         let hours = Math.floor(durationInSeconds / 3600);
         let minutes = Math.floor((durationInSeconds % 3600) / 60);
@@ -305,6 +313,13 @@ async function route() {
         map.fitBounds(bbox(json.geometry.geometry.coordinates), {padding: 40});
         allRouteDuration = `${hours}h ${minutes}m ${seconds}s`;
     }
+}
+
+function getArraryOfCoordinates(feature) {
+    jsonGeometryWaypoints = []; // reste table
+    feature.geometry.coordinates.forEach(coordinate => {
+        jsonGeometryWaypoints.push("[" + coordinate + "]");
+    });
 }
 
 // Add click event to store coordinates
@@ -482,19 +497,7 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
     }
 });
 
-// Add event listener to button to add this POI as a waypoint
-document.addEventListener('DOMContentLoaded', () => {
-    addToRouteBtn.addEventListener('click', () => {
-        if (poi.name) {
-            waypoints.push({coords: poi.coords, name: poi.name || 'Nieznany'});
-            updateWaypointsList();  // update list of route points
-            route();
-            console.log(`Point added ${poi.name} (${poi.coords.join(', ')}) to route`);
-        } else {
-            console.log("No name for this point.");
-        }
-    });
-});
+
 
 
 document.getElementById('addSavedWaypointBtn').addEventListener('click', () => {
@@ -610,53 +613,123 @@ peopleInput.addEventListener('input', function () {
     }
 });
 
-let arr1 = null;
-let arr2 = null;
-let arr3 = null;
 
+///////////////////////////////////////////////////////////////////////
+var activeSendButton = false;
 
-document.getElementById('save_announcement').onclick = function () {
-    arr1 = this.getAttribute('arr1');
-    arr2 = this.getAttribute('arr2');
-    arr3 = this.getAttribute('arr3');
-    // tu powinno wypisać być "moje koordynaty" w konsoli przeglądarki
-    console.log(arr1);
-    getJavaScript(arr1, arr2, arr3);
-};
+var descriptionInput = document.getElementById('description');
+var descriptionBool = false;
 
-function getJavaScript(arr1, arr2, arr3) {
-    arr1 = waypoints;
-    arr2 = coordinatesOfTrip;
-    arr3 = allRouteDuration;
-    console.log("Route Waypoints:", arr1);
-    console.log("coords:", arr2)
-    console.log("Duration:", arr3)
+descriptionInput.addEventListener('input', function () {
+    if (descriptionInput.value !== '') {
+        document.getElementById('description').style.backgroundColor = 'green';
+        descriptionBool = true;
+    } else {
+        document.getElementById('description').style.backgroundColor = '#c0392b';
+        descriptionBool = false;
+    }
+    checkInputs();
+});
+
+var destinationInput = document.getElementById('dest');
+var destinationBool = false;
+
+destinationInput.addEventListener('input', function () {
+    if (destinationInput.value !== '') {
+        document.getElementById('destination-div').style.backgroundColor = "green";
+        destinationBool = true;
+    } else {
+        document.getElementById('destination-div').style.backgroundColor = "#c0392b";
+        destinationBool = false;
+    }
+    checkInputs();
+});
+
+var timeInput = document.getElementById('time');
+var timeBool = false;
+
+timeInput.addEventListener('input', function () {
+    if (timeInput.value !== '') {
+        document.getElementById('time').style.backgroundColor = "green";
+        timeBool = true;
+    } else {
+        document.getElementById('time').style.backgroundColor = "#c0392b";
+        timeBool = false;
+    }
+    checkInputs();
+});
+
+var submitButton = document.getElementById('add_announcement');
+
+// Funkcja do sprawdzania, czy wszystkie pola są wypełnione
+function checkInputs() {
+
+    if (descriptionBool && destinationBool && timeBool) {
+        activeSendButton = true;
+        submitButton.style.backgroundColor = "green";
+        submitButton.disabled = false;
+    } else {
+        activeSendButton = false;
+        submitButton.style.backgroundColor = "#ccc";
+        submitButton.disabled = true;
+    }
 }
 
 function sendToJava() {
-// Pobieranie danych, z danych globalnych waypoints itp
-    var waypoints1 = waypoints;
-    var coords2 = coordinatesOfTrip;
-    var duration3 = allRouteDuration;
-    var description = document.getElementById('description').value;
-    const isCheckedDriver = document.getElementById('driver').checked;
-    var amountOfPeopleDriver = document.getElementById('DriverPeopleInput').value;
-    const isCheckedAnimals = document.getElementById('animals').checked;
-    const isCheckedGroup = document.getElementById('closedGroupCheckbox').checked;
-    var amountOfPeopleInGroup = document.getElementById('peopleInput').value;
 
+    if(activeSendButton) {
 
-    // Ustawianie wartości w polach ukrytych formularza
-    document.getElementById('waypoints').value = JSON.stringify(waypoints1);
-    document.getElementById('coordinatesOfTrip').value = JSON.stringify(coords2);
-    document.getElementById('allRouteDuration').value = duration3;
+        var waypoints1 = waypoints;
+        var waypointsLength = waypoints.length;
+        var coords2 = coordinatesOfTrip;
+        var duration3 = allRouteDuration;
+        var description = document.getElementById('description').value;
+        const isCheckedDriver = document.getElementById('driver').checked;
+        var amountOfPeopleDriver = document.getElementById('DriverPeopleInput').value;
+        const isCheckedAnimals = document.getElementById('animals').checked;
+        const isCheckedGroup = document.getElementById('closedGroupCheckbox').checked;
+        var amountOfPeopleInGroup = document.getElementById('peopleInput').value;
+        var dest = document.getElementById('dest').value;
+        var date = document.getElementById('dateTime').value;
+        var textContentOfDistance = document.getElementById('distance').textContent;
 
-    document.getElementById('descriptionOfTrip').value = description;
-    document.getElementById('driverCheck').value = isCheckedDriver;
-    document.getElementById('amountOfPeopleDriver').value = amountOfPeopleDriver;
-    document.getElementById('isCheckedAnimals').bool = isCheckedAnimals;
-    document.getElementById('isCheckedGroup').value = isCheckedGroup;
-    document.getElementById('amountOfPeopleInGroup').value = amountOfPeopleInGroup;
+        // Ustawianie wartości w polach ukrytych formularza
+        document.getElementById('waypoints').value = JSON.stringify(waypoints1);
+        document.getElementById('coordinatesOfTrip').value = JSON.stringify(coords2);
+        document.getElementById('allRouteDuration').value = duration3;
 
-    document.getElementById('saveForm').submit();
+        document.getElementById('descriptionOfTrip').value = description;
+        document.getElementById('driverCheck').value = isCheckedDriver;
+        document.getElementById('amountOfPeopleDriver').value = amountOfPeopleDriver;
+        document.getElementById('isCheckedAnimals').bool = isCheckedAnimals;
+        document.getElementById('isCheckedGroup').value = isCheckedGroup;
+        document.getElementById('amountOfPeopleInGroup').value = amountOfPeopleInGroup;
+        document.getElementById('destination').value = dest;
+        document.getElementById('date').value = date;
+        document.getElementById('distanceOfTrip').value = textContentOfDistance;
+        document.getElementById('jsonGeometryWaypoints').value = jsonGeometryWaypoints;
+        document.getElementById('waypointsLength').value = waypoints.length;
+
+        if (date.length < 1 || dest.length < 1 || description.length < 1) {
+            alert("fulfill description, destination, date and time of trip!")
+        } else {
+            console.log("wysyłam")
+            document.getElementById('saveForm').submit();
+        }
+    }
 }
+
+
+// Add event listener to button to add this POI as a waypoint
+// document.addEventListener('DOMContentLoaded', () => {
+//     addToRouteBtn.addEventListener('click', () => {
+//         if (poi.name) {
+//             waypoints.push({coords: poi.coords, name: poi.name || 'Nieznany'});
+//             updateWaypointsList();  // update list of route points
+//             route();
+//             console.log(`Point added ${poi.name} (${poi.coords.join(', ')}) to route`);
+//         } else {
+//             console.log("No name for this point.");
+//         }
+//     });
+// });

@@ -5,80 +5,185 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="'Trip to ' + ${trip.destination}">Trip Details</title>
     <link rel="stylesheet" th:href="@{/css/trip.css}">
+    <!--    href="/static/css/trip.css"-->
     <meta name="_csrf" content="my_token_csrf">
 </head>
 <body class="background-image" style="background-image: url('/images/tripBackground.jpg');">
 <div class="container">
-    <h1 th:text="${trip.destination}">Trip Destination</h1>
+    <!-- Trip Destination at the center -->
+    <div class="tileCenter">
+        <h1 th:text="${trip.destination}">Trip Destination</h1>
+    </div>
 
-    <div class="grid-container">
-        <!-- Główne informacje o wycieczce -->
-        <div class="tile">
-            <h3>Trip ID</h3>
-            <p id="IDofTrip" th:text="${trip.id}">Trip ID</p>
-        </div>
-        <div class="tile">
-            <h3>Trip Description</h3>
-            <p th:text="${trip.tripDescription}">This is a trip description</p>
-        </div>
-        <div class="tile">
-            <h3>Trip Duration</h3>
-            <p th:text="${trip.tripDuration}">3 days</p>
+    <!-- Main 3-column grid layout -->
+    <div class="big-grid-container">
+        <!-- Left grid: Participants list -->
+        <div class="left-grid">
+            <div class="Participants-tile">
+                <h3 th:text="'Participants' + ' ' +  ${trip.getParticipants().size()} + '/' + ${trip.amountOfClosedGroup}">Participants</h3>
+                <ul th:if="${trip.getOwner().getId() != customUser.getId()}">
+                    <li th:each="participant : ${trip.getParticipants()}">
+                        <a th:href="@{'/userProfile/' +${participant.getId()}}"
+                           th:text="${participant.getCustomUserName()}">Participant</a>
+                    <div th:if="${participant.getId() == customUser.getId()}"><form id="delete_participant_clone"
+                                                                                    action="/delete_participant" method="POST">
+                        <input type="hidden"  name="user_Identity" th:value="${participant.getId()}">
+                        <input type="hidden"  name="tripId" th:value="${trip.getId()}">
+                        <!--            must have! TOKEN-->
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                        <button>delete me from trip</button>
+                    </form></div>
+                    </li>
+                </ul>
+                <ul th:if="${trip.getOwner().getId() == customUser.getId()}">
+                    <li th:each="participant : ${trip.getParticipants()}">
+                        <a th:href="@{'/userProfile/' +${participant.getId()}}"
+                           th:text="${participant.getCustomUserName()}">Participant</a>
+                        <form id="delete_participant"
+                              action="/delete_participant" method="POST">
+                            <input type="hidden"  name="user_Identity" th:value="${participant.getId()}">
+                            <input type="hidden"  name="tripId" th:value="${trip.getId()}">
+                            <!--            must have! TOKEN-->
+                            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                        <button>delete participant</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         </div>
 
-        <!-- Grupa -->
-        <div class="tile">
-            <h3>Closed Group</h3>
-            <p th:text="${trip.closedGroup ? 'Yes' : 'No'}">No</p>
-        </div>
-        <div class="tile">
-            <h3>Group Size</h3>
-            <p th:text="${trip.amountOfClosedGroup}">5 people</p>
+        <!-- Center grid: Map -->
+        <div class="center-grid">
+            <div id="map"></div>
+            <form id="gpxFile"
+                  action="/downloadGpx" method="GET">
+                <input type="hidden" id="trip_Identity" name="trip_Identity" th:value="${trip.getId()}">
+                <!--            must have! TOKEN-->
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+
+                <div id="download_button-container">
+                    <button id="download_button" class="download_button">
+                        Download GPX
+                    </button>
+                </div>
+            </form>
         </div>
 
-        <!-- Transport -->
-        <div class="tile">
-            <h3>People in the Car</h3>
-            <p th:text="${trip.peopleInTheCar ? 'Yes' : 'No'}">No</p>
-        </div>
-        <div class="tile">
-            <h3>Amount of Driver People</h3>
-            <p th:text="${trip.amountOfDriverPeople}">3</p>
-        </div>
+        <!-- Right grid: Info tiles, description, and join button -->
+        <div class="right-grid">
+            <div class="info-container">
+                <div class="grid-container">
+                    <!-- Info tiles with trip details -->
+                    <div class="tile">
+                        <h3>Trip ID</h3>
+                        <p id="IDofTrip" th:text="${trip.id}">Trip ID</p>
+                    </div>
+                    <div class="tile">
+                        <h3>Trip Duration</h3>
+                        <p th:text="${trip.tripDuration}">3 days</p>
+                    </div>
+                    <div class="tile">
+                        <h3>Trip Distance</h3>
+                        <p th:text="${trip.distanceOfTrip}">distance</p>
+                    </div>
+                    <div class="tile">
+                        <h3>Trip Time</h3>
+                        <p th:text="${trip.getTripDateTime()}">now</p>
+                    </div>
+                    <div class="tile">
+                        <h3>Closed Group</h3>
+                        <p th:text="${trip.closedGroup ? 'Yes' : 'No'}">No</p>
+                    </div>
+                    <div class="tile">
+                        <h3>Group Size</h3>
+                        <p th:text="${trip.amountOfClosedGroup}">5 people</p>
+                    </div>
+                    <div class="tile">
+                        <h3>People in the Car</h3>
+                        <p th:text="${trip.peopleInTheCar ? 'Yes' : 'No'}">No</p>
+                    </div>
+                    <div class="tile">
+                        <h3>Amount of People to take</h3>
+                        <p th:text="${trip.amountOfDriverPeople}">3</p>
+                    </div>
+                    <div class="tile">
+                        <h3>Owner</h3>
+                        <a th:href="@{'/userProfile/' + ${owner.getId()}}" class="owner-profile">
+                            <p th:text="${owner.getCustomUserName()}">Owner Name</p>
+                        </a>
+                    </div>
+                    <!-- Add other tiles similarly... -->
+                </div>
 
-        <!-- Właściciel i uczestnicy -->
-        <div class="tile">
-            <h3>Owner</h3>
-            <p th:text="${trip.ownerOfTrip.getCustomUserName()}">Owner Name</p>
+                <!-- Trip Description -->
+                <div id="description" class="tile">
+                    <h3>Trip Description</h3>
+                    <p th:text="${trip.tripDescription}">This is a trip description</p>
+                </div>
+
+                <!-- Join Trip button -->
+                <div id="button-container" th:if="${!isParticipant}">
+                    <form id="saveForm" action="/addMe" method="POST">
+                        <input type="hidden" id="tripId" name="tripId" th:value="${trip.getId()}">
+                        <input type="hidden" id="userId" name="userId" th:value="${customUser.getId()}">
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                        <button id="add_button" class="add_button"
+                                th:if="!${trip.owner.getId() == customUser.getId() || isParticipant}">
+                            Join to Trip!
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="tile">
-            <h3>Participants</h3>
+    </div>
+
+    <!-- Comments Section -->
+    <div id="commentSection" th:if="${isParticipant or customUser.getId() == trip.getOwner().getId()}">
+        <div><h3>Comments</h3></div>
+        <div id="comment_form">
+            <form id="commentForm"
+                  action="/addComment" method="POST">
+                <label>
+                    <textarea id="comment" name="comment" rows="4" cols="50"></textarea>
+                </label>
+                <input type="hidden" id="userIdComment" name="userIdComment" th:value="${customUser.getId()}">
+                <input type="hidden" id="userName" name="userName" th:value="${customUser.customUserName}">
+                <input type="hidden" id="tripIdComment" name="tripIdComment" th:value="${trip.getId()}">
+                <!--            must have! TOKEN-->
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+
+                <div id="commentButton-container">
+                    <button id="addCommentButton" class="addCommentButton">
+                        add comment
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div>
             <ul>
-                <li th:each="participant : ${trip.getParticipants()}" th:text="${participant.customUserName}">Participant 1</li>
+                <li th:each="comment : ${comments}" class="comment-item">
+                    <!-- Link do profilu użytkownika -->
+                    <a th:href="@{'/userProfile/' + ${comment.getUserID()}}" class="comment-username"
+                       th:text="${comment.getNameOfComentator()}">User</a>
+                    <!-- Komentarz użytkownika -->
+                    <p class="comment-text" th:text="${comment.comment}">This is a comment text.</p>
+                    <!-- Data komentarza -->
+                    <span class="comment-date" th:text="${comment.getDateOfComment()}"></span>
+                    <form th:action="@{/deleteComment}" method="post"
+                          th:if="${comment.getUserID() == customUser.getId()}">
+                        <button type="submit">Delete Comment</button>
+                        <input type="hidden" id="idComment" name="idComment" th:value="${comment.getID()}">
+                        <input type="hidden" name="idOfTrip" th:value="${comment.getTripID()}">
+                    </form>
+                </li>
             </ul>
         </div>
     </div>
-
-    <form id="saveForm"
-          action="/addMe" method="POST">
-        <p hidden="hidden" id="USER_id" th:text="${customUser.id}"></p>
-        <input type="hidden" id="tripId" name="tripId">
-        <input type="hidden" id="userId" name="userId">
-
-        <!--            must have! TOKEN-->
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-
-    <div class="button-container">
-        <button id="add_button">Join to Trip</button>
-    </div>
-    </form>
 </div>
-
-
-
-
-
-
+<!-- External resources -->
+<link href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-gpx@1.7.0/gpx.min.js"></script>
 <script type="text/javascript" th:src="@{/js/trip.js}"></script>
 </body>
 </html>

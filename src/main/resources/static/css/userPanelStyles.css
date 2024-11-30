@@ -19,6 +19,7 @@ h1 {
 
 .background-image {
     position: fixed;
+    background-attachment: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -51,7 +52,16 @@ h1 {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    text-align: left;
+    text-align: center;
+    cursor: pointer;
+}
+
+.tile-editable {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
     cursor: pointer;
 }
 
@@ -90,4 +100,38 @@ h1 {
 .close:hover {
     color: black;
     cursor: pointer;
+}
+
+.tile:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tile-editable:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 800px) {
+
+    .body {
+        justify-content: center;
+    }
+
+    .profile-container {
+        justify-self: center;
+        position: relative;
+        max-width: 90%; /* Szerokość kontenera */
+        padding: 10px;
+        z-index: 1;
+        background-color: rgba(255, 255, 255, 0.6);
+        border-radius: 10px;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .background-image {
+        background-position: 80% center;
+        background-attachment: fixed;
+        background-size: cover;
+    }
 }

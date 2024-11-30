@@ -13,25 +13,49 @@ html, body {
     overflow-y: auto;
 }
 
+.container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.sidebar { grid-area: 1 / 1 / 2 / 2; }
+.map { grid-area: 1 / 2 / 2 / 3; }
+.announcement_information { grid-area: 1 / 3 / 2 / 4; }
+
+
 #map {
     width: 65%;
     height: 100vh;
     float: left;
 }
-#annoucement_information{
-    width: 19%;
+
+.map{
+    width: 65%;
+    height: 100vh;
+    float: left;
+}
+#announcement_information{
+    text-align: center;
+    justify-content: center;
+    justify-self: center;
+    justify-items: center;
+    max-width: 19%;
     height: 100vh;
     float: right;
     background-color: #f8f8f8;
 }
 
-
-
-.container {
-    display: flex;
-    height: 100vh;
+.waypoints-section{
+    justify-content: center;
+    justify-items: center;
 }
 
+.points{
+    justify-self: center;
+}
 
 #sidebar ul {
     list-style: none;
@@ -61,12 +85,17 @@ html, body {
 
 .dropdown {
     position: absolute; /* Umożliwia umiejscowienie nad innymi elementami */
-    background-color: Grey; /* Tło rozwijanej listy */
+    background-color: lightgrey; /* Tło rozwijanej listy */
     border: 1px solid black; /* Ramka */
     z-index: 1000; /* Wyższy z-index, aby była nad innymi elementami */
     max-height: 200px; /* Maksymalna wysokość, aby zachować proporcje */
     overflow-y: auto; /* Przewijanie, gdy lista jest za długa */
     display: none; /* Ukryta domyślnie */
+}
+
+
+.locateMeBtn-div{
+    align-self: center;
 }
 
 .search-result-item {
@@ -80,31 +109,72 @@ html, body {
     background-color: darkgreen; /* Kolor tła przy najechaniu */
 }
 
-
-#add_announcement_div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#searchInput{
+    box-sizing: border-box;
 }
 
+
 #add_announcement {
+    margin-top: 10%;
     padding: 15px 30px; /* Większy przycisk */
     font-size: 18px; /* Większy tekst */
     background-color: grey;
     color: white;
-    border: none;
+    border: solid black;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, border 0.3s ease;
 }
 
+#time {
+    justify-content: center;
+    margin-top: 10%;
+    border: solid black 2px;
+    border-radius: 5px;
+    background-color: #c0392b;
+}
+
 #add_announcement:hover {
-    background-color: green;
     border: 2px solid orange;
 }
 
-/*sekcja ogłoszenia*/
+#destination-div{
+    justify-items: center;
+    margin-top: 10%;
+    border: solid black 2px;
+    border-radius: 5px;
+    background-color: #c0392b;
+}
 
+#destination-label{
+    display: flex;            /* Ustawienie flexboxa */
+    justify-content: center;   /* Wyśrodkowanie poziome */
+    text-align: center;        /* Wyśrodkowanie tekstu w labelu */
+    width: 100%;               /* Opcjonalnie, aby label zajmował całą szerokość */
+}
+
+#dest {
+    flex: 1;                  /* Input wypełnia dostępne miejsce */
+    padding: 8px;             /* Wewnętrzne odstępy dla inputu */
+    box-sizing: border-box;   /* Uwzględnia padding w szerokości */
+}
+
+#description {
+    flex: 1;                  /* Input wypełnia dostępne miejsce */
+    padding: 8px;             /* Wewnętrzne odstępy dla inputu */
+    box-sizing: border-box;   /* Uwzględnia padding w szerokości */
+}
+
+/*checkboxy*/
+
+.checkbox{
+    border: solid black 2px;
+    border-radius: 5px;
+    padding: 5px;
+    display: block;
+    box-sizing: border-box;
+    margin: 5px;
+}
 
 h2 {
     color: #333;
@@ -136,6 +206,97 @@ input[type="text"], textarea {
     margin-right: 10px;
 }
 
+@media (max-width: 1050px) {
 
+    #sidebar {
+        width: 30%;
+        height: 100vh;
+        float: left;
+        background-color: #f8f8f8;
+        padding: 10px;
+        box-sizing: border-box;
+        overflow-y: auto;
+    }
 
+    .container {
+        display: grid;
+        grid-template-columns: repeat(2, 2fr);
+        grid-template-rows: 1fr;
+        grid-column-gap: 0px;
+        grid-row-gap: 0px;
+    }
 
+    .sidebar { grid-area: 1 / 1 / 2 / 2; }
+    .map { grid-area: 1 / 2 / 2 / 3; }
+    .announcement_information { grid-area: 2 / 3 / 1 / 4; }
+
+    #map {
+        width: 65%;
+        height: 100vh;
+        float: left;
+    }
+
+    .map{
+        width: 65%;
+        height: 100vh;
+        float: left;
+    }
+
+    #announcement_information{
+        text-align: center;
+        justify-content: center;
+        justify-self: center;
+        justify-items: center;
+        max-width: 100%;
+        height: 100vh;
+        background-color: #f8f8f8;
+    }
+
+}
+
+@media (max-width: 550px) {
+    #sidebar {
+        width: 40%;
+        height: 100vh;
+        float: left;
+        background-color: #f8f8f8;
+        padding: 10px;
+        box-sizing: border-box;
+        overflow-y: auto;
+    }
+
+    .container {
+        display: grid;
+        grid-template-columns: repeat(2, 2fr);
+        grid-template-rows: 1fr;
+        grid-column-gap: 0px;
+        grid-row-gap: 0px;
+    }
+
+    .sidebar { grid-area: 1 / 1 / 2 / 2; }
+    .map { grid-area: 1 / 2 / 2 / 3; }
+    .announcement_information { grid-area: 2 / 3 / 1 / 4; }
+
+    #map {
+        width: 55%;
+        height: 100vh;
+        float: left;
+    }
+
+    .map{
+        width: 55%;
+        height: 100vh;
+        float: left;
+    }
+
+    #announcement_information{
+        text-align: center;
+        justify-content: center;
+        justify-self: center;
+        justify-items: center;
+        max-width: 100%;
+        height: 100vh;
+        background-color: #f8f8f8;
+    }
+
+}

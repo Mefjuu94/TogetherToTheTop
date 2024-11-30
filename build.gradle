@@ -13,6 +13,10 @@ java {
     }
 }
 
+springBoot {
+    mainClass.set('TTT.TogetherToTheTopApplication')
+}
+
 repositories {
     mavenCentral()
 }
@@ -25,10 +29,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    implementation 'org.json:json:20210307'
 
     implementation 'org.apache.poi:poi:5.2.5'
 
     runtimeOnly 'org.postgresql:postgresql'
+
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation "org.testcontainers:junit-jupiter:1.20.0"

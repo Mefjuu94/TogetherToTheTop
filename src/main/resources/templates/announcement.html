@@ -5,26 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Announcements</title>
     <link rel="stylesheet" th:href="@{/css/anoucements.css}">
+    <!--    th:href="@{/css/anoucements.css}"  || href="/static/css/anoucements.css"-->
 </head>
 <body style="background-image: url('/images/background.jpg');">
-
-<div class="container announcements-container">
+<!--url('/images/background.jpg');"      || url('/static/images/background.jpg');"-->
+<div class="container">
     <h1>Announcements</h1>
-    <div class="announcement-list">
 
-        <a th:href="@{'/trips/' + ${trips.id}}" class="announcement-item" th:each="trips : ${trips}">
-            <h2 th:text="${trips.destination}">Destynacja</h2>
-            <p th:text="${trips.tripDescription}">Opis ogłoszenia</p>
-           <span class="owner-icon">
-                <img th:if="${trips.ownerOfTrip.id == customUser.id and !tripsID.contains(trips.id)}" th:src="@{/images/announcement/owner.png}"
-                     alt="You are the owner of Trip" class="icon-image owner-icon">
-                <img th:if="${trips.ownerOfTrip.id != customUser.id and tripsID.contains(trips.id)}" th:src="@{/images/announcement/ok.png}"
-                      alt="You are already on this trip" class="icon-image flag-icon">
-                 <img th:if="${!tripsID.contains(trips.id) and trips.ownerOfTrip.id != customUser.id}" th:src="@{/images/announcement/add.png}"
-                     alt="Add me to trip" class="icon-image flag-icon">
-</span>
+    <div class="announcement-list" th:each="trip : ${trips}">
+        <a th:if="${trip.tripVisible == true}" th:href="@{'/trips/' + ${trip.id}}" class="announcement-item">
+
+            <div id="destination" class="small-grid">
+                <div id="dest1"><h2>Destination</h2></div>
+                <div id="dest2"><p th:text="${trip.destination}">Destination</p></div>
+            </div>
+
+            <div id="distance" class="small-grid">
+                <div id="dist1"><h2>Distance</h2></div>
+                <div id="dist2"><p th:text="${trip.distanceOfTrip}">Distance</p></div>
+            </div>
+
+            <div id="Creator" class="small-grid">
+                <div id="creat1"><h2>Creator Name</h2></div>
+                <div id="creat2"><p th:text="${trip.owner.getCustomUserName()}">Creator Name</p></div>
+            </div>
+
+            <div id="icon_div" class="small-grid">
+                <div id="icon_when"><h2 class="owner-icon" th:with="helperVar=${customUser.id + ',' + trip.id}" > Role:
+                    <img src="/static/images/announcement/owner.png" th:if="${trip.owner.id == customUser.id}"
+                         th:src="@{/images/announcement/owner.png}"
+                         alt="You are the owner of Trip" class="icon-image owner-icon">
+
+                    <img th:if="${trip.owner.id != customUser.id and !#lists.contains(tripsAndIDs,helperVar)}"
+                         th:src="@{/images/announcement/add.png}"
+                         alt="Add me to trip" class="icon-image flag-icon">
+
+                    <img th:if="${trip.getId() != customUser.getId() and #lists.contains(tripsAndIDs,helperVar)}"
+                         th:src="@{/images/announcement/ok.png}"
+                         alt="You are already on this trip" class="icon-image flag-icon">
+                </h2></div>
+
+                <div id="when"><p th:text="${trip.tripDateTime}">when...</p></div>
+            </div>
         </a>
     </div>
+
 </div>
 <script type="text/javascript" th:src="@{/js/announcement.js}"></script>
 </body>

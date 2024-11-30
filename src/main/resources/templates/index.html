@@ -18,8 +18,8 @@
                 </a>
             </div>
             <div th:if="${#authorization.expression('isAuthenticated()')}">
-                <a th:href="@{/logout}" th:method="post">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <a href="#" th:href="@{logout}" th:method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <img src="/images/mainMenu_png/user-logout.png" alt="User Profile">
                     <span>Logout</span>
                 </a>
@@ -33,11 +33,16 @@
                 </a>
             </div>
             <div th:if="${#authorization.expression('isAuthenticated()')}">
-                <a href="#">
-                    <img src="/images/mainMenu_png/find_friend.png" alt="Plan Trip">
-                    <span>Find Friend</span>
-                </a>
+                <form id="saveForm" th:action="@{/findFriend}" method="GET">
+                    <button type="submit" id="findFriend" style="border: none; background: none;">
+                        <img src="/images/mainMenu_png/find_friend.png" alt="Find Friend">
+                        <span>Find Friend</span>
+                    </button>
+                    <input type="text" id="friendName" name="friendName" placeholder="Search user by name..." required/>
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                </form>
             </div>
+
         </div>
     </main>
 </div>
@@ -47,21 +52,21 @@
         <!-- Kafelki menu -->
         <div class="tile">
             <div th:if="${not #authorization.expression('isAuthenticated()')}">
-            <a href="/login">
-                <img src="/images/mainMenu_png/user-profile_not_active.png" alt="User Profile">
-                <span>Login to view user profile</span>
-            </a>
+                <a href="/login">
+                    <img src="/images/mainMenu_png/user-profile_not_active.png" alt="User Profile">
+                    <span>Login to view user profile</span>
+                </a>
             </div>
             <div th:if="${#authorization.expression('isAuthenticated()')}">
-                <a href="/user">
+                <a href="/myProfile">
                     <img src="/images/mainMenu_png/user-profile.png" alt="User Profile">
-                    <span>Login to view user profile</span>
+                    <span>my profile</span>
                 </a>
             </div>
         </div>
         <div class="tile">
             <div th:if="${#authorization.expression('isAuthenticated()')}">
-                <a href="/map" >
+                <a href="/map">
                     <img src="/images/mainMenu_png/map.png" alt="Plan Trip">
                     <span>Plan a trip</span>
                 </a>
@@ -73,24 +78,13 @@
                 </a>
             </div>
         </div>
-        <div class="tile">
-            <a href="#" id="aboutButton">
-                <img src="/images/mainMenu_png/about.png" alt="About">
-                <span>About "TTT" Project</span>
-            </a>
-        </div>
-        <div class="tile">
-            <a href="#" id="contactButton">
-                <img src="/images/mainMenu_png/contact.png" alt="Contact">
-                <span>Contact</span>
-            </a>
-        </div>
+
         <div class="tile">
             <div th:if="${#authorization.expression('isAuthenticated()')}">
-            <a href="/announcement">
-                <img src="/images/mainMenu_png/announcement.png" alt="Announcements">
-                <span>Announcement</span>
-            </a>
+                <a href="/announcement">
+                    <img src="/images/mainMenu_png/announcement.png" alt="Announcements">
+                    <span>Announcement</span>
+                </a>
             </div>
             <div th:if="${not #authorization.expression('isAuthenticated()')}">
                 <a href="/login" id="announcementButton">
@@ -99,6 +93,42 @@
                 </a>
             </div>
         </div>
+
+        <div class="tile">
+            <a href="#" id="contactButton">
+                <img src="/images/mainMenu_png/contact.png" alt="Contact">
+                <span>Contact</span>
+            </a>
+        </div>
+
+        <div class="tile">
+            <div th:if="${not #authorization.expression('isAuthenticated()')}">
+                <a href="/login">
+                    <img src="/images/mainMenu_png/findTrip_noActive.png" alt="Find Trip">
+                    <span>Login to Find Trip!</span>
+                </a>
+            </div>
+
+            <div th:if="${#authorization.expression('isAuthenticated()')}">
+                <form id="Form" th:action="@{/findTrip}" method="GET">
+                    <button type="submit" id="find_Trip" style="border: none; background: none;">
+                        <img src="/images/mainMenu_png/findTripColor_active.png" alt="Find Trip">
+                        <span>I want to go...</span>
+                    </button>
+                    <input type="text" id="tripDestination" name="tripDestination"
+                           placeholder="Search trip by destination..." required/>
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                </form>
+            </div>
+        </div>
+
+        <div class="tile">
+            <a href="#" id="aboutButton">
+                <img src="/images/mainMenu_png/about.png" alt="About">
+                <span>About "TTT" Project</span>
+            </a>
+        </div>
+
     </main>
 </div>
 
@@ -140,7 +170,8 @@
         <form th:action="@{/register}" method="post">
             <div>
                 <label>
-                    <input type="email" name="email" placeholder="Email" required/>
+                    <input type="email" name="email" id="emailInput" placeholder="Email" required/>
+                    <span id="message"></span>
                 </label>
                 <i class="bx bxs-envelope"></i>
             </div>
@@ -150,7 +181,7 @@
                 </label>
                 <i class="bx bxs-lock-alt"></i>
             </div>
-            <input type="submit" value="Register"/>
+            <input type="submit" id="submitRegister" value="Register"/>
         </form>
     </div>
 </div>
@@ -172,7 +203,7 @@
     <div class="modal-content">
         <span class="close">&times;</span>
         <h2>Contact</h2>
-        <p>Contatct with me.</p>
+        <p><img src="/images/mainMenu_png/mail.png" alt="" class="mail-icon"> Contatct with me.</p>
     </div>
 </div>
 <div th:if="${not #authorization.expression('isAuthenticated()')}">
@@ -181,6 +212,8 @@
 <div th:if="${#authorization.expression('isAuthenticated()')}">
     <p>Hello, you are logged!</p>
 </div>
+<input th:value="${users}"
+    id="usersData" typeof="hidden" type="hidden">
 <script type="text/javascript" th:src="@{/js/index.js}"></script>
 </body>
 </html>

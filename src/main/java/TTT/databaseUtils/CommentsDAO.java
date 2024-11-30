@@ -1,6 +1,6 @@
 package TTT.databaseUtils;
 
-import TTT.trips.Trip;
+import TTT.trips.Comments;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
@@ -10,22 +10,20 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class TripDAO {
+public class CommentsDAO {
 
     private final SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
 
-    public boolean addAnnouncement(Trip trip) {
+    public boolean addComment(Comments comment) {
 
         Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()){
             transaction = session.beginTransaction();
-            session.merge(trip);
+            session.merge(comment);
             transaction.commit();
-            System.out.println("The trip has been created!");
+            System.out.println("Comment added!");
             return true;
         } catch (Exception e) {
             if (transaction != null) transaction.rollback(); // back transaction when is error
@@ -34,50 +32,40 @@ public class TripDAO {
         }
     }
 
-    public List <Trip> findTrip(String destination) {
+    public List<Comments> findByTripID(Long ID) {
         try {
             Session session = sessionFactory.openSession();
             CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaQuery<Trip> cq = cb.createQuery(Trip.class);
-            Root<Trip> root = cq.from(Trip.class);
-            cq.select(root);
-
-            List <Trip> preResults = session.createQuery(cq).getResultList();
-            List <Trip> results = new ArrayList<>();
-            for (Trip preResult : preResults) {
-                String[] tag = preResult.getDestination().split("[ ,]+");
-                for (String s : tag) {
-                    System.out.println(s);
-                    if (Objects.equals(s.toLowerCase(), destination.toLowerCase())) {
-                        results.add(preResult);
-                        break;
-                    }
-                }
-            }
+            CriteriaQuery<Comments> userQuery = cb.createQuery(Comments.class);
+            Root<Comments> root = userQuery.from(Comments.class);
+            userQuery.select(root).where(cb.equal(root.get("tripID"), ID));
+            List<Comments> results = session.createQuery(userQuery).getResultList();
             return results;
         } catch (PersistenceException | IllegalArgumentException e) {
-            System.out.println("No entity found with destination: " + destination);
+            System.out.println("No entity found with id: " + ID);
         }
         return null;
     }
 
+    public boolean deleteComment(long id) {
 
-    public boolean deleteTrip(Trip trip) {
+        Session session = null;
+        Comments comment = findCommentID(id);
 
-        if (trip == null) {
+        if (comment == null){
+            System.out.println("no comment with this ID!");
             return false;
         }
 
-        Session session = null;
         try {
             session = sessionFactory.openSession();
             session.beginTransaction();
 
             CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaDelete<Trip> delete = cb.createCriteriaDelete(Trip.class);
+            CriteriaDelete<Comments> delete = cb.createCriteriaDelete(Comments.class);
 
-            Root<Trip> authorRoot = delete.from(Trip.class);
-            delete.where(cb.equal(authorRoot.get("Trip"), Trip.class));
+            Root<Comments> authorRoot = delete.from(Comments.class);
+            delete.where(cb.equal(authorRoot.get("id"), id));
 
             session.createMutationQuery(delete).executeUpdate();
             session.getTransaction().commit();
@@ -93,29 +81,22 @@ public class TripDAO {
                 session.close();
             }
         }
+
     }
 
-    public List<Trip> listAllAnnouncements() {
+    public List<Comments> listAllComments() {
         Session session = sessionFactory.openSession();
-        return session.createQuery("SELECT a FROM Trip a", Trip.class).getResultList();
+        return session.createQuery("SELECT a FROM Comments a", Comments.class).getResultList();
     }
 
-    public List<Trip> listAllAnnouncementsByUserId(Long userId) {
-        Session session = sessionFactory.openSession();
-        return session.createQuery("SELECT a FROM Trip a WHERE a.owner.id = :userId", Trip.class)
-                .setParameter("userId", userId)
-                .getResultList();
-    }
-
-
-    public Trip findTripID(long id) {
+    public Comments findCommentID(long id) {
         try {
             Session session = sessionFactory.openSession();
             CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaQuery<Trip> userQuery = cb.createQuery(Trip.class);
-            Root<Trip> root = userQuery.from(Trip.class);
+            CriteriaQuery<Comments> userQuery = cb.createQuery(Comments.class);
+            Root<Comments> root = userQuery.from(Comments.class);
             userQuery.select(root).where(cb.equal(root.get("id"), id));
-            Trip results = session.createQuery(userQuery).getSingleResultOrNull();
+            Comments results = session.createQuery(userQuery).getSingleResultOrNull();
             return results;
         } catch (PersistenceException | IllegalArgumentException e) {
             System.out.println("No entity found with destination: " + id);
@@ -123,23 +104,13 @@ public class TripDAO {
         return null;
     }
 
-    public List<Object[]> listAllTripParticipantIds() {
-        Session session = sessionFactory.openSession();
-        return session.createNativeQuery("SELECT trip_id, user_id FROM trip_participants", Object[].class)
-                .getResultList();
-    }
-
-    public void updateTrip(long idTrip, Trip trip) {
+    public void editComment(long idOfComment, String commentString) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            if (trip != null) {
-                session.merge(trip);
+                session.merge(commentString);
                 transaction.commit();
-            } else {
-                System.out.println("Trip id did not exist");
-            }
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -147,6 +118,4 @@ public class TripDAO {
             e.printStackTrace();
         }
     }
-
-
 }
