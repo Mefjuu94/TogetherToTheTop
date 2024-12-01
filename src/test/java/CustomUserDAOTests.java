@@ -34,7 +34,7 @@ public class CustomUserDAOTests {
         System.out.println(mappedPort);
     }
 
-    private CustomUser createTestUser() {
+    protected CustomUser createTestUser() {
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "testUser", 99, 0, 0, new ArrayList<>(),
                 new ArrayList<>(), "city");

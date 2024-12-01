@@ -16,9 +16,17 @@ import java.util.Objects;
 
 public class TripDAO {
 
-    private final SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
+    private SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
+    public TripDAO(SessionFactory testSessionFactory){
+        this.sessionFactory = testSessionFactory;
+    }
+    public TripDAO(){}
 
     public boolean addAnnouncement(Trip trip) {
+
+        if (trip == null){
+            return false;
+        }
 
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {

@@ -8,6 +8,9 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Testcontainers
 public class CommentsDAOTests {
     private CommentsDAO testObject;
@@ -45,15 +48,42 @@ public class CommentsDAOTests {
 
     @Test
     public void findCommentsByTripIDTest() {
-        createTestComment();
+        saveCommentTest();
 
-        // Assertions.assertArrayEquals();
+        List<Comments> list = new ArrayList<>();
+        testComment.setID(1L);
+        list.add(testComment);
+
+         Assertions.assertEquals(list,testObject.findCommentsByTripID(1L));
+    }
+
+    @Test
+    public void findCommentsByTripIDTestFail() {
+        saveCommentTest();
+        Comments comment = testObject.findCommentID(1);
+        Assertions.assertNotEquals(testComment,comment); // wrong Id
     }
 
     @Test
     public void deleteCommentTest() {
-        createTestComment();
+        saveCommentTest();
         Assertions.assertTrue(this.testObject.deleteComment(1));
+    }
+    @Test
+    public void deleteCommentFail() {
+        Assertions.assertFalse(this.testObject.deleteComment(1));
+    }
+
+    @Test
+    public void editComment() {
+        saveCommentTest();
+        Assertions.assertTrue(this.testObject.editComment(1,"comment was edited"));
+        Assertions.assertEquals("comment was edited",testObject.findCommentID(1).getComment());
+    }
+
+    @Test
+    public void editCommentFail() {
+        Assertions.assertFalse(this.testObject.editComment(1,"comment was edited"));
     }
 
 }

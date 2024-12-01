@@ -112,18 +112,26 @@ public class CommentsDAO {
         return null;
     }
 
-    public void editComment(long idOfComment, String commentString) {
+    public Boolean editComment(long idOfComment, String commentString) {
         Transaction transaction = null;
 
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-                session.merge(commentString);
+        Comments comment = findCommentID(idOfComment);
+        if (comment == null){
+            return false;
+        }else {
+            comment.setComment(commentString);
+            try (Session session = sessionFactory.openSession()) {
+                transaction = session.beginTransaction();
+                session.merge(comment);
                 transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
+                return true;
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                e.printStackTrace();
             }
-            e.printStackTrace();
         }
+        return false;
     }
 }
