@@ -50,5 +50,10 @@ public class CommentsDAOTests {
         // Assertions.assertArrayEquals();
     }
 
+    @Test
+    public void deleteCommentTest() {
+        createTestComment();
+        Assertions.assertTrue(this.testObject.deleteComment(1));
+    }
 
 }
