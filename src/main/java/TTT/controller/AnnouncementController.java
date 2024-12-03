@@ -217,7 +217,7 @@ public class AnnouncementController {
             customUser.setTripsParticipated(userTrips);
 
             // save changes in database
-            tripDAO.updateTrip(Long.parseLong(tripId), trip);
+            tripDAO.updateTrip(trip);
 
             String email = methodsHandler.getLoggedInUserName();
             customUserDAO.updateUserTrips(email, userTrips);
@@ -282,7 +282,7 @@ public class AnnouncementController {
         }
 
         trip.setParticipants(newParticipants);
-        tripDAO.updateTrip(Long.parseLong(tripId), trip);
+        tripDAO.updateTrip(trip);
 
         String nextPage = "/trips/" + tripId;
         model.addAttribute("nextPage", nextPage);

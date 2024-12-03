@@ -84,10 +84,10 @@ public class TripDAO {
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaDelete<Trip> delete = cb.createCriteriaDelete(Trip.class);
 
-            Root<Trip> authorRoot = delete.from(Trip.class);
-            delete.where(cb.equal(authorRoot.get("Trip"), Trip.class));
+            Root<Trip> root = delete.from(Trip.class);
+            delete.where(cb.equal(root.get("id"), trip.getId()));
 
-            session.createMutationQuery(delete).executeUpdate();
+            session.createQuery(delete).executeUpdate();
             session.getTransaction().commit();
             return true;
         } catch (Exception e) {
@@ -137,16 +137,19 @@ public class TripDAO {
                 .getResultList();
     }
 
-    public void updateTrip(long idTrip, Trip trip) {
+    public Boolean updateTrip(Trip trip) {
         Transaction transaction = null;
+
+        if (trip == null){
+            return false;
+        }
 
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             if (trip != null) {
                 session.merge(trip);
                 transaction.commit();
-            } else {
-                System.out.println("Trip id did not exist");
+                return true;
             }
         } catch (Exception e) {
             if (transaction != null) {
@@ -154,6 +157,7 @@ public class TripDAO {
             }
             e.printStackTrace();
         }
+        return false;
     }
 
 

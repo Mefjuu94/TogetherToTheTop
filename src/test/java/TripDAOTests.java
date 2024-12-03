@@ -1,6 +1,4 @@
-import TTT.databaseUtils.CommentsDAO;
 import TTT.databaseUtils.TripDAO;
-import TTT.trips.Comments;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
 import org.junit.jupiter.api.Assertions;
@@ -18,8 +16,7 @@ import java.util.List;
 @Testcontainers
 public class TripDAOTests {
     private final Trip testTrip = createTestTrip();
-    private final CustomUserDAOTests customUserDAOTests = new CustomUserDAOTests();
-    private final CustomUser customUser = customUserDAOTests.createTestUser();
+    private final CustomUser customUser = createTestUser();
     TripDAO testObject = new TripDAO();
     DockerImageName postgres = DockerImageName.parse("postgres:16");
     @Container
@@ -36,6 +33,13 @@ public class TripDAOTests {
         int mappedPort = this.postgresqlContainer.getMappedPort(5432);
         TripDAO testObject = new TripDAO(TestSessionFactoryCreator.getCustomUserSessionFactory(mappedPort));
         System.out.println(mappedPort);
+    }
+
+    private CustomUser createTestUser() {
+        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
+                "testUser", 99, 0, 0, new ArrayList<>(),
+                new ArrayList<>(), "city");
+        return customUser;
     }
 
     private Trip createTestTrip() {
@@ -58,18 +62,18 @@ public class TripDAOTests {
     }
 
     @Test
-    public void addAnnouncementTest(){
+    public void addAnnouncementTest() {
         Assertions.assertTrue(testObject.addAnnouncement(testTrip));
     }
 
     @Test
-    public void addAnnouncementTestFail(){
+    public void addAnnouncementTestFail() {
         Trip trip = null;
         Assertions.assertFalse(testObject.addAnnouncement(trip));
     }
 
     @Test
-    public void findTripTest(){
+    public void findTripTest() {
         addAnnouncementTest();
         List<Trip> tripList = testObject.findTrip("destination");
         tripList.get(0).setId(0);
@@ -77,13 +81,74 @@ public class TripDAOTests {
         List<Trip> list = new ArrayList<>();
         list.add(testTrip);
         testTrip.setTripDateTime(tripList.get(0).getTripDateTime()); // because of delay in time
-        Assertions.assertEquals(testTrip.toString(),tripList.get(0).toString());
+        Assertions.assertEquals(testTrip.toString(), tripList.get(0).toString());
     }
 
     @Test
-    public void findTripTestFail(){
+    public void findTripTestFail() {
         List<Trip> list = new ArrayList<>();
-        Assertions.assertEquals(list,testObject.findTrip("dest"));
+        Assertions.assertEquals(list, testObject.findTrip("dest"));
     }
+
+    @Test
+    public void deleteTripTest() {
+        addAnnouncementTest();
+        Assertions.assertTrue(testObject.deleteTrip(testTrip));
+    }
+
+    @Test
+    public void deleteTripTestFail() {
+        Assertions.assertFalse(testObject.deleteTrip(null));
+    }
+
+    @Test
+    public void listAllAnnouncementsTest() {
+        testObject.addAnnouncement(testTrip);
+        List<Trip> tripList = testObject.findTrip(testTrip.getDestination());
+
+        Assertions.assertEquals(testObject.listAllAnnouncements().toString(), tripList.toString());
+    }
+
+    @Test
+    public void listAllAnnouncementsByUserIdTest() {
+        //TODO
+    }
+
+    @Test
+    public void findTripIDTest() {
+        testObject.addAnnouncement(testTrip);
+
+        List<Trip> tripList = testObject.listAllAnnouncements();
+
+        Trip trip = tripList.get(0);
+
+        Assertions.assertEquals(trip.toString(), testObject.findTripID(trip.getId()).toString());
+    }
+
+    @Test
+    public void findTripIDTestFail() {
+        testObject.addAnnouncement(testTrip);
+
+        Assertions.assertNull(testObject.findTripID(2));
+    }
+
+    @Test
+    public void updateTripTest() {
+        testObject.addAnnouncement(testTrip);
+        List<Trip> tripList = testObject.listAllAnnouncements();
+
+        Trip trip = tripList.get(0);
+        trip.setDistanceOfTrip("13h");
+
+        Assertions.assertTrue(testObject.updateTrip(trip));
+    }
+
+    @Test
+    public void updateTripTestFail() {
+        Trip trip = null;
+
+        Assertions.assertFalse(testObject.updateTrip(trip));
+    }
+
 
 }

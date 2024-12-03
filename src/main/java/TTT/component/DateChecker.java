@@ -23,7 +23,7 @@ public class DateChecker {
             }
             if (entity.getTripDateTime().isBefore(LocalDateTime.now())) {
                 entity.setTripVisible(false);
-                tripDAO.updateTrip(entity.getId(),entity);
+                tripDAO.updateTrip(entity);
                 System.out.println("Trip id: " + entity.getId() + " will be no longer avaible because is after date");
             }
         }
