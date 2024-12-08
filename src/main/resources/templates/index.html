@@ -103,7 +103,7 @@
 
         <div class="tile">
             <div th:if="${not #authorization.expression('isAuthenticated()')}">
-                <a href="/login">
+                <a href="/login" id="find_TripButton">
                     <img src="/images/mainMenu_png/findTrip_noActive.png" alt="Find Trip">
                     <span>Login to Find Trip!</span>
                 </a>

@@ -7,11 +7,6 @@ public class TestSessionFactoryCreator {
     }
 
     public static SessionFactory getCustomUserSessionFactory(int port) {
-//        Configuration config = new Configuration();
-//        config.configure("hibernate.cfg.xml");
-//        config.setProperty("hibernate.connection.url", "jdbc:postgresql://localhost:" + port + "/test_container?loggerLevel=OFF");
-//        return config.buildSessionFactory();
-
         // Tworzymy konfigurację Hibernate
         Configuration config = new Configuration();
         // Ładujemy podstawową konfigurację z pliku hibernate.cfg.xml

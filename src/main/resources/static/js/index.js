@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const profileButton = document.querySelector(".grid .tile a[href='/login']");
     const mapButton = document.getElementById("mapButton");
     const announcementButton = document.getElementById("announcementButton");
+    const find_TripButton = document.getElementById("find_TripButton");
 
     const closeLogin = loginModal.querySelector(".close");
     const closeRegister = registerModal.querySelector(".close");
@@ -49,6 +50,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (announcementButton) {
         announcementButton.onclick = function (event) {
+            event.preventDefault();
+            loginModal.style.display = "block";
+        }
+    }
+
+    if (find_TripButton) {
+        find_TripButton.onclick = function (event) {
             event.preventDefault();
             loginModal.style.display = "block";
         }

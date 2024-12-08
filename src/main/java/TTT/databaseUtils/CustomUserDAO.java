@@ -33,7 +33,9 @@ public class CustomUserDAO {
             return false;
         }
 
-        customUser.setCustomUserName("yourName");
+        if (customUser.getCustomUserName() == null) {
+            customUser.setCustomUserName("yourName");
+        }
 
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {

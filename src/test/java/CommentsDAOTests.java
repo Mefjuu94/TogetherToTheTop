@@ -86,4 +86,32 @@ public class CommentsDAOTests {
         Assertions.assertFalse(this.testObject.editComment(1,"comment was edited"));
     }
 
+    @Test
+    public void listAllCommentsTest() {
+        List<Comments> list = new ArrayList<>();
+
+        testObject.addComment(testComment);
+        Comments comment = new Comments("second comment", 2, 3, "Stefan");
+        testObject.addComment(comment);
+        testComment.setID(1L);
+        comment.setID(2L);
+
+        list.add(testComment);
+        list.add(comment);
+
+        Assertions.assertEquals(list,testObject.listAllComments());
+    }
+
+    @Test
+    public void listAllCommentsTestFail() {
+        List<Comments> list = new ArrayList<>();
+
+        testObject.addComment(testComment);
+        Comments comment = new Comments("second comment", 2, 3, "Stefan");
+        testObject.addComment(comment);
+
+        Assertions.assertNotEquals(list,testObject.listAllComments());
+    }
+
+
 }

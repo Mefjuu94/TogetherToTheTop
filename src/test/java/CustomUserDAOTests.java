@@ -117,10 +117,11 @@ public class CustomUserDAOTests {
 
     @Test
     public void findCustomUserByNameTest() {
-        this.testObject.saveUser(this.testCustomUser);
-        List<CustomUser> list = testObject.findCustomUserByName("yourName");
-        CustomUser userFromNameSearch = list.get(0);
-        Assertions.assertEquals(testCustomUser.toString(), userFromNameSearch.toString());
+        testObject.saveUser(testCustomUser);
+        List<CustomUser> list = new ArrayList<>();
+        list.add(testCustomUser);
+
+        Assertions.assertEquals(list.toString(), testObject.findCustomUserByName("testUser").toString());
     }
 
     @Test
@@ -129,9 +130,11 @@ public class CustomUserDAOTests {
                 "Adam", 99, 0, 0, new ArrayList<>(),
                 new ArrayList<>(), "city");
         this.testObject.saveUser(customUser);
-        List<CustomUser> list = testObject.findCustomUserByName("yourName");
-        CustomUser userFromNameSearch = list.get(0);
-        Assertions.assertNotEquals(testCustomUser.toString(), userFromNameSearch.toString());
+        List<CustomUser> result = testObject.findCustomUserByName("testUser");
+
+        List<CustomUser> notExpectedList = new ArrayList<>();
+
+        Assertions.assertEquals(notExpectedList, result);
     }
 
 

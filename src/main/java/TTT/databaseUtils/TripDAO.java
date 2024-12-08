@@ -17,14 +17,17 @@ import java.util.Objects;
 public class TripDAO {
 
     private SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
-    public TripDAO(SessionFactory testSessionFactory){
+
+    public TripDAO(SessionFactory testSessionFactory) {
         this.sessionFactory = testSessionFactory;
     }
-    public TripDAO(){}
+
+    public TripDAO() {
+    }
 
     public boolean addAnnouncement(Trip trip) {
 
-        if (trip == null){
+        if (trip == null) {
             return false;
         }
 
@@ -34,6 +37,7 @@ public class TripDAO {
             session.merge(trip);
             transaction.commit();
             System.out.println("The trip has been created!");
+            session.close();
             return true;
         } catch (Exception e) {
             if (transaction != null) transaction.rollback(); // back transaction when is error
@@ -135,22 +139,21 @@ public class TripDAO {
         Session session = sessionFactory.openSession();
         return session.createNativeQuery("SELECT trip_id, user_id FROM trip_participants", Object[].class)
                 .getResultList();
+
     }
 
     public Boolean updateTrip(Trip trip) {
         Transaction transaction = null;
 
-        if (trip == null){
+        if (trip == null) {
             return false;
         }
 
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            if (trip != null) {
-                session.merge(trip);
-                transaction.commit();
-                return true;
-            }
+            session.merge(trip);
+            transaction.commit();
+            return true;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
