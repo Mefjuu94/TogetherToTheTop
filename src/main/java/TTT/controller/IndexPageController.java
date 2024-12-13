@@ -13,7 +13,7 @@ import java.util.List;
 public class IndexPageController {
 
 
-    @GetMapping("/")
+    @GetMapping("index")
     public String getEmailsAtIndexPage(Model model) {
         CustomUserDAO customUserDAO = new CustomUserDAO();
 
@@ -22,8 +22,6 @@ public class IndexPageController {
         for (CustomUser customUser : usersList) {
             users.add(customUser.getEmail());
         }
-
-        System.out.println(users.size());
 
         model.addAttribute("users", users);
 

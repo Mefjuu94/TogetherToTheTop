@@ -11,7 +11,6 @@ public class SuccessPageController {
     @GetMapping("/actionSuccess")
     public String getAnnouncementsPage(@RequestParam String page, Model model) {
         model.addAttribute("page", page); //where to redirect after action
-        System.out.println(page);
         return page;
     }
 }

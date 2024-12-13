@@ -186,9 +186,6 @@ public class AnnouncementController {
     @PostMapping("/addMe")
     public String addMeToTrip(@RequestParam String tripId, @RequestParam String userId, Model model) {
 
-        System.out.println("get data trip ID: " + tripId);
-        System.out.println("get data user ID: " + userId);
-
         Trip trip = tripDAO.findTripID(Long.parseLong(tripId));
         CustomUserDAO customUserDAO = new CustomUserDAO();
         CustomUser customUser = customUserDAO.findCustomUserByID(userId);
@@ -222,7 +219,7 @@ public class AnnouncementController {
             String email = methodsHandler.getLoggedInUserName();
             customUserDAO.updateUserTrips(email, userTrips);
 
-            System.out.println("User " + userId + " added to trip " + tripId);
+           // System.out.println("User " + userId + " added to trip " + tripId);
         }
 
         String nextPage = "/trips/" + tripId;
@@ -246,9 +243,6 @@ public class AnnouncementController {
     public String deleteComment(@RequestParam String idComment, @RequestParam String idOfTrip, Model model) {
 
         long commentID = Long.parseLong(idComment);
-
-        System.out.println(commentID);
-        System.out.println(idOfTrip);
 
         if (commentsDAO.deleteComment(commentID)) {
             System.out.println("comment was deleted!");

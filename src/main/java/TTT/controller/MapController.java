@@ -66,9 +66,6 @@ public class MapController {
             throw new RuntimeException(e);
         }
 
-        System.out.println("duration: " + allRouteDuration);
-        System.out.println("DISTANCE    : " + distanceOfTrip);
-
         Trip trip = new Trip.TripBuilder()
                 .withTripDescription(description)
                 .withDestination(destination)

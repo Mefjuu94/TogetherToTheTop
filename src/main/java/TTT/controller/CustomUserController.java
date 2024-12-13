@@ -27,15 +27,10 @@ public class CustomUserController {
     public String getMainPage(Model model) {
         String email = methodsHandler.getLoggedInUserName();
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
+        
 
-        List<Trip> trips = tripDAO.listAllAnnouncements();
+        int numberOfTripsOwned = customUser.getNumbersOfTrips();
 
-        int numberOfTripsOwned = 0;
-        for (int i = 0; i < trips.size(); i++) {
-            if (trips.get(i).getOwner().getId() == customUser.getId()) {
-                numberOfTripsOwned++;
-            }
-        }
 
         List<UserRating> rating = customUser.getRatings();
         int rate = 0;
@@ -84,7 +79,6 @@ public class CustomUserController {
     @GetMapping("/tripsOwned")
     public String getTripsOWned(@RequestParam String userID, Model model) {
 
-        System.out.println(userID);
         List<Trip> trips = tripDAO.listAllAnnouncementsByUserId(Long.valueOf(userID));
         model.addAttribute("trips", trips);
 
@@ -93,7 +87,6 @@ public class CustomUserController {
 
     @GetMapping("/rate")
     public String getUsersToRate(Model model) {
-        System.out.println("rate view:");
 
         String email = methodsHandler.getLoggedInUserName();
         CustomUser me = customUserDAO.findCustomUserByEmail(email);
@@ -159,7 +152,6 @@ public class CustomUserController {
                                  Model model) {
 
         String email = methodsHandler.getLoggedInUserName();
-        System.out.println(email);
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
 
         CustomUser userToRate = customUserDAO.findCustomUserByID(userId);
@@ -194,7 +186,6 @@ public class CustomUserController {
                               @RequestParam("newValue") String newValue, Model model) {
 
         String email = methodsHandler.getLoggedInUserName();
-        System.out.println(email);
 
         // update field
         if (fieldName.equals("age")) {
