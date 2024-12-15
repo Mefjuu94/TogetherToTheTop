@@ -11,6 +11,10 @@
 <div class="background-image" style="background-image: url('/images/userProfile/backgroundUserProfile.jpg');"></div>
 <!--url('/images/userProfile/backgroundUserProfile.jpg');"-->
 
+<a href="/" id="homeButton">
+    <button class="home-button"><img src="/images/mainMenu_png/home-button.png" alt="return home" class="home-icon"></button>
+</a>
+
 <div class="profile-container">
     <h1>My Profile</h1>
 
@@ -51,7 +55,7 @@
             <input type="hidden" name="userID" th:value="${customUser.getId()}">
             <div class="tile" onclick="this.closest('form').submit()">
                 <h3>Trips Created</h3>
-                <p th:text="${numberOfTripsOwned}">?</p>
+                <p th:text="${customUser.tripsOwned.size()}">?</p>
             </div>
         </form>
 
@@ -62,6 +66,11 @@
                 <p th:text="${tripsParticipated.size()}">?</p>
             </div>
         </form>
+
+        <div class="tile">
+            <h3>Distance Traveled [km]</h3>
+                <p th:text="${customUser.getDistanceTraveled()}">?</p>
+        </div>
 
         <div class="tile">
             <h3>Rating</h3>

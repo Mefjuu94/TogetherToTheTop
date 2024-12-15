@@ -203,6 +203,36 @@ input[type="submit"]:hover {
     height: auto;
 }
 
+#homeButton {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+    text-decoration: none; /* Usuń ewentualne podkreślenie linku */
+}
+
+.home-button {
+    background: transparent;  /* Tło przycisku przezroczyste */
+    border: none;  /* Usuń obramowanie przycisku */
+    padding: 0;  /* Usuwamy marginesy domyślne wokół przycisku */
+    cursor: pointer;  /* Kursor wskazujący na przycisk */
+    display: flex;  /* Umożliwia wyśrodkowanie ikony */
+    align-items: center;  /* Wyrównanie ikony w pionie */
+    justify-content: center;  /* Wyrównanie ikony w poziomie */
+}
+
+.home-button img.home-icon {
+    width: 50px;
+    height: auto;
+    background: transparent; /* Tło ikony przezroczyste */
+}
+
+/* Efekt hover */
+.home-button:hover {
+    background-color: #6dc671; /* Zmiana tła przy najechaniu */
+}
+
+
 /* Media Queries */
 
 /* Styl dla małych ekranów - telefony (max-width: 600px) */
@@ -272,6 +302,10 @@ input[type="submit"]:hover {
     .modal-content {
         width: 70%;
     }
+}
+
+@media (max-width: 800px) {
+
 }
 
 

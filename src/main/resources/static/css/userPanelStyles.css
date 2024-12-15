@@ -112,6 +112,35 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+#homeButton {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+}
+
+.home-button {
+    padding: 10px 20px;
+    background: none;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.home-button img.home-icon {
+    width: 50px;
+    height: auto;
+    margin-right: 8px;
+    background: transparent;
+}
+
+.home-button:hover {
+    background-color: #6dc671;
+}
+
 @media (max-width: 800px) {
 
     .body {
@@ -134,4 +163,5 @@ h1 {
         background-attachment: fixed;
         background-size: cover;
     }
+
 }

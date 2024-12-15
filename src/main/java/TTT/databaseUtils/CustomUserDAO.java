@@ -233,17 +233,29 @@ public class CustomUserDAO {
         }
     }
 
-    public Boolean updateUserStats(int value, String email, String field) {
+    public Boolean updateUserStats(double value, String email, String field) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             CustomUser user = findCustomUserByEmail(email);
             if (user != null && value > 0) {
+                int numberOfAnnouncements = user.getTripsOwned().size();
+                int numberOfTrips = user.getNumbersOfTrips();
+                double numberOfDistance = user.getDistanceTraveled();
+
                 switch (field) {
+                    case "numbersOfTrips":
+                        user.setNumbersOfTrips((numberOfTrips + 1));
+                        System.out.println("NumbersOfTrips " + user.getCustomUserName() + " " + user.getNumbersOfTrips());
+                        break;
                     case "numberOfAnnouncements":
-                        int number = user.getNumbersOfAnnoucements();
-                        user.setNumbersOfAnnoucements(number + value);
+                        user.setNumbersOfAnnouncements(numberOfAnnouncements);
+                        System.out.println("owner " + user.getCustomUserName() + " " + user.getNumbersOfAnnouncements());
+                        break;
+                    case "distanceTraveled":
+                        user.setDistanceTraveled(numberOfDistance + value);
+                        System.out.println("distanceTraveled " + user.getCustomUserName() + " " + user.getDistanceTraveled());
                         break;
                 }
                 session.merge(user);

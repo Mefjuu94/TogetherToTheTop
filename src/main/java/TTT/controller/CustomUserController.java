@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -29,7 +30,7 @@ public class CustomUserController {
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
         
 
-        int numberOfTripsOwned = customUser.getNumbersOfTrips();
+        int numberOfTripsOwned = customUser.getTripsOwned().size();
 
 
         List<UserRating> rating = customUser.getRatings();
@@ -44,8 +45,8 @@ public class CustomUserController {
             rate = 1;
         }
 
-        List<Object[]> obejcts = tripDAO.listAllTripParticipantIds();
-        List<Trip> tripsParticipated = methodsHandler.listOfTrips(obejcts, customUser);
+        List<Object[]> objects = tripDAO.listAllTripParticipantIds();
+        List<Trip> tripsParticipated = methodsHandler.listOfTrips(objects, customUser);
 
         model.addAttribute("customUser", customUser);
         model.addAttribute("numberOfTripsOwned", numberOfTripsOwned);
@@ -77,7 +78,7 @@ public class CustomUserController {
     }
 
     @GetMapping("/tripsOwned")
-    public String getTripsOWned(@RequestParam String userID, Model model) {
+    public String getTripsOwned(@RequestParam String userID, Model model) {
 
         List<Trip> trips = tripDAO.listAllAnnouncementsByUserId(Long.valueOf(userID));
         model.addAttribute("trips", trips);
@@ -110,35 +111,27 @@ public class CustomUserController {
         }
 
         //add all participants who was with me:
-        for (int i = 0; i < tripsWhereParticipated.size(); i++) {
-            Trip trip = tripsWhereParticipated.get(i);
-
+        for (Trip trip : tripsWhereParticipated) {
             if (!trip.isTripVisible()) {
                 usersTemp.addAll(trip.getParticipants());
+                usersTemp.add(trip.getOwner());
             }
         }
-
+            //TODO ???
         UserRatingDAO userRatingDAO = new UserRatingDAO();
         List<UserRating> ratingList = userRatingDAO.listAllARatings();
+        List<Long> reviewers = new ArrayList<>();
 
-        //check if user already rate participant from trip.
+        for (int i = 0; i < ratingList.size(); i++) {
+            reviewers.add(ratingList.get(i).getReviewer().getId());
+        }
+
         for (int i = 0; i < usersTemp.size(); i++) {
-            CustomUser participant = usersTemp.get(i);
-
-            if (participant.getId() != me.getId()) {
-
-                for (int j = 0; j < ratingList.size(); j++) {
-                    UserRating rate = ratingList.get(j);
-
-                    if (rate.getReviewer().getId() == me.getId() && rate.getUser().getId() == participant.getId() || participant.getId() == me.getId()) {
-                        System.out.println("you " + me.getId() + " already rate user: " + rate.getUser().getCustomUserName() + " " + rate.getUser().getId());
-                        break;
-                    } else {
-                        users.add(participant); //TODO
-                    }
-                }
+            if (!reviewers.contains(usersTemp.get(i).getId())){
+                users.add(usersTemp.get(i));
             }
         }
+
 
         model.addAttribute("users", users);
         model.addAttribute("me", me);

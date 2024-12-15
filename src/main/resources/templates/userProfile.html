@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="/css/userPanelStyles.css">
 </head>
 <body>
+
+<a href="/" id="homeButton">
+    <button class="home-button" id="home-button"><img src="/images/mainMenu_png/home-button.png" alt="return home"
+                                                      class="home-icon"></button>
+</a>
+
 <div class="background-image" style="background-image: url('/images/userProfile/backgroundUserProfile.jpg');"></div>
 
 <div class="profile-container">
@@ -50,14 +56,19 @@
             </div>
         </form>
 
-                <div class="tile">
-                    <h3>Rating</h3>
-                    <p th:text="${rate}">?</p>
-                </div>
-            </div>
+        <div class="tile">
+            <h3>Distance Traveled [km]</h3>
+            <p th:text="${customUser.getDistanceTraveled()}">?</p>
         </div>
 
+        <div class="tile">
+            <h3>Rating</h3>
+            <p th:text="${rate}">?</p>
+        </div>
+    </div>
+</div>
 
-        <script type="text/javascript" th:src="@{/js/userProfile.js}"></script>
+
+<script type="text/javascript" th:src="@{/js/userProfile.js}"></script>
 </body>
 </html>

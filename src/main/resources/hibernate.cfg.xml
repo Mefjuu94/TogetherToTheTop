@@ -10,7 +10,6 @@
         <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/postgres</property>
         <property name="hibernate.connection.username">postgres</property>
 
-
         <mapping class="TTT.peaksAndSummitsHandler.Top"/>
         <mapping class="TTT.trips.Trip"/>
         <mapping class="TTT.trips.Comments"/>

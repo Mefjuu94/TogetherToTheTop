@@ -1,94 +1,3 @@
-/** {*/
-/*    margin: 0;*/
-/*    padding: 0;*/
-/*    box-sizing: border-box;*/
-/*    font-family: Arial, sans-serif;*/
-/*}*/
-
-/*body, html {*/
-/*    min-height: 100%;*/
-/*    overflow: auto;*/
-/*    display: flex;*/
-/*}*/
-
-/*.background-image {*/
-/*    position: -ms-device-fixed;*/
-/*    top: 0;*/
-/*    left: 0;*/
-/*    width: 100%;*/
-/*    height: 100%;*/
-/*    background-size: cover;*/
-/*    background-position: center;*/
-/*    z-index: -1;*/
-/*}*/
-
-/*.container {*/
-/*    max-width: 40%;*/
-/*    margin: 0 auto;*/
-/*    padding: 20px;*/
-/*    float:right;*/
-/*}*/
-
-/*.description_container {*/
-/*    max-width: 40%;*/
-/*    margin: 0 auto;*/
-/*    padding: 20px;*/
-/*    float:right;*/
-/*}*/
-
-/*.comment_form{*/
-/*    max-width: 40%;*/
-/*    margin: 0 auto;*/
-/*    padding: 20px;*/
-/*    float:right;*/
-/*}*/
-
-/*h1 {*/
-/*    text-align: center;*/
-/*    margin-bottom: 20px;*/
-/*    font-size: 2.5rem;*/
-/*    color: black;*/
-/*}*/
-
-/*.grid-container {*/
-/*    display: grid;*/
-/*    grid-template-columns: 1fr 1fr; !* Dwie kolumny *!*/
-/*    grid-gap: 20px;*/
-/*    padding: 20px;*/
-/*}*/
-
-/*!* Styl dla kafelków *!*/
-/*.tile {*/
-/*    background-color: rgba(255, 255, 255, 0.9);*/
-/*    padding: 20px;*/
-/*    border-radius: 10px;*/
-/*    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);*/
-/*    text-align: left;*/
-/*}*/
-
-
-
-/*.tile h3 {*/
-/*    margin-bottom: 10px;*/
-/*    color: #007bff;*/
-/*}*/
-
-/*.tile p {*/
-/*    !*margin-bottom: 10px;*!*/
-/*    color: #555;*/
-/*}*/
-
-/*.tile span {*/
-/*    display: block;*/
-/*    font-weight: bold;*/
-/*}*/
-
-/*.button-container {*/
-/*    display: flex;*/
-/*    justify-content: center;*/
-/*    margin-top: 20px;*/
-/*}*/
-
 button {
     padding: 10px 20px;
     background-color: #007bff;
@@ -102,51 +11,6 @@ button {
 button:hover {
     background-color: #0056b3;
 }
-
-
-
-/*#commentSection {*/
-/*    margin-top: 20px;*/
-/*    padding: 20px;*/
-/*    position: absolute;*/
-/*}*/
-
-/*.comment-item {*/
-/*    margin: 0 auto; !* Wyśrodkowanie elementu *!*/
-/*    max-width: 60%;*/
-/*    background-color: rgba(255, 255, 255, 0.9); !* Jasne tło jak kafelki *!*/
-/*    padding: 20px;*/
-/*    border-radius: 10px;*/
-/*    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); !* Cień jak dla kafelków *!*/
-/*}*/
-
-/*.comment-username {*/
-/*    font-weight: bold;*/
-/*    color: #007bff; !* Ten sam kolor co w kafelkach *!*/
-/*    text-decoration: none;*/
-/*}*/
-
-/*.comment-username:hover {*/
-/*    text-decoration: underline;*/
-/*}*/
-
-/*.comment-text {*/
-/*    margin: 10px 0;*/
-/*    color: #555; !* Ten sam kolor co w kafelkach *!*/
-/*}*/
-
-/*.comment-date {*/
-/*    display: block;*/
-/*    font-size: 0.85em;*/
-/*    color: #777;*/
-/*    margin-top: 10px;*/
-/*}*/
-
-/*#map {*/
-/*    height: 40vh;*/
-/*    width: 30%;*/
-/*}*/
-
 
 /* Reset and basic styles */
 * {
@@ -272,5 +136,34 @@ body, html {
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
+#homeButton {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+    text-decoration: none; /* Usuń ewentualne podkreślenie linku */
+}
+
+.home-button {
+    background: transparent;  /* Tło przycisku przezroczyste */
+    border: none;  /* Usuń obramowanie przycisku */
+    padding: 0;  /* Usuwamy marginesy domyślne wokół przycisku */
+    cursor: pointer;  /* Kursor wskazujący na przycisk */
+    display: flex;  /* Umożliwia wyśrodkowanie ikony */
+    align-items: center;  /* Wyrównanie ikony w pionie */
+    justify-content: center;  /* Wyrównanie ikony w poziomie */
+}
+
+.home-button img.home-icon {
+    width: 50px;
+    height: auto;
+    background: transparent; /* Tło ikony przezroczyste */
+}
+
+/* Efekt hover */
+.home-button:hover {
+    background-color: #6dc671; /* Zmiana tła przy najechaniu */
+}
+
 
 

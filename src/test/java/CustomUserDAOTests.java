@@ -236,7 +236,7 @@ public class CustomUserDAOTests {
                 new ArrayList<>(), "city");
         testObject.saveUser(customUser);
         Assertions.assertTrue(testObject.updateUserStats(2, "test@mail.com","numberOfAnnouncements"));
-        Assertions.assertEquals(testObject.findCustomUserByEmail("test@mail.com").getNumbersOfAnnoucements(),2);
+        Assertions.assertEquals(testObject.findCustomUserByEmail("test@mail.com").getNumbersOfAnnouncements(),2);
     }
 
     @Test

@@ -180,6 +180,7 @@ public class AnnouncementController {
         model.addAttribute("tripsParticipated", tripsParticipated);
         model.addAttribute("numberOfTripsOwned", numberOfTripsOwned);
 
+
         return "userProfile";
     }
 
@@ -205,9 +206,6 @@ public class AnnouncementController {
             List<CustomUser> participants = trip.getParticipants();
             participants.add(customUser);
             trip.setParticipants(participants);
-            //add number to trips participated
-            int changeNumberOfTrips = customUser.getNumbersOfTrips();
-            customUser.setNumbersOfTrips(changeNumberOfTrips + 1);
 
             List<Trip> userTrips = customUser.getTripsParticipated();
             userTrips.add(trip);
