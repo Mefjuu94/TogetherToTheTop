@@ -128,7 +128,7 @@ public class CustomUserDAOTests {
     public void findCustomUserByNameTestFail() {
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         this.testObject.saveUser(customUser);
         List<CustomUser> result = testObject.findCustomUserByName("testUser");
 
@@ -154,7 +154,7 @@ public class CustomUserDAOTests {
     public void updateUserTripsTest() {
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         Trip trip = new Trip.TripBuilder()
                 .withTripDescription("description")
                 .withDestination("destination")
@@ -182,7 +182,7 @@ public class CustomUserDAOTests {
     public void updateUserTripsTestFailInvalidEmail() {
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         Trip trip = new Trip.TripBuilder()
                 .withTripDescription("description")
                 .withDestination("destination")
@@ -211,7 +211,7 @@ public class CustomUserDAOTests {
     public void updateUserAgeTest() {
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         testObject.saveUser(customUser);
         Assertions.assertTrue(this.testObject.updateUserAge("test@mail.com", 90));
         Assertions.assertEquals(testObject.findCustomUserByEmail("test@mail.com").getAge(), 90);
@@ -221,7 +221,7 @@ public class CustomUserDAOTests {
     public void updateUserAgeTestFail() {
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         testObject.saveUser(customUser);
         Assertions.assertFalse(this.testObject.updateUserAge("mail.com", 90)); //invalid email
         Assertions.assertFalse(this.testObject.updateUserAge("test@mail.com", 150)); //invalid Age > 120
@@ -233,7 +233,7 @@ public class CustomUserDAOTests {
     public void updateUserStatsTest() {
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         testObject.saveUser(customUser);
         Assertions.assertTrue(testObject.updateUserStats(2, "test@mail.com","numberOfAnnouncements"));
         Assertions.assertEquals(testObject.findCustomUserByEmail("test@mail.com").getNumbersOfAnnouncements(),2);
@@ -243,7 +243,7 @@ public class CustomUserDAOTests {
     public void updateUserStatsTestFail() {
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         testObject.saveUser(customUser);
         Assertions.assertFalse(testObject.updateUserStats(2, "mail.com","numberOfAnnouncements")); //no user = null
         Assertions.assertFalse(testObject.updateUserStats(-2, "test@mail.com","numberOfAnnouncements"));
@@ -254,7 +254,7 @@ public class CustomUserDAOTests {
     public void updateUserFieldEmailTest(){
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         testObject.saveUser(customUser);
         //email
         Assertions.assertTrue(testObject.updateUserField("mail@mail.com","test@mail.com","email"));
@@ -264,7 +264,7 @@ public class CustomUserDAOTests {
     public void updateUserFieldUsernameTest(){
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         testObject.saveUser(customUser);
         //username
         Assertions.assertTrue(testObject.updateUserField("MyNewName","test@mail.com","username"));
@@ -274,7 +274,7 @@ public class CustomUserDAOTests {
     public void updateUserFieldCityTest(){
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         testObject.saveUser(customUser);
         //city
         Assertions.assertTrue(testObject.updateUserField("Warsaw","test@mail.com","city"));
@@ -284,7 +284,7 @@ public class CustomUserDAOTests {
     public void updateUserFieldTestFail(){
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         testObject.saveUser(customUser);
         //email
         Assertions.assertFalse(testObject.updateUserField("mail.test@mail.com","mail.com","email")); //invalid email

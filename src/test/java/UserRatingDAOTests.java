@@ -19,7 +19,7 @@ public class UserRatingDAOTests {
 
     private CustomUser reviewer = new CustomUser(1, "reviewer@mail.com", "testUser123!",
             "reviewerTestUser", 99, 0, 0, new ArrayList<>(),
-            new ArrayList<>(), "reviewerCity");;
+            new ArrayList<>(), "reviewerCity",0);;
     ///////////////////
     CustomUserDAO customUserDAO;
     private final CustomUser customUser = createTestUser();
@@ -45,7 +45,7 @@ public class UserRatingDAOTests {
     private CustomUser createTestUser() {
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "testUser", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         return customUser;
     }
 

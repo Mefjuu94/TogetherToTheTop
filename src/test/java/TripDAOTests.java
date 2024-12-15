@@ -40,7 +40,7 @@ public class TripDAOTests {
     private CustomUser createTestUser() {
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "testUser", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         return customUser;
     }
 
@@ -183,10 +183,10 @@ public class TripDAOTests {
         //create participants
         CustomUser customUser1 = new CustomUser(1, "test@mail.com", "testUser123!",
                 "testUser", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         CustomUser customUser2 = new CustomUser(2, "testemail@mail.com", "testUser123!",
                 "testUser", 19, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "Test city");
+                new ArrayList<>(), "Test city",0);
         //add to list
         customUserList.add(customUser1);
         customUserList.add(customUser2);
