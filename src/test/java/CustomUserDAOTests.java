@@ -37,7 +37,7 @@ public class CustomUserDAOTests {
     protected CustomUser createTestUser() {
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "testUser", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         return customUser;
     }
 
@@ -56,7 +56,7 @@ public class CustomUserDAOTests {
     public void saveCustomUserTestFailPassword() {
         CustomUser customUser = new CustomUser(9999, "test@mail.com", "123",
                 "testUser", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city");
+                new ArrayList<>(), "city",0);
         Assertions.assertFalse(this.testObject.saveUser(customUser));
     }
 
