@@ -28,7 +28,7 @@ public class CustomUserController {
     public String getMainPage(Model model) {
         String email = methodsHandler.getLoggedInUserName();
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
-        
+
 
         int numberOfTripsOwned = customUser.getTripsOwned().size();
 
@@ -47,12 +47,14 @@ public class CustomUserController {
 
         List<Object[]> objects = tripDAO.listAllTripParticipantIds();
         List<Trip> tripsParticipated = methodsHandler.listOfTrips(objects, customUser);
+        List<CustomUser> users = methodsHandler.usersToRate(customUser);
 
         model.addAttribute("customUser", customUser);
         model.addAttribute("numberOfTripsOwned", numberOfTripsOwned);
         model.addAttribute("rating", rating);
         model.addAttribute("rate", rate);
         model.addAttribute("tripsParticipated", tripsParticipated);
+        model.addAttribute("users", users.size() -1);
 
         return "myProfile";
     }
@@ -92,46 +94,7 @@ public class CustomUserController {
         String email = methodsHandler.getLoggedInUserName();
         CustomUser me = customUserDAO.findCustomUserByEmail(email);
 
-        List<Object[]> participantsIDs = tripDAO.listAllTripParticipantIds();
-        List<Trip> tripsWhereParticipated = new ArrayList<>();
-        List<CustomUser> usersTemp = new ArrayList<>();
-        List<CustomUser> users = new ArrayList<>();
-
-        // get list where user participated.
-        for (int i = 0; i < participantsIDs.size(); i++) {
-            String s1 = Arrays.toString(participantsIDs.get(i));
-            String s = s1.replaceAll("[\\[\\]\\s]", "");
-            String[] split = s.split(",");
-            long tripID = Long.parseLong(split[0]);
-            long user_id = Long.parseLong(split[1]);
-
-            if (me.getId() == user_id) {
-                tripsWhereParticipated.add(tripDAO.findTripID(tripID));
-            }
-        }
-
-        //add all participants who was with me:
-        for (Trip trip : tripsWhereParticipated) {
-            if (!trip.isTripVisible()) {
-                usersTemp.addAll(trip.getParticipants());
-                usersTemp.add(trip.getOwner());
-            }
-        }
-            //TODO ???
-        UserRatingDAO userRatingDAO = new UserRatingDAO();
-        List<UserRating> ratingList = userRatingDAO.listAllARatings();
-        List<Long> reviewers = new ArrayList<>();
-
-        for (int i = 0; i < ratingList.size(); i++) {
-            reviewers.add(ratingList.get(i).getReviewer().getId());
-        }
-
-        for (int i = 0; i < usersTemp.size(); i++) {
-            if (!reviewers.contains(usersTemp.get(i).getId())){
-                users.add(usersTemp.get(i));
-            }
-        }
-
+        List<CustomUser> users = methodsHandler.usersToRate(me);
 
         model.addAttribute("users", users);
         model.addAttribute("me", me);

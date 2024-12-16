@@ -81,7 +81,7 @@
             <form action="/rate" method="GET">
                 <div class="tile" onclick="this.closest('form').submit()">
                     <h3>Users to rate:</h3>
-                    <p>?</p>
+                    <p th:text="${users}">?</p>
                 </div>
             </form>
         </div>

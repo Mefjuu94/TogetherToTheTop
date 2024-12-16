@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class MapController {
@@ -45,6 +47,8 @@ public class MapController {
         String userID = String.valueOf(customUser.getId());
         int tripsCreated = customUser.getNumbersOfTrips() + 1; // get amount of trips created and add one to them
         customUserDAO.updateUserStats(tripsCreated, userEmail, "numberOfAnnouncements");
+        List<CustomUser> participants = new ArrayList<>();
+        participants.add(customUser);
 
         int numberOfWaypoints = Integer.parseInt(waypointsLength);
 
@@ -79,6 +83,7 @@ public class MapController {
                 .withWaypoints(waypoints)
                 .withTripDataTime(dateTime)
                 .withDistanceOfTrip(distanceOfTrip)
+                .withParticipants(participants) // add me as participant
                 .withGpxFile(gpxFile)
                 .build();
 
