@@ -1,6 +1,5 @@
 package TTT.controller;
 
-import TTT.databaseUtils.CustomUserDAO;
 import TTT.databaseUtils.TripDAO;
 import TTT.databaseUtils.UserRatingDAO;
 import TTT.trips.Trip;
@@ -72,7 +71,6 @@ public class MethodsHandler {
                 tripsWhereParticipated.add(tripDAO.findTripID(tripID));
             }
         }
-
         //add all participants who was with me:
         for (Trip trip : tripsWhereParticipated) {
             if (!trip.isTripVisible()) {

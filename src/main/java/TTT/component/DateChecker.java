@@ -18,7 +18,7 @@ public class DateChecker {
     TripDAO tripDAO = new TripDAO();
     CustomUserDAO customUserDAO = new CustomUserDAO();
 
-    @Scheduled(fixedRate = 60000) // 60000 = 1 minute // Co 6 godzin 6 * 60 * 60 * 1000
+    @Scheduled(fixedRate = 60000 * 10) // 60000 = 1 minute // Co 6 godzin 6 * 60 * 60 * 1000
     public void checkDatesToRateUsersAndVisible() {
         System.out.println("checking dates!");
         List<Trip> entities = tripDAO.listAllAnnouncements();
@@ -33,7 +33,6 @@ public class DateChecker {
                 if (entity.getTripDateTime().isBefore(LocalDateTime.now())) {
                     //change number of trips of participants
                     for (CustomUser user : participants) {
-                        System.out.println(user.getCustomUserName());
                         customUserDAO.updateUserStats(1, user.getEmail(), "numbersOfTrips");
                         customUserDAO.updateUserStats(number, user.getEmail(), "distanceTraveled");
                     }
@@ -42,9 +41,6 @@ public class DateChecker {
                     customUserDAO.updateUserStats(1, owner.getEmail(), "numberOfAnnouncements");
                     customUserDAO.updateUserStats(1, owner.getEmail(), "numbersOfTrips");
                     customUserDAO.updateUserStats(number, owner.getEmail(), "distanceTraveled");
-                    System.out.println(entity.getDestination());
-
-                    System.out.println();
 
                     entity.setTripVisible(false);
                     tripDAO.updateTrip(entity);

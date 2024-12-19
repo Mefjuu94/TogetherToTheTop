@@ -25,7 +25,7 @@ public class CustomUser {
     private int numbersOfTrips;
     @Column(nullable = false, columnDefinition = "int default 0")
     private int numbersOfAnnouncements;
-    private double distanceTraveled;
+    private double distanceTraveled = 0.00;
     private String city;
 
     // Lista wycieczek, których użytkownik jest właścicielem

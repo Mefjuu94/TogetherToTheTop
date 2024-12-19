@@ -36,6 +36,7 @@ public class CustomUserDAO {
         if (customUser.getCustomUserName() == null) {
             customUser.setCustomUserName("yourName");
         }
+        customUser.setDistanceTraveled(0.00);
 
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
@@ -54,8 +55,14 @@ public class CustomUserDAO {
     }
 
     public List<CustomUser> listAllUsers() {
-        Session session = sessionFactory.openSession();
-        return session.createQuery("SELECT a FROM CustomUser a", CustomUser.class).getResultList();
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<CustomUser> criteriaQuery = cb.createQuery(CustomUser.class);
+            Root<CustomUser> root = criteriaQuery.from(CustomUser.class);
+            criteriaQuery.select(root);
+
+            return session.createQuery(criteriaQuery).getResultList();
+        }
     }
 
 

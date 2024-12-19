@@ -165,5 +165,46 @@ body, html {
     background-color: #6dc671; /* Zmiana tła przy najechaniu */
 }
 
+@media (max-width: 1050px) {
+    /* Responsywność dla małych ekranów */
+        .container {
+            display: grid;
+            grid-template-rows: auto auto auto auto auto; /* Pięć wierszy */
+            grid-template-columns: 1fr; /* Jedna kolumna */
+            gap: 20px;
+        }
+
+        /* tileCenter zajmuje cały pierwszy wiersz */
+        .tileCenter {
+            grid-row: 1 / 2;
+            grid-column: 1 / 2;
+        }
+
+        /* center-grid na 70% */
+        .center-grid {
+            grid-row: 2 / 3;
+            grid-column: 1 / -1;
+        }
+
+        /* right-grid poniżej center-grid */
+        .right-grid {
+            grid-row: 3 / 4;
+            grid-column: 1 / -1;
+        }
+
+        /* left-grid poniżej right-grid */
+        .left-grid {
+            grid-row: 4 / 5;
+            grid-column: 1 / -1;
+        }
+
+        /* commentSection na końcu */
+        #commentSection {
+            grid-row: 5 / 6;
+            grid-column: 1 / -1;
+            width: 80vh;
+        }
+
+}
 
 

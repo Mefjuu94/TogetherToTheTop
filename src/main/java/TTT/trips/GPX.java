@@ -10,7 +10,7 @@ import java.io.IOException;
 public class GPX {
 
 
-    public void makeGPX(String geoJsonString, int numberOfWaypoints, String filePath) throws IOException {
+    public void makeGPX(String geoJsonString, int numberOfWaypoints, String filePath) {
 
         String jsonString = "{\"geometry\": {\"type\": \"LineString\", \"coordinates\": [" + geoJsonString + "]}}";
         JSONObject geoJson = new JSONObject(jsonString);
@@ -82,7 +82,5 @@ public class GPX {
         } catch (IOException e) {
             System.err.println("Error when trying to save: " + e.getMessage());
         }
-
     }
-
 }

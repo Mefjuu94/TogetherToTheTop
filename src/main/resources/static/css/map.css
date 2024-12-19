@@ -221,7 +221,7 @@ input[type="text"], textarea {
     #sidebar {
         grid-column: 1; /* Sidebar w drugiej kolumnie, pierwsza kolumna */
         grid-row: 2; /* Drugi wiersz */
-        width: 100%;
+        width: 50vh;
         height: auto;
     }
 

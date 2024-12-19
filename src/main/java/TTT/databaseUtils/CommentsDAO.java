@@ -16,18 +16,20 @@ public class CommentsDAO {
 
     private SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
 
-    public CommentsDAO(){}
-    public CommentsDAO(SessionFactory testSessionFactory){
+    public CommentsDAO() {
+    }
+
+    public CommentsDAO(SessionFactory testSessionFactory) {
         this.sessionFactory = testSessionFactory;
     }
 
     public boolean addComment(Comments comment) {
 
         Transaction transaction = null;
-        if (comment == null){
+        if (comment == null) {
             return false;
         }
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.merge(comment);
             transaction.commit();
@@ -60,7 +62,7 @@ public class CommentsDAO {
         Session session = null;
         Comments comment = findCommentID(id);
 
-        if (comment == null){
+        if (comment == null) {
             System.out.println("no comment with this ID!");
             return false;
         }
@@ -93,8 +95,14 @@ public class CommentsDAO {
     }
 
     public List<Comments> listAllComments() {
-        Session session = sessionFactory.openSession();
-        return session.createQuery("SELECT a FROM Comments a", Comments.class).getResultList();
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Comments> criteriaQuery = cb.createQuery(Comments.class);
+            Root<Comments> root = criteriaQuery.from(Comments.class);
+            criteriaQuery.select(root);
+
+            return session.createQuery(criteriaQuery).getResultList();
+        }
     }
 
     public Comments findCommentID(long id) {
@@ -116,9 +124,9 @@ public class CommentsDAO {
         Transaction transaction = null;
 
         Comments comment = findCommentID(idOfComment);
-        if (comment == null){
+        if (comment == null) {
             return false;
-        }else {
+        } else {
             comment.setComment(commentString);
             try (Session session = sessionFactory.openSession()) {
                 transaction = session.beginTransaction();

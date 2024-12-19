@@ -108,16 +108,27 @@ public class TripDAO {
     }
 
     public List<Trip> listAllAnnouncements() {
-        Session session = sessionFactory.openSession();
-        return session.createQuery("SELECT a FROM Trip a", Trip.class).getResultList();
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Trip> criteriaQuery = cb.createQuery(Trip.class);
+            Root<Trip> root = criteriaQuery.from(Trip.class);
+            criteriaQuery.select(root);
+
+            return session.createQuery(criteriaQuery).getResultList();
+        }
     }
 
     public List<Trip> listAllAnnouncementsByUserId(Long userId) {
-        Session session = sessionFactory.openSession();
-        return session.createQuery("SELECT a FROM Trip a WHERE a.owner.id = :userId", Trip.class)
-                .setParameter("userId", userId)
-                .getResultList();
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Trip> criteriaQuery = cb.createQuery(Trip.class);
+            Root<Trip> root = criteriaQuery.from(Trip.class);
+            criteriaQuery.select(root).where(cb.equal(root.get("owner").get("id"), userId));
+
+            return session.createQuery(criteriaQuery).getResultList();
+        }
     }
+
 
 
     public Trip findTripID(long id) {

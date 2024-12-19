@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="'Trip to ' + ${trip.destination}">Trip Details</title>
     <link rel="stylesheet" th:href="@{/css/trip.css}">
-    <!--    href="/static/css/trip.css"-->
+    <!--    href="/static/css/trip.css" th:href="@{/css/trip.css}" -->
     <meta name="_csrf" content="my_token_csrf">
 </head>
 <body class="background-image" style="background-image: url('/images/tripBackground.jpg');">

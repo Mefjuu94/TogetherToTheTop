@@ -54,7 +54,7 @@ public class CustomUserController {
         model.addAttribute("rating", rating);
         model.addAttribute("rate", rate);
         model.addAttribute("tripsParticipated", tripsParticipated);
-        model.addAttribute("users", users.size() -1);
+        model.addAttribute("users", users.size());
 
         return "myProfile";
     }
