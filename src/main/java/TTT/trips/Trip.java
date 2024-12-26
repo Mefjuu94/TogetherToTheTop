@@ -240,6 +240,7 @@ public class Trip {
         private String waypoints;
         private LocalDateTime tripDateTime;
         private String distanceOfTrip;
+        private List<CustomUser> participants;
         private byte[] gpxFile;
 
         public Trip build() {
@@ -303,6 +304,11 @@ public class Trip {
 
         public TripBuilder withDistanceOfTrip(String distanceOfTrip) {
             this.distanceOfTrip = distanceOfTrip;
+            return this;
+        }
+
+        public TripBuilder withParticipants(List<CustomUser> participants) {
+            this.participants = participants;
             return this;
         }
 

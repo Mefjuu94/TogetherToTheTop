@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="'Trip to ' + ${trip.destination}">Trip Details</title>
     <link rel="stylesheet" th:href="@{/css/trip.css}">
-    <!--    href="/static/css/trip.css"-->
+    <!--    href="/static/css/trip.css" th:href="@{/css/trip.css}" -->
     <meta name="_csrf" content="my_token_csrf">
 </head>
 <body class="background-image" style="background-image: url('/images/tripBackground.jpg');">
+
+<a href="/" id="homeButton">
+    <button class="home-button" id="home-button"><img src="/images/mainMenu_png/home-button.png" alt="return home" class="home-icon"></button>
+</a>
+
 <div class="container">
     <!-- Trip Destination at the center -->
     <div class="tileCenter">
@@ -179,6 +184,16 @@
             </ul>
         </div>
     </div>
+</div>
+
+<div id="deleteTrip" th:if="${trip.getOwner().getId() == customUser.getId()}">
+    <form id="delete_trip"
+          action="/delete_trip" method="POST">
+        <input type="hidden"  name="tripId" th:value="${trip.getId()}">
+        <!--            must have! TOKEN-->
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+    <button id="delete_trip_button">DELETE TRIP</button>
+    </form>
 </div>
 <!-- External resources -->
 <link href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.min.css" rel="stylesheet"/>
