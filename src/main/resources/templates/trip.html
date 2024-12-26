@@ -185,6 +185,16 @@
         </div>
     </div>
 </div>
+
+<div id="deleteTrip" th:if="${trip.getOwner().getId() == customUser.getId()}">
+    <form id="delete_trip"
+          action="/delete_trip" method="POST">
+        <input type="hidden"  name="tripId" th:value="${trip.getId()}">
+        <!--            must have! TOKEN-->
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+    <button id="delete_trip_button">DELETE TRIP</button>
+    </form>
+</div>
 <!-- External resources -->
 <link href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.min.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.min.js"></script>

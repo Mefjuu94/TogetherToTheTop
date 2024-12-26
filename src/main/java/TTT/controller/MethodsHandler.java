@@ -33,12 +33,12 @@ public class MethodsHandler {
         return null;
     }
 
-    protected ArrayList<Trip> listOfTrips(List<Object[]> obejcts, CustomUser customUser){
+    protected ArrayList<Trip> listOfTrips(List<Object[]> objects, CustomUser customUser){
         TripDAO tripDAO = new TripDAO();
         ArrayList<Trip> tripsParticipated = new ArrayList<>();
 
-        for (int i = 0; i < obejcts.size(); i++) {
-            String s1 = Arrays.toString(obejcts.get(i));
+        for (int i = 0; i < objects.size(); i++) {
+            String s1 = Arrays.toString(objects.get(i));
             String s = s1.replaceAll("[\\[\\]\\s]", "");
             String[] split = s.split(",");
             long tripID = Long.parseLong(split[0]);

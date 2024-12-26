@@ -281,4 +281,19 @@ public class AnnouncementController {
 
         return "actionSuccess";
     }
+
+    @PostMapping("/delete_trip")
+    public String deleteTrip(@RequestParam String tripId, Model model) {
+
+        long tripID = Long.parseLong(tripId);
+
+        Trip trip = tripDAO.findTripID(tripID);
+
+        tripDAO.deleteTrip(trip);
+
+        String nextPage = "/announcement";
+        model.addAttribute("nextPage", nextPage);
+
+        return "actionSuccess";
+    }
 }

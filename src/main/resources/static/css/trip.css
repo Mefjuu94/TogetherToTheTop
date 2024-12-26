@@ -165,7 +165,18 @@ body, html {
     background-color: #6dc671; /* Zmiana tła przy najechaniu */
 }
 
-@media (max-width: 1050px) {
+#deleteTrip{
+    align-self: center;
+    text-align: center;
+    margin-top: 20px;
+}
+
+#delete_trip_button {
+    background-color: darkred;
+    margin-top: 20px;
+}
+
+@media (max-width: 800px) {
     /* Responsywność dla małych ekranów */
         .container {
             display: grid;
@@ -202,7 +213,11 @@ body, html {
         #commentSection {
             grid-row: 5 / 6;
             grid-column: 1 / -1;
-            width: 80vh;
+        }
+
+        #comment{
+            width: 100%;
+            box-sizing: border-box; /* Uwzględnij padding i border w szerokości */
         }
 
 }

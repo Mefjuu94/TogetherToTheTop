@@ -205,11 +205,6 @@ input[type="text"], textarea {
 }
 
 @media (max-width: 1050px) {
-    #container {
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* Dwie kolumny o równej szerokości */
-        grid-template-rows: auto auto; /* Dwa wiersze */
-    }
 
     #map {
         grid-column: 1 / -1; /* Mapa zajmuje całą szerokość w pierwszym wierszu */
@@ -218,26 +213,29 @@ input[type="text"], textarea {
         height: 80vh; /* 80% wysokości ekranu */
     }
 
-    #sidebar {
-        grid-column: 1; /* Sidebar w drugiej kolumnie, pierwsza kolumna */
-        grid-row: 2; /* Drugi wiersz */
-        width: 50vh;
-        height: auto;
-    }
 
     #announcement_information {
         grid-column: 2; /* Announcement w drugiej kolumnie */
         grid-row: 2; /* Drugi wiersz */
-        max-width: 50vh;
+        width: 50%;
         display: grid;
         flex-direction: column; /* Ustaw elementy jeden pod drugim */
         align-items: stretch;   /* Rozciąga elementy na pełną szerokość */
         height: 100%;
-        padding: 10px;
+        padding: 0;
     }
 
-    #searchInput{
-        width: 50vh;
+
+    #container {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Dwie kolumny o równej szerokości */
+        grid-template-rows: 1fr; /* Równy wiersz */
+    }
+
+    #sidebar, #announcement_information {
+        align-self: stretch; /* Rozciąganie na pełną wysokość */
+        width: 100%; /* Wypełnia kolumnę */
+        box-sizing: border-box;
     }
 
 }

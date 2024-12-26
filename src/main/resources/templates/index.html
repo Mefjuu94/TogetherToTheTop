@@ -8,12 +8,6 @@
 </head>
 <body style="background-image: url('/images/background.jpg');">
 
-<div th:if="${#authorization.expression('isAuthenticated()')}">
-    <a href="/" id="homeButton">
-        <button class="home-button" id="home-button"><img src="/images/mainMenu_png/home-button.png" alt="return home" class="home-icon"></button>
-    </a>
-</div>
-
 <div class="login-container">
     <main class="gridLogin">
         <!-- Kafelki menu -->
