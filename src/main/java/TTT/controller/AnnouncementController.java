@@ -7,6 +7,7 @@ import TTT.trips.Comments;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
 import TTT.users.UserRating;
+import jakarta.persistence.GeneratedValue;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -290,6 +291,25 @@ public class AnnouncementController {
         Trip trip = tripDAO.findTripID(tripID);
 
         tripDAO.deleteTrip(trip);
+
+        String nextPage = "/announcement";
+        model.addAttribute("nextPage", nextPage);
+
+        return "actionSuccess";
+    }
+
+    @PostMapping("/renew_trip")
+    public String renew_trip(@RequestParam Long trip,@RequestParam LocalDateTime date,@RequestParam String new_description, Model model) {
+
+        Trip renewTrip = tripDAO.findTripID(trip);
+        renewTrip.setTripDateTime(date);
+        renewTrip.setParticipants(new ArrayList<>());
+        renewTrip.setTripVisible(true);
+        renewTrip.setTripDescription(new_description);
+        Trip trip1 = new Trip(); // to automatically create new ID
+        renewTrip.setId(trip1.getId());
+
+        tripDAO.addAnnouncement(renewTrip);
 
         String nextPage = "/announcement";
         model.addAttribute("nextPage", nextPage);

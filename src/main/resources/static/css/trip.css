@@ -176,6 +176,147 @@ body, html {
     margin-top: 20px;
 }
 
+#renew_trip {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    cursor: pointer;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/*tutaj coś test */
+#add_announcement {
+    margin-top: 10%;
+    padding: 15px 30px; /* Większy przycisk */
+    font-size: 18px; /* Większy tekst */
+    background-color: grey;
+    color: white;
+    border: solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border 0.3s ease;
+}
+
+#time {
+    justify-content: center;
+    margin-top: 10%;
+    border: solid black 2px;
+    border-radius: 5px;
+    background-color: #c0392b;
+}
+
+#add_announcement:hover {
+    border: 2px solid orange;
+}
+
+#destination-div{
+    justify-items: center;
+    margin-top: 10%;
+    border: solid black 2px;
+    border-radius: 5px;
+    background-color: #c0392b;
+}
+
+#destination-label{
+    display: flex;            /* Ustawienie flexboxa */
+    justify-content: center;   /* Wyśrodkowanie poziome */
+    text-align: center;        /* Wyśrodkowanie tekstu w labelu */
+    width: 100%;               /* Opcjonalnie, aby label zajmował całą szerokość */
+}
+
+#dest {
+    flex: 1;                  /* Input wypełnia dostępne miejsce */
+    padding: 8px;             /* Wewnętrzne odstępy dla inputu */
+    box-sizing: border-box;   /* Uwzględnia padding w szerokości */
+}
+
+#description {
+    flex: 1;                  /* Input wypełnia dostępne miejsce */
+    padding: 8px;             /* Wewnętrzne odstępy dla inputu */
+    box-sizing: border-box;   /* Uwzględnia padding w szerokości */
+}
+
+/*checkboxy*/
+
+.checkbox{
+    border: solid black 2px;
+    border-radius: 5px;
+    padding: 5px;
+    display: block;
+    box-sizing: border-box;
+    margin: 5px;
+}
+
+h2 {
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.checkbox-group input {
+    margin-right: 10px;
+}
+/* Domyślne style */
+#time, #descriptionTrip, #renew_trip_button {
+    background-color: #c0392b;
+    transition: background-color 0.3s ease;
+}
+
+#time{
+    padding: 0;
+}
+
+#renew_trip_div {
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    max-width: 70%;
+    margin: 0 auto;
+    overflow-y: auto;
+}
+
+/* Zielone tło dla wypełnionych pól */
+.completed {
+    background-color: green !important;
+}
+
+
+/*koniec testu*/
 @media (max-width: 800px) {
     /* Responsywność dla małych ekranów */
         .container {

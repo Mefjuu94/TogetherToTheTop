@@ -31,11 +31,11 @@ public class Trip {
     private boolean tripVisible = true;
 
     // Właściciel wycieczki (ManyToOne)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private CustomUser owner; // Właściciel wycieczki
 
     // Uczestnicy wycieczki (ManyToMany)
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "trip_participants", // Nazwa tabeli pośredniej
             joinColumns = @JoinColumn(name = "trip_id"), // Kolumna dla Trip

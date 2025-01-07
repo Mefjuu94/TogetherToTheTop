@@ -67,8 +67,8 @@ public class CustomUserDAO {
 
 
     public CustomUser findCustomUserByEmail(String email) {
-        try {
-            Session session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()){
+
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
             Root<CustomUser> root = userQuery.from(CustomUser.class);
@@ -83,8 +83,8 @@ public class CustomUserDAO {
 
 
     public CustomUser findCustomUserByID(String ID) {
-        try {
-            Session session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()){
+
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
             Root<CustomUser> root = userQuery.from(CustomUser.class);
@@ -98,8 +98,8 @@ public class CustomUserDAO {
     }
 
     public List<CustomUser> findCustomUserByName(String name) {
-        try {
-            Session session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()){
+
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
             Root<CustomUser> root = userQuery.from(CustomUser.class);

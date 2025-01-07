@@ -8,10 +8,11 @@
     <!--    href="/static/css/trip.css" th:href="@{/css/trip.css}" -->
     <meta name="_csrf" content="my_token_csrf">
 </head>
-<body class="background-image" style="background-image: url('/images/tripBackground.jpg');">
+<body class="background-image" style="background-image: url('/static/images/tripBackground.jpg');">
 
 <a href="/" id="homeButton">
-    <button class="home-button" id="home-button"><img src="/images/mainMenu_png/home-button.png" alt="return home" class="home-icon"></button>
+    <button class="home-button" id="home-button"><img src="/images/mainMenu_png/home-button.png" alt="return home"
+                                                      class="home-icon"></button>
 </a>
 
 <div class="container">
@@ -25,19 +26,22 @@
         <!-- Left grid: Participants list -->
         <div class="left-grid">
             <div class="Participants-tile">
-                <h3 th:text="'Participants' + ' ' +  ${trip.getParticipants().size()} + '/' + ${trip.amountOfClosedGroup}">Participants</h3>
+                <h3 th:text="'Participants' + ' ' +  ${trip.getParticipants().size()} + '/' + ${trip.amountOfClosedGroup}">
+                    Participants</h3>
                 <ul th:if="${trip.getOwner().getId() != customUser.getId()}">
                     <li th:each="participant : ${trip.getParticipants()}">
                         <a th:href="@{'/userProfile/' +${participant.getId()}}"
                            th:text="${participant.getCustomUserName()}">Participant</a>
-                    <div th:if="${participant.getId() == customUser.getId()}"><form id="delete_participant_clone"
-                                                                                    action="/delete_participant" method="POST">
-                        <input type="hidden"  name="user_Identity" th:value="${participant.getId()}">
-                        <input type="hidden"  name="tripId" th:value="${trip.getId()}">
-                        <!--            must have! TOKEN-->
-                        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                        <button>delete me from trip</button>
-                    </form></div>
+                        <div th:if="${participant.getId() == customUser.getId() and trip.tripVisible == true}">
+                            <form id="delete_participant_clone"
+                                  action="/delete_participant" method="POST">
+                                <input type="hidden" name="user_Identity" th:value="${participant.getId()}">
+                                <input type="hidden" name="tripId" th:value="${trip.getId()}">
+                                <!--            must have! TOKEN-->
+                                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                                <button>delete me from trip</button>
+                            </form>
+                        </div>
                     </li>
                 </ul>
                 <ul th:if="${trip.getOwner().getId() == customUser.getId()}">
@@ -46,11 +50,11 @@
                            th:text="${participant.getCustomUserName()}">Participant</a>
                         <form id="delete_participant"
                               action="/delete_participant" method="POST">
-                            <input type="hidden"  name="user_Identity" th:value="${participant.getId()}">
-                            <input type="hidden"  name="tripId" th:value="${trip.getId()}">
+                            <input type="hidden" name="user_Identity" th:value="${participant.getId()}">
+                            <input type="hidden" name="tripId" th:value="${trip.getId()}">
                             <!--            must have! TOKEN-->
                             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                        <button>delete participant</button>
+                            <button>delete participant</button>
                         </form>
                     </li>
                 </ul>
@@ -127,7 +131,8 @@
                 </div>
 
                 <!-- Join Trip button -->
-                <div id="button-container" th:if="${!isParticipant}">
+                <div id="button-container" th:if="${!isParticipant and trip.owner.id != customUser.getId() and !trip.closedGroup ||
+                !isParticipant and trip.owner.id != customUser.getId() and trip.closedGroup and trip.amountOfClosedGroup < trip.participants.size()}">
                     <form id="saveForm" action="/addMe" method="POST">
                         <input type="hidden" id="tripId" name="tripId" th:value="${trip.getId()}">
                         <input type="hidden" id="userId" name="userId" th:value="${customUser.getId()}">
@@ -186,19 +191,89 @@
     </div>
 </div>
 
-<div id="deleteTrip" th:if="${trip.getOwner().getId() == customUser.getId()}">
+<div id="deleteTrip" th:if="${trip.getOwner().getId() == customUser.getId() and trip.tripVisible == true}">
     <form id="delete_trip"
           action="/delete_trip" method="POST">
-        <input type="hidden"  name="tripId" th:value="${trip.getId()}">
+        <input type="hidden" name="tripId" th:value="${trip.getId()}">
         <!--            must have! TOKEN-->
         <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-    <button id="delete_trip_button">DELETE TRIP</button>
+        <button id="delete_trip_button">DELETE TRIP</button>
     </form>
 </div>
+
+
+<div id="renew_trip_div" th:if="${trip.getOwner().getId() == customUser.getId() and trip.tripVisible == false}">
+    <div id="time">
+        <div>
+            <label>Set time of Your Trip</label>
+        </div>
+        <div>
+            <label for="dateTime">
+                <input type="datetime-local" id="dateTime" name="date">
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="description">Describe your trip:</label>
+        <textarea id="descriptionTrip" rows="6"
+                  placeholder="Description of destination, route, etc. max 1000 signs!"></textarea>
+    </div>
+
+    <!-- Checkbox section -->
+    <div class="checkbox-group">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="driver"> I am driving a vehicle and I can take someone with me
+            </label>
+            <label id="DriverPeopleInputLabel" style="display: none;">
+                Specify number of people:
+                <input type="number" id="DriverPeopleInput" min="1" max="99"
+                       placeholder="Amount of people 1-99" value="1">
+            </label>
+        </div>
+
+        <div class="checkbox">
+            <label><input type="checkbox" id="animals"> I tolerate animals</label>
+        </div>
+
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="closedGroupCheckbox"> Closed group (limiting the number of people)
+            </label>
+            <label id="peopleInputLabel" style="display: none;">
+                Specify number of people:
+                <input type="number" id="peopleInput" min="1" max="99"
+                       placeholder="Amount of people 1-99" value="1">
+            </label>
+        </div>
+    </div>
+
+    <div>
+        <button id="renew_trip_button" type="button" onclick="renewTrip()">RENEW YOUR TRIP</button>
+    </div>
+
+    <form id="renew_trip" action="/renew_trip" method="POST">
+        <input type="hidden" name="trip" th:value="${trip.getId()}">
+        <input type="hidden" id="hidden_date" name="date">
+        <input type="hidden" id="hidden_description" name="new_description">
+        <input type="hidden" id="hidden_driver" name="driver">
+        <input type="hidden" id="hidden_driver_people" name="driver_people">
+        <input type="hidden" id="hidden_animals" name="animals">
+        <input type="hidden" id="hidden_closed_group" name="closed_group">
+        <input type="hidden" id="hidden_closed_group_people" name="closed_group_people">
+
+        <!-- CSRF token -->
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+
+    </form>
+</div>
+
 <!-- External resources -->
 <link href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.min.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet-gpx@1.7.0/gpx.min.js"></script>
 <script type="text/javascript" th:src="@{/js/trip.js}"></script>
+<!--th:src="@{/js/trip.js}" src="/static/js/trip.js"-->
 </body>
 </html>

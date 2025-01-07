@@ -27,14 +27,17 @@ public class DateChecker {
 
             if (entity.isTripVisible()) {
                 //load all participants of trip
-                List<CustomUser> participants = entity.getParticipants();
+                List<CustomUser> participants = tripDAO.findTripID(entity.getId()).getParticipants();
+                System.out.println(participants.size());
                 double number = Double.parseDouble(entity.getDistanceOfTrip().substring(0, entity.getDistanceOfTrip().length() - 3));
 
                 if (entity.getTripDateTime().isBefore(LocalDateTime.now())) {
                     //change number of trips of participants
-                    for (CustomUser user : participants) {
-                        customUserDAO.updateUserStats(1, user.getEmail(), "numbersOfTrips");
-                        customUserDAO.updateUserStats(number, user.getEmail(), "distanceTraveled");
+                    for (CustomUser participant : participants) {
+
+                        participant.setDistanceTraveled(participant.getDistanceTraveled() + number);
+                        participant.setNumbersOfTrips(participant.getNumbersOfTrips() + 1);
+                        customUserDAO.saveUser(participant);
                     }
 
                     CustomUser owner = entity.getOwner();

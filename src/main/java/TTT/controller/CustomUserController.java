@@ -29,6 +29,7 @@ public class CustomUserController {
         String email = methodsHandler.getLoggedInUserName();
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
 
+        System.out.println(customUser.getCustomUserName());
 
         int numberOfTripsOwned = customUser.getTripsOwned().size();
 

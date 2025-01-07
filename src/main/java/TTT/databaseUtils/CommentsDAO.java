@@ -43,8 +43,7 @@ public class CommentsDAO {
     }
 
     public List<Comments> findCommentsByTripID(Long ID) {
-        try {
-            Session session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()){
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Comments> userQuery = cb.createQuery(Comments.class);
             Root<Comments> root = userQuery.from(Comments.class);
@@ -106,8 +105,7 @@ public class CommentsDAO {
     }
 
     public Comments findCommentID(long id) {
-        try {
-            Session session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()){
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Comments> userQuery = cb.createQuery(Comments.class);
             Root<Comments> root = userQuery.from(Comments.class);

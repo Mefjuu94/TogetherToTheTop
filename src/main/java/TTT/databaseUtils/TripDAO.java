@@ -47,8 +47,7 @@ public class TripDAO {
     }
 
     public List<Trip> findTrip(String destination) {
-        try {
-            Session session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()) {
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Trip> cq = cb.createQuery(Trip.class);
             Root<Trip> root = cq.from(Trip.class);
@@ -130,10 +129,8 @@ public class TripDAO {
     }
 
 
-
     public Trip findTripID(long id) {
-        try {
-            Session session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()) {
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Trip> userQuery = cb.createQuery(Trip.class);
             Root<Trip> root = userQuery.from(Trip.class);
@@ -147,10 +144,15 @@ public class TripDAO {
     }
 
     public List<Object[]> listAllTripParticipantIds() {
-        Session session = sessionFactory.openSession();
-        return session.createNativeQuery("SELECT trip_id, user_id FROM trip_participants", Object[].class)
-                .getResultList();
-
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            return session.createNativeQuery("SELECT trip_id, user_id FROM trip_participants", Object[].class)
+                    .getResultList();
+        }finally {
+            assert session != null;
+            session.close();
+        }
     }
 
     public Boolean updateTrip(Trip trip) {

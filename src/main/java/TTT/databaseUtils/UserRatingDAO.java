@@ -1,6 +1,9 @@
 package TTT.databaseUtils;
 
 import TTT.users.UserRating;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -53,7 +56,14 @@ public class UserRatingDAO {
     }
 
     public List<UserRating> listAllARatings() {
-        Session session = sessionFactory.openSession();
-        return session.createQuery("SELECT a FROM UserRating a", UserRating.class).getResultList();
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<UserRating> criteriaQuery = criteriaBuilder.createQuery(UserRating.class);
+
+            Root<UserRating> root = criteriaQuery.from(UserRating.class);
+            criteriaQuery.select(root);
+
+            return session.createQuery(criteriaQuery).getResultList();
+        }
     }
 }

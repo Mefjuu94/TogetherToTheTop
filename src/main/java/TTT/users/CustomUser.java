@@ -29,14 +29,14 @@ public class CustomUser {
     private String city;
 
     // Lista wycieczek, których użytkownik jest właścicielem
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Trip> tripsOwned; // Wycieczki, których użytkownik jest właścicielem
 
     // Lista wycieczek, w których użytkownik bierze udział
-    @ManyToMany(mappedBy = "participants")
+    @ManyToMany(mappedBy = "participants", fetch = FetchType.EAGER)
     private List<Trip> tripsParticipated; // Wycieczki, w których użytkownik uczestniczy
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<UserRating> ratings;
 
     public CustomUser() {
