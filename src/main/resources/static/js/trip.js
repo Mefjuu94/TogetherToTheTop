@@ -106,14 +106,26 @@ function checkFormCompletion() {
 
     if (description.trim() !== "") {
         document.getElementById("descriptionTrip").classList.add("completed");
+        button.classList.add("completed");
     } else {
         document.getElementById("descriptionTrip").classList.remove("completed");
     }
 
     if (dateTime.trim() !== "" ) {
         document.getElementById("time").classList.add("completed");
+        button.classList.add("completed");
     } else {
         document.getElementById("dateTime").classList.remove("completed");;
+    }
+}
+
+function toggleDiv() {
+    let div = document.getElementById("toggleDiv");
+    div.classList.toggle("show");
+    if (div.classList.contains("show")) {
+        setTimeout(() => {
+            div.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 500); // Czekamy na zakończenie animacji
     }
 }
 
