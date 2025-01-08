@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="'Trip to ' + ${trip.destination}">Trip Details</title>
-    <link rel="stylesheet" href="/static/css/trip.css">
+    <link rel="stylesheet" th:href="@{/css/trip.css}">
     <!--    href="/static/css/trip.css" th:href="@{/css/trip.css}" -->
     <meta name="_csrf" content="my_token_csrf">
 </head>
-<body class="background-image" style="background-image: url('/static/images/tripBackground.jpg');">
+<body class="background-image" style="background-image: url('/images/tripBackground.jpg');">
 
 <a href="/" id="homeButton">
     <button class="home-button" id="home-button"><img src="/images/mainMenu_png/home-button.png" alt="return home"
@@ -201,9 +201,9 @@
     </form>
 </div>
 
-<button id="toggleButton" onclick="toggleDiv()">Renew Trip!</button>
+<button th:if="${trip.getOwner().getId() == customUser.getId() and trip.tripVisible == false}" id="toggleButton" onclick="toggleDiv()">Renew Trip!</button>
 <div id="toggleDiv" class="hidden">
-    <div id="renew_trip_div" th:if="${trip.getOwner().getId() == customUser.getId() and trip.tripVisible == false}">
+    <div id="renew_trip_div" >
         <div id="time">
             <div>
                 <label>Set time of Your Trip</label>
@@ -275,7 +275,7 @@
 <link href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.min.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet-gpx@1.7.0/gpx.min.js"></script>
-<script type="text/javascript" src="/static/js/trip.js"></script>
+<script type="text/javascript" th:src="@{/js/trip.js}"></script>
 <!--th:src="@{/js/trip.js}" src="/static/js/trip.js"-->
 </body>
 </html>
