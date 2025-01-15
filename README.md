@@ -1,4 +1,5 @@
 # Together To The Top ⛰️ (TTTT) -> project still ongoing!
+# Adress to connect: http://13.60.233.120:8080
 
 **Together To The Top (TTTT)** is a web application that allows users to search for and join walking tours, as well as share their own. Users can browse, create and manage walking tours, interact with other users and use the interactive map to plan their routes.
 
