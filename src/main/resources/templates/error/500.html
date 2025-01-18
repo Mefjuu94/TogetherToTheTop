@@ -8,7 +8,12 @@
 <body>
 <div class="error-container">
     <h1>Error Page 500 – "Internal Server Error"</h1>
-    <p>The server encountered an internal error that it cannot handle. This is usually a problem on the server side, not the client.</p>
+    <div th:if="request != null">
+        <p>Incorrect Login or Password!</p>
+    </div>
+    <div th:if="request == null">
+        <p>The server encountered an internal error that it cannot handle. This is usually a problem on the server side, not the client.</p>
+    </div>
     <p>You will be redirected to the home page in <span id="countdown">10</span> seconds...</p>
 </div>
 <script>

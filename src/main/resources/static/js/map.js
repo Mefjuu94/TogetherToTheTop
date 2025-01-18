@@ -552,9 +552,6 @@ function locateUser() {
     }
 }
 
-// add listener to localize user
-document.getElementById('locateMeBtn').addEventListener('click', locateUser);
-
 // get checkbox and display field
 const closedGroupCheckbox = document.getElementById('closedGroupCheckbox');
 const peopleInputLabel = document.getElementById('peopleInputLabel');

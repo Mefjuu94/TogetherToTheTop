@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.io.IOException;
 public class CustomErrorController implements ErrorController {
 
     @RequestMapping("/error")
-    public String handleError(HttpServletRequest request) throws IOException {
+    public String handleError(HttpServletRequest request, Model model) throws IOException {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
         if (status != null) {
@@ -24,6 +25,7 @@ public class CustomErrorController implements ErrorController {
                 return "error/404";
             } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
                 printError(request);
+                model.addAttribute("request",request);
                 return "error/500";
             } else if (statusCode == HttpStatus.FORBIDDEN.value()) {
                 printError(request);

@@ -131,8 +131,8 @@
                 </div>
 
                 <!-- Join Trip button -->
-                <div id="button-container" th:if="${!isParticipant and trip.owner.id != customUser.getId() and !trip.closedGroup ||
-                !isParticipant and trip.owner.id != customUser.getId() and trip.closedGroup and trip.amountOfClosedGroup < trip.participants.size()}">
+                <div id="button-container" th:if="${!isParticipant and trip.owner.id != customUser.getId() ||
+                !isParticipant and trip.owner.id != customUser.getId() and trip.amountOfClosedGroup <= trip.participants.size()}">
                     <form id="saveForm" action="/addMe" method="POST">
                         <input type="hidden" id="tripId" name="tripId" th:value="${trip.getId()}">
                         <input type="hidden" id="userId" name="userId" th:value="${customUser.getId()}">

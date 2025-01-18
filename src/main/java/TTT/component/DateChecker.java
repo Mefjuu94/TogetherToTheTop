@@ -8,9 +8,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 @Component
@@ -20,7 +17,6 @@ public class DateChecker {
 
     @Scheduled(fixedRate = 60000 * 10) // 60000 = 1 minute // Co 6 godzin 6 * 60 * 60 * 1000
     public void checkDatesToRateUsersAndVisible() {
-        System.out.println("checking dates!");
         List<Trip> entities = tripDAO.listAllAnnouncements();
 
         for (Trip entity : entities) {
@@ -28,7 +24,7 @@ public class DateChecker {
             if (entity.isTripVisible()) {
                 //load all participants of trip
                 List<CustomUser> participants = tripDAO.findTripID(entity.getId()).getParticipants();
-                System.out.println(participants.size());
+
                 double number = Double.parseDouble(entity.getDistanceOfTrip().substring(0, entity.getDistanceOfTrip().length() - 3));
 
                 if (entity.getTripDateTime().isBefore(LocalDateTime.now())) {

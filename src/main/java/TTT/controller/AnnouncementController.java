@@ -7,7 +7,6 @@ import TTT.trips.Comments;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
 import TTT.users.UserRating;
-import jakarta.persistence.GeneratedValue;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
