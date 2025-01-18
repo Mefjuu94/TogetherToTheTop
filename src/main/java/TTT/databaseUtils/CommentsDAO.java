@@ -14,12 +14,22 @@ import java.util.List;
 
 public class CommentsDAO {
 
-    private final SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
+    private SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
+
+    public CommentsDAO() {
+    }
+
+    public CommentsDAO(SessionFactory testSessionFactory) {
+        this.sessionFactory = testSessionFactory;
+    }
 
     public boolean addComment(Comments comment) {
 
         Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()){
+        if (comment == null) {
+            return false;
+        }
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.merge(comment);
             transaction.commit();
@@ -32,9 +42,8 @@ public class CommentsDAO {
         }
     }
 
-    public List<Comments> findByTripID(Long ID) {
-        try {
-            Session session = sessionFactory.openSession();
+    public List<Comments> findCommentsByTripID(Long ID) {
+        try (Session session = sessionFactory.openSession()){
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Comments> userQuery = cb.createQuery(Comments.class);
             Root<Comments> root = userQuery.from(Comments.class);
@@ -52,7 +61,7 @@ public class CommentsDAO {
         Session session = null;
         Comments comment = findCommentID(id);
 
-        if (comment == null){
+        if (comment == null) {
             System.out.println("no comment with this ID!");
             return false;
         }
@@ -85,13 +94,18 @@ public class CommentsDAO {
     }
 
     public List<Comments> listAllComments() {
-        Session session = sessionFactory.openSession();
-        return session.createQuery("SELECT a FROM Comments a", Comments.class).getResultList();
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Comments> criteriaQuery = cb.createQuery(Comments.class);
+            Root<Comments> root = criteriaQuery.from(Comments.class);
+            criteriaQuery.select(root);
+
+            return session.createQuery(criteriaQuery).getResultList();
+        }
     }
 
     public Comments findCommentID(long id) {
-        try {
-            Session session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()){
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Comments> userQuery = cb.createQuery(Comments.class);
             Root<Comments> root = userQuery.from(Comments.class);
@@ -104,18 +118,26 @@ public class CommentsDAO {
         return null;
     }
 
-    public void editComment(long idOfComment, String commentString) {
+    public Boolean editComment(long idOfComment, String commentString) {
         Transaction transaction = null;
 
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-                session.merge(commentString);
+        Comments comment = findCommentID(idOfComment);
+        if (comment == null) {
+            return false;
+        } else {
+            comment.setComment(commentString);
+            try (Session session = sessionFactory.openSession()) {
+                transaction = session.beginTransaction();
+                session.merge(comment);
                 transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
+                return true;
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                e.printStackTrace();
             }
-            e.printStackTrace();
         }
+        return false;
     }
 }

@@ -552,9 +552,6 @@ function locateUser() {
     }
 }
 
-// add listener to localize user
-document.getElementById('locateMeBtn').addEventListener('click', locateUser);
-
 // get checkbox and display field
 const closedGroupCheckbox = document.getElementById('closedGroupCheckbox');
 const peopleInputLabel = document.getElementById('peopleInputLabel');
@@ -718,18 +715,3 @@ function sendToJava() {
         }
     }
 }
-
-
-// Add event listener to button to add this POI as a waypoint
-// document.addEventListener('DOMContentLoaded', () => {
-//     addToRouteBtn.addEventListener('click', () => {
-//         if (poi.name) {
-//             waypoints.push({coords: poi.coords, name: poi.name || 'Nieznany'});
-//             updateWaypointsList();  // update list of route points
-//             route();
-//             console.log(`Point added ${poi.name} (${poi.coords.join(', ')}) to route`);
-//         } else {
-//             console.log("No name for this point.");
-//         }
-//     });
-// });

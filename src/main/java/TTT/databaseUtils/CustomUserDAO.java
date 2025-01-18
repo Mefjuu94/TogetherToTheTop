@@ -11,28 +11,35 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 public class CustomUserDAO {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    private final SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
+    private SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
+
+    public CustomUserDAO() {}
+    public CustomUserDAO(SessionFactory testSessionFactory) {
+        this.sessionFactory = testSessionFactory;
+    }
 
     public boolean saveUser(CustomUser customUser) {
 
         if (findCustomUserByEmail(customUser.getEmail()) != null) {
             return false;
         }
-        if (customUser.getPassword().length() < 8) {
+        if (customUser.getPassword() == null || customUser.getPassword().length() < 8) {
             return false;
         }
 
-        customUser.setCustomUserName("yourName");
+        if (customUser.getCustomUserName() == null) {
+            customUser.setCustomUserName("yourName");
+        }
+        customUser.setDistanceTraveled(0.00);
 
         Transaction transaction = null;
-        try(Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             customUser.setPassword(passwordEncoder.encode(customUser.getPassword()));
             session.merge(customUser);
@@ -48,14 +55,20 @@ public class CustomUserDAO {
     }
 
     public List<CustomUser> listAllUsers() {
-        Session session = sessionFactory.openSession();
-        return session.createQuery("SELECT a FROM CustomUser a", CustomUser.class).getResultList();
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<CustomUser> criteriaQuery = cb.createQuery(CustomUser.class);
+            Root<CustomUser> root = criteriaQuery.from(CustomUser.class);
+            criteriaQuery.select(root);
+
+            return session.createQuery(criteriaQuery).getResultList();
+        }
     }
 
 
     public CustomUser findCustomUserByEmail(String email) {
-        try {
-            Session session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()){
+
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
             Root<CustomUser> root = userQuery.from(CustomUser.class);
@@ -70,8 +83,8 @@ public class CustomUserDAO {
 
 
     public CustomUser findCustomUserByID(String ID) {
-        try {
-            Session session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()){
+
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
             Root<CustomUser> root = userQuery.from(CustomUser.class);
@@ -85,13 +98,13 @@ public class CustomUserDAO {
     }
 
     public List<CustomUser> findCustomUserByName(String name) {
-        try {
-            Session session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()){
+
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
             Root<CustomUser> root = userQuery.from(CustomUser.class);
             userQuery.select(root).where(cb.equal(cb.lower(root.get("customUserName")), name.toLowerCase()));
-            List <CustomUser> results = session.createQuery(userQuery).getResultList();
+            List<CustomUser> results = session.createQuery(userQuery).getResultList();
             return results;
         } catch (PersistenceException | IllegalArgumentException e) {
             System.out.println("No entity found with email: " + name);
@@ -138,7 +151,7 @@ public class CustomUserDAO {
         }
     }
 
-    public void updateUserTrips(String email, List<Trip> trips) {
+    public Boolean updateUserTrips(String email, List<Trip> trips) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {
@@ -148,25 +161,29 @@ public class CustomUserDAO {
                 user.setTripsParticipated(trips);
                 session.merge(user);
                 transaction.commit();
+                return true;
             } else {
                 System.out.println("User not found with email: " + email);
+                return false;
             }
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
+            return false;
         }
+
     }
 
-    public void updateUserField(String value, String email,String field) {
+    public Boolean updateUserField(String value, String email, String field) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             CustomUser user = findCustomUserByEmail(email);
-            if (user != null) {
-                switch (field){
+            if (user != null && value != null) {
+                switch (field) {
                     case "email":
                         user.setEmail(value);
                         break;
@@ -176,23 +193,31 @@ public class CustomUserDAO {
                     case "city":
                         user.setCity(value);
                         break;
+                    default:
+                        System.out.println("Wrong field!");
+                        return false;
                 }
                 session.merge(user);
                 transaction.commit();
+                return true;
             } else {
                 System.out.println("User not found");
+                return false;
             }
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
-
+            return false;
         }
     }
 
-    public void updateUserAge(String email, int age) {
+    public Boolean updateUserAge(String email, int age) {
         Transaction transaction = null;
+        if (age > 120) {
+            return false;
+        }
 
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -201,41 +226,58 @@ public class CustomUserDAO {
                 user.setAge(age);
                 session.merge(user);
                 transaction.commit();
+                return true;
             } else {
                 System.out.println("User not found with email: " + email);
+                return false;
             }
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
+            return false;
         }
     }
 
-    public void updateUserStats(int value, String email,String field) {
+    public Boolean updateUserStats(double value, String email, String field) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             CustomUser user = findCustomUserByEmail(email);
-            if (user != null) {
-                switch (field){
+            if (user != null && value > 0) {
+                int numberOfAnnouncements = user.getTripsOwned().size();
+                int numberOfTrips = user.getNumbersOfTrips();
+                double numberOfDistance = user.getDistanceTraveled();
+
+                switch (field) {
+                    case "numbersOfTrips":
+                        user.setNumbersOfTrips((numberOfTrips + 1));
+                        System.out.println("NumbersOfTrips " + user.getCustomUserName() + " " + user.getNumbersOfTrips());
+                        break;
                     case "numberOfAnnouncements":
-                        int number = user.getNumbersOfAnnoucements();
-                        user.setNumbersOfAnnoucements(number + value);
+                        user.setNumbersOfAnnouncements(numberOfAnnouncements);
+                        System.out.println("owner " + user.getCustomUserName() + " " + user.getNumbersOfAnnouncements());
+                        break;
+                    case "distanceTraveled":
+                        user.setDistanceTraveled(numberOfDistance + value);
+                        System.out.println("distanceTraveled " + user.getCustomUserName() + " " + user.getDistanceTraveled());
                         break;
                 }
                 session.merge(user);
                 transaction.commit();
+                return true;
             } else {
                 System.out.println("User not found");
+                return false;
             }
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
-
+            return false;
         }
     }
 }
