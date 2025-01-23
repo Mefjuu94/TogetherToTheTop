@@ -181,7 +181,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!emailValue) {
                 tooltipContent.innerHTML = "<p>Please enter email address.</p>";
             } else if (validateEmail(emailValue)) {
-                tooltipContent.innerHTML = "<p style='color: #2baf31; font-weight: bold;'>e-mail is valid!</p>";
+                tooltipContent.innerHTML = "<p style='color: #2baf31; font-weight: bold;'>e-mail is valid! " +
+                    " * Your name will be set to text before '@' - you can change it later.</p>";
                 isEmailCorrect = true;
             } else {
                 tooltipContent.innerHTML = "<p style='color: red;'>Please enter a valid email address.</p>";
@@ -200,6 +201,19 @@ document.addEventListener("DOMContentLoaded", function () {
         updateTooltipContent("email");
     });
 
+    passwordInput.addEventListener("focus", function () {
+        updateTooltipContent("password");
+    });
+
+    passwordInput.addEventListener("input", function (){
+        updatePasswordTooltip(passwordInput.value);
+        if (isEmailCorrect && isPasswordCorrect){
+            document.getElementById('submitRegister').style.backgroundColor = "#2baf31";
+        }else {
+            document.getElementById('submitRegister').style.backgroundColor = "grey";
+        }
+    })
+
     emailInput.addEventListener("input", function () {
         updateTooltipContent("email");
         if (isEmailCorrect && isPasswordCorrect){
@@ -208,12 +222,6 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('submitRegister').style.backgroundColor = "grey";
         }
     });
-
-    passwordInput.addEventListener("focus", function () {
-        updateTooltipContent("password");
-    });
-
-
 
     if (!localStorage.getItem('privacyPolicyAccepted')) {
         // Pokaż modal, jeśli użytkownik jeszcze nie zaakceptował polityki
@@ -231,6 +239,14 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem('privacyPolicyAccepted', 'true');
         document.getElementById('privacyPolicyModal').style.display = 'none';
     });
+
+    document.getElementById('submitRegister').addEventListener('click', function (event) {
+        // Jeśli walidacja nie przeszła, zapobiegamy wysłaniu formularza
+        if (!isEmailCorrect || !isPasswordCorrect) {
+            event.preventDefault(); // Zatrzymanie wysłania formularza
+        }
+    });
+
 
 });
 
