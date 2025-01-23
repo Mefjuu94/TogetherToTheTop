@@ -32,10 +32,10 @@ public class CustomUserDAO {
         if (customUser.getPassword() == null || customUser.getPassword().length() < 8) {
             return false;
         }
+        String username = customUser.getEmail().substring(0, customUser.getEmail().indexOf("@"));
 
-        if (customUser.getCustomUserName() == null) {
-            customUser.setCustomUserName("yourName");
-        }
+        customUser.setCustomUserName(username);
+
         customUser.setDistanceTraveled(0.00);
 
         Transaction transaction = null;

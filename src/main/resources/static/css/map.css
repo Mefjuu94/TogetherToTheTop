@@ -111,6 +111,13 @@ html, body {
     box-sizing: border-box;
 }
 
+#description {
+    border: 2px solid darkred;
+}
+#description:focus {
+    border: 2px solid darkred;
+    outline: none;
+}
 
 #add_announcement {
     margin-top: 10%;
@@ -141,7 +148,6 @@ html, body {
     margin-top: 10%;
     border: solid black 2px;
     border-radius: 5px;
-    background-color: #c0392b;
 }
 
 #destination-label{
@@ -202,6 +208,13 @@ input[type="text"], textarea {
 
 .checkbox-group input {
     margin-right: 10px;
+}
+
+#DriverPeopleInput {
+    box-sizing: border-box; /* Globalne ustawienie */
+}
+#peopleInput {
+    box-sizing: border-box; /* Globalne ustawienie */
 }
 
 @media (max-width: 1050px) {

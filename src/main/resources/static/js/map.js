@@ -612,6 +612,7 @@ peopleInput.addEventListener('input', function () {
 
 
 ///////////////////////////////////////////////////////////////////////
+
 var activeSendButton = false;
 
 var descriptionInput = document.getElementById('description');
@@ -619,10 +620,10 @@ var descriptionBool = false;
 
 descriptionInput.addEventListener('input', function () {
     if (descriptionInput.value !== '') {
-        document.getElementById('description').style.backgroundColor = 'green';
+        document.getElementById('description').style.border = '2px solid green';
         descriptionBool = true;
     } else {
-        document.getElementById('description').style.backgroundColor = '#c0392b';
+        document.getElementById('description').style.borderColor = 'darkred';
         descriptionBool = false;
     }
     checkInputs();

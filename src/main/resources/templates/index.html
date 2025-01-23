@@ -142,7 +142,7 @@
         <form th:action="@{login}" method="post">
             <div>
                 <label>
-                    <input type="email" name="email" placeholder="Username" required/>
+                    <input type="email" name="email" placeholder="email" required/>
                 </label>
                 <i class="bx bxs-user"></i>
             </div>
@@ -167,25 +167,38 @@
 <div id="registerModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-        <h2>Register</h2>
+        <h2 style="text-align: center;">Register</h2> <!-- Napis Register wyśrodkowany -->
+
         <form th:action="@{/register}" method="post">
-            <div>
-                <label>
-                    <input type="email" name="email" id="emailInput" placeholder="Email" required/>
-                    <span id="message"></span>
-                </label>
-                <i class="bx bxs-envelope"></i>
+            <!-- Kontener grid 2x1 -->
+            <div class="form-grid">
+                <!-- Lewa kolumna: Login i Password -->
+                <div class="form-inputs">
+                    <label>
+                        <input type="email" name="email" id="emailInput" placeholder="Email" required />
+                        <span id="messageEmail"></span>
+                    </label>
+                    <label>
+                        <input type="password" name="password" placeholder="Password" id="passwordInput" required />
+                        <span id="messagePassword"></span>
+                    </label>
+                </div>
+
+                <!-- Prawa kolumna: Tooltip -->
+                <div class="form-hints">
+                    <div id="tooltip" class="tooltip">
+                        <p id="tooltipContent">Start sing up!</p>
+                    </div>
+                </div>
             </div>
-            <div>
-                <label>
-                    <input type="password" name="password" placeholder="Password" id="passwordInput" required/>
-                </label>
-                <i class="bx bxs-lock-alt"></i>
-            </div>
-            <input type="submit" id="submitRegister" value="Register"/>
+
+            <!-- Przycisk Register -->
+            <input type="submit" id="submitRegister" value="Register" />
         </form>
     </div>
 </div>
+
+
 
 
 <div id="aboutModal" class="modal">
@@ -208,14 +221,26 @@
             mateusz94orzel@gmail.com</p>
     </div>
 </div>
-<div th:if="${not #authorization.expression('isAuthenticated()')}">
-    <p>Hello dear guest! Login to take an action!</p>
+
+<!-- Modal z polityką prywatności -->
+<div id="privacyPolicyModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closePrivacyPolicy">&times;</span>
+        <h2>Privacy Policy</h2>
+        <p>
+            All information regarding the protection of your personal data can be found in
+            <a href="/privacyPolicy" target="_blank" id="privacyPolicyLink">
+                full privacy policy
+            </a>.
+        </p>
+        <button id="acceptPrivacyPolicy">Accept</button>
+    </div>
 </div>
-<div th:if="${#authorization.expression('isAuthenticated()')}">
-    <p>Hello, you are logged!</p>
-</div>
+
+
 <input th:value="${users}"
        id="usersData" typeof="hidden" type="hidden">
 <script type="text/javascript" th:src="@{/js/index.js}"></script>
 </body>
+
 </html>

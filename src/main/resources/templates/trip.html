@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="'Trip to ' + ${trip.destination}">Trip Details</title>
-    <link rel="stylesheet" th:href="@{/css/trip.css}">
+    <link rel="stylesheet"  th:href="@{/css/trip.css}">
     <!--    href="/static/css/trip.css" th:href="@{/css/trip.css}" -->
     <meta name="_csrf" content="my_token_csrf">
 </head>
@@ -26,7 +26,7 @@
         <!-- Left grid: Participants list -->
         <div class="left-grid">
             <div class="Participants-tile">
-                <h3 th:text="'Participants' + ' ' +  ${trip.getParticipants().size()} + '/' + ${trip.amountOfClosedGroup}">
+                <h3 th:text="${trip.closedGroup ? 'Participants ' + trip.getParticipants().size() + '/' + trip.amountOfClosedGroup : 'Participants: '}">
                     Participants</h3>
                 <ul th:if="${trip.getOwner().getId() != customUser.getId()}">
                     <li th:each="participant : ${trip.getParticipants()}">
@@ -83,7 +83,7 @@
             <div class="info-container">
                 <div class="grid-container">
                     <!-- Info tiles with trip details -->
-                    <div class="tile">
+                    <div style="display: none;" class="tile">
                         <h3>Trip ID</h3>
                         <p id="IDofTrip" th:text="${trip.id}">Trip ID</p>
                     </div>
@@ -101,17 +101,15 @@
                     </div>
                     <div class="tile">
                         <h3>Closed Group</h3>
-                        <p th:text="${trip.closedGroup ? 'Yes' : 'No'}">No</p>
-                    </div>
-                    <div class="tile">
-                        <h3>Group Size</h3>
-                        <p th:text="${trip.amountOfClosedGroup}">5 people</p>
+                        <p th:text="${trip.closedGroup ? 'Yes: ' + trip.amountOfClosedGroup + ' people can join' : 'No, this group is open'}">
+                            No, this group is open
+                        </p>
                     </div>
                     <div class="tile">
                         <h3>People in the Car</h3>
                         <p th:text="${trip.peopleInTheCar ? 'Yes' : 'No'}">No</p>
                     </div>
-                    <div class="tile">
+                    <div class="tile" th:if="${trip.peopleInTheCar}">
                         <h3>Amount of People to take</h3>
                         <p th:text="${trip.amountOfDriverPeople}">3</p>
                     </div>

@@ -34,7 +34,7 @@ public class SecurityConfig {
                                 HttpMethod.POST).fullyAuthenticated()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll().
-                        requestMatchers("/", "/login", "/logout", "/register", "/error/**", "/usersEmails")
+                        requestMatchers("/", "/login", "/logout", "/register", "/error/**", "/usersEmails","privacyPolicy")
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin((form) -> form.loginPage("/login")

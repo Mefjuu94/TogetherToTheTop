@@ -1,5 +1,5 @@
-let passwordValidation = false;
 document.addEventListener("DOMContentLoaded", function () {
+
     const contactModal = document.getElementById("contactModal");
     const aboutModal = document.getElementById("aboutModal");
     const loginModal = document.getElementById("loginModal");
@@ -129,67 +129,108 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-});
+    const emailInput = document.getElementById("emailInput");
+    const passwordInput = document.getElementById("passwordInput");
 
-document.addEventListener('DOMContentLoaded', function() {
-    function toggleSubmitButton() {
-        if (passwordValidation) {
-            document.getElementById("submitRegister").disabled = false;  // Odblokowanie przycisku
-        } else {
-            document.getElementById("submitRegister").disabled = true;   // Zablokowanie przycisku
+    const tooltipContent = document.getElementById("tooltipContent");
+
+    // Pobranie referencji do elementów podpowiedzi (dla hasła)
+    const lengthHint = document.createElement('p');
+    const uppercaseHint = document.createElement('p');
+    const numberHint = document.createElement('p');
+
+    lengthHint.textContent = "- At least 8 signs";
+    uppercaseHint.textContent = "- At least 1 uppercase";
+    numberHint.textContent = "- At least 1 digit";
+
+    lengthHint.classList.add("invalid");
+    uppercaseHint.classList.add("invalid");
+    numberHint.classList.add("invalid");
+
+    let isPasswordCorrect = false;
+    let isEmailCorrect = validateEmail(emailInput);
+
+    // Funkcja do aktualizacji tooltipa dla hasła
+    function updatePasswordTooltip(password) {
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasMinLength = password.length >= 8;
+
+        lengthHint.className = hasMinLength ? "valid" : "invalid";
+        uppercaseHint.className = hasUpperCase ? "valid" : "invalid";
+        numberHint.className = hasNumber ? "valid" : "invalid";
+
+        if (hasMinLength && hasNumber && hasUpperCase){
+            isPasswordCorrect = true;
+        }else {
+            isPasswordCorrect = false;
+            console.log('incorrect password')
         }
     }
 
+    // Funkcja walidacji e-maila
+    function validateEmail(email) {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+    }
 
-    const usersDataString = document.getElementById("usersData").value;
-
-// Usunięcie nawiasów kwadratowych i cudzysłowów, a następnie podzielenie po przecinkach
-    const usersData2 = usersDataString.replace(/[\[\]" ]/g, '');
-    const usersData1 =  usersData2.trim();
-    const usersData = usersData1.split(',')
-
-
-    let emailInput = document.getElementById("emailInput");
-    let passwordInput = document.getElementById("passwordInput");
-
-    emailInput.addEventListener('input', function() {
-
-        let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-        // Sprawdzamy, czy e-mail pasuje do wyrażenia regularnego
-        if (emailRegex.test(emailInput.value)) {
-            for (let i = 0; i < usersData.length; i++) {
-                if (emailInput.value === usersData[i]) {
-                    document.getElementById("emailInput").style.borderColor = "red";
-                } else {
-                    document.getElementById("emailInput").style.borderColor = "default";
-                }
+    // Funkcja zmiany zawartości tooltipa
+    function updateTooltipContent(focusField) {
+        if (focusField === "email") {
+            const emailValue = emailInput.value;
+            if (!emailValue) {
+                tooltipContent.innerHTML = "<p>Please enter email address.</p>";
+            } else if (validateEmail(emailValue)) {
+                tooltipContent.innerHTML = "<p style='color: #2baf31; font-weight: bold;'>e-mail is valid!</p>";
+                isEmailCorrect = true;
+            } else {
+                tooltipContent.innerHTML = "<p style='color: red;'>Please enter a valid email address.</p>";
+                isEmailCorrect = false;
             }
-            document.getElementById("emailInput").style.borderColor = "green";
-        }else{
-            document.getElementById("emailInput").style.borderColor = "red";
+        } else if (focusField === "password") {
+            tooltipContent.innerHTML = ""; // Czyszczenie zawartości
+            tooltipContent.appendChild(lengthHint);
+            tooltipContent.appendChild(uppercaseHint);
+            tooltipContent.appendChild(numberHint);
         }
+    }
 
+    // Obsługa zdarzeń dla e-maila
+    emailInput.addEventListener("focus", function () {
+        updateTooltipContent("email");
     });
 
-    passwordInput.addEventListener('input', function() {
-
-        let passwordValue = passwordInput.value;
-
-        // Warunki do sprawdzenia
-        let hasUpperCase = /[A-Z]/.test(passwordValue);      // Sprawdza obecność wielkich liter
-        let hasNumber = /[0-9]/.test(passwordValue);          // Sprawdza obecność cyfr
-        let hasMinLength = passwordValue.length >= 8;         // Sprawdza długość co najmniej 8 znaków
-
-        // Sprawdzenie, czy wszystkie warunki są spełnione
-        if (hasUpperCase && hasNumber && hasMinLength) {
-            document.getElementById("passwordInput").style.borderColor = "green"
-            passwordValidation = true;
-        } else {
-            document.getElementById("passwordInput").style.borderColor = "red"
-            passwordValidation = false;
+    emailInput.addEventListener("input", function () {
+        updateTooltipContent("email");
+        if (isEmailCorrect && isPasswordCorrect){
+            document.getElementById('submitRegister').style.backgroundColor = "#2baf31";
+        }else {
+            document.getElementById('submitRegister').style.backgroundColor = "grey";
         }
-
-        toggleSubmitButton();
     });
+
+    passwordInput.addEventListener("focus", function () {
+        updateTooltipContent("password");
+    });
+
+
+
+    if (!localStorage.getItem('privacyPolicyAccepted')) {
+        // Pokaż modal, jeśli użytkownik jeszcze nie zaakceptował polityki
+        document.getElementById('privacyPolicyModal').style.display = 'block';
+    }
+
+    // Obsługa zamykania modala
+    document.getElementById('closePrivacyPolicy').addEventListener('click', function () {
+        document.getElementById('privacyPolicyModal').style.display = 'none';
+    });
+
+    // Obsługa akceptacji polityki prywatności
+    document.getElementById('acceptPrivacyPolicy').addEventListener('click', function () {
+        // Zapisywanie w localStorage, że polityka została zaakceptowana
+        localStorage.setItem('privacyPolicyAccepted', 'true');
+        document.getElementById('privacyPolicyModal').style.display = 'none';
+    });
+
 });
+

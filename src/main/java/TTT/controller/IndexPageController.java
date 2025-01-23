@@ -27,5 +27,11 @@ public class IndexPageController {
 
         return "index";
     }
+
+    @GetMapping("privacyPolicy")
+    public String getPrivacyPolicyPage(Model model) {
+
+        return "privacyPolicy";
+    }
 }
 
