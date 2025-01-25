@@ -19,15 +19,11 @@
     <h1>My Profile</h1>
 
     <div class="grid-container">
+
         <!-- Edytowalne kafelki -->
         <div class="tile-editable" data-field="username" data-label="Username">
             <h3>Username</h3>
             <p id="username-display" th:text="${customUser.getCustomUserName()}">Username</p>
-        </div>
-
-        <div class="tile" data-field="ID" data-label="id">
-            <h3>User ID</h3>
-            <p id="user-id" th:text="${customUser.getId()}">User ID</p>
         </div>
 
         <div class="tile-editable" data-field="age" data-label="Age">
@@ -41,19 +37,24 @@
         </div>
 
         <!-- Nieedytowalne kafelki -->
+
+        <div class="tile" data-field="ID" data-label="id">
+            <h3>User ID</h3>
+            <p id="user-id" th:text="${customUser.getId()}">User ID</p>
+        </div>
         <div class="tile" data-field="email" data-label="Email">
             <h3>Email</h3>
             <p id="email-display" th:text="${customUser.getEmail()}">Email</p>
         </div>
 
-        <div class="tile">
+        <div class="tile-link">
             <h3>Total Trips</h3>
             <p th:text="${customUser.getNumbersOfTrips()}">numbers</p>
         </div>
 
         <form action="/tripsOwned" method="GET">
             <input type="hidden" name="userID" th:value="${customUser.getId()}">
-            <div class="tile" onclick="this.closest('form').submit()">
+            <div class="tile-link" onclick="this.closest('form').submit()">
                 <h3>Trips Created</h3>
                 <p th:text="${customUser.tripsOwned.size()}">?</p>
             </div>
@@ -61,7 +62,7 @@
 
         <form action="/tripsParticipated" method="GET">
             <input type="hidden" name="userID" th:value="${customUser.getId()}">
-            <div class="tile" onclick="this.closest('form').submit()">
+            <div class="tile-link" onclick="this.closest('form').submit()">
                 <h3>Trips Participated</h3>
                 <p th:text="${tripsParticipated.size()}">?</p>
             </div>
@@ -75,15 +76,6 @@
         <div class="tile">
             <h3>Rating</h3>
             <p th:text="${rate}">?</p>
-        </div>
-
-        <div th:if="${#authorization.expression('isAuthenticated()')}">
-            <form action="/rate" method="GET">
-                <div class="tile" onclick="this.closest('form').submit()">
-                    <h3>Users to rate:</h3>
-                    <p th:text="${users}">?</p>
-                </div>
-            </form>
         </div>
 
     </div>

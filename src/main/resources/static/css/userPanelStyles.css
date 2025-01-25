@@ -29,26 +29,31 @@ h1 {
     z-index: -1;
 }
 
-/* Kontener profilu */
 .profile-container {
-    max-width: 300px; /* Szerokość kontenera */
-    margin: 0 20px; /* Dodanie przestrzeni po lewej stronie */
+    max-width: 100vh; /* Szerokość kontenera */
+    width: 90%; /* Opcjonalnie - aby był responsywny */
+    margin: 0 auto;
     padding: 20px;
-    position: relative;
-    z-index: 1;
-    background-color: rgba(255, 255, 255, 0.8);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.3);
     border-radius: 10px;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
 }
 
+
 .grid-container {
-    display: flex;
+    display: grid ;
+    grid-template-columns: auto auto auto;
     flex-direction: column; /* Ustawienie kafelków jeden pod drugim */
     gap: 20px; /* Przestrzeń między kafelkami */
 }
 
 .tile {
     background-color: rgba(255, 255, 255, 0.9);
+    border: #2c3e50 solid 3px;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
@@ -58,6 +63,17 @@ h1 {
 
 .tile-editable {
     background-color: rgba(255, 255, 255, 0.9);
+    border: #a127ae solid 3px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    cursor: pointer;
+}
+
+.tile-link {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: #0634ac solid 3px;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
@@ -156,6 +172,12 @@ h1 {
         background-color: rgba(255, 255, 255, 0.6);
         border-radius: 10px;
         box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    }
+    .grid-container {
+        display: grid ;
+        grid-template-columns: auto auto;
+        flex-direction: column; /* Ustawienie kafelków jeden pod drugim */
+        gap: 20px; /* Przestrzeń między kafelkami */
     }
 
     .background-image {
