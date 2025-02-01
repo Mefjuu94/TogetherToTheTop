@@ -15,7 +15,7 @@ import java.util.List;
 
 public class MethodsHandler {
 
-    TripDAO tripDAO = new TripDAO();
+    UserRatingDAO userRatingDAO = new UserRatingDAO();
 
     protected String getLoggedInUserName() {
         //download active user
@@ -52,54 +52,32 @@ public class MethodsHandler {
         return tripsParticipated;
     }
 
-    protected List<CustomUser> usersToRate(CustomUser me){
+    protected List<UserRating> usersToRate(CustomUser me){
 
-        List<Object[]> participantsIDs = tripDAO.listAllTripParticipantIds();
-        List<Trip> tripsWhereParticipated = new ArrayList<>();
-        List<CustomUser> usersTemp = new ArrayList<>();
-        List<CustomUser> users = new ArrayList<>();
+        List<UserRating> usersToRateTemp = userRatingDAO.listUsersToRateByMe(me.getId());
+        List<UserRating> usersToRate = new ArrayList<>();
 
-        // get list where user participated.
-        for (int i = 0; i < participantsIDs.size(); i++) {
-            String s1 = Arrays.toString(participantsIDs.get(i));
-            String s = s1.replaceAll("[\\[\\]\\s]", "");
-            String[] split = s.split(",");
-            long tripID = Long.parseLong(split[0]);
-            long user_id = Long.parseLong(split[1]);
-
-            if (me.getId() == user_id) {
-                tripsWhereParticipated.add(tripDAO.findTripID(tripID));
-            }
-        }
-        //add all participants who was with me:
-        for (Trip trip : tripsWhereParticipated) {
-            if (!trip.isTripVisible()) {
-                usersTemp.addAll(trip.getParticipants());
-                usersTemp.add(trip.getOwner());
+        for (UserRating userRating : usersToRateTemp) {
+            if (!userRating.isFilled()) {
+                usersToRate.add(userRating);
             }
         }
 
-        UserRatingDAO userRatingDAO = new UserRatingDAO();
-        List<UserRating> ratingList = userRatingDAO.listAllARatings();
-        List<Long> reviewers = new ArrayList<>();
-        List<Long> usersReviewed = new ArrayList<>();
+        return usersToRate;
+    }
 
-        //collect ids from reviewers and users who reviewed
-        for (UserRating userRating : ratingList) {
-            reviewers.add(userRating.getReviewer().getId());
-            usersReviewed.add(userRating.getUser().getId());
-        }
+    protected List<UserRating> whatsMyRate(CustomUser me){
 
-        // if in participants match ids then remove from temporary usersList
-        for (int i = 0; i < usersTemp.size(); i++) {
-            for (int j = 0; j < usersReviewed.size(); j++) {
-                if (me.getId() == reviewers.get(j) && usersTemp.get(i).getId() == usersReviewed.get(j)) {
-                    usersTemp.remove(i);
-                }
+        List<UserRating> usersToRateTemp = userRatingDAO.listUsersToRateByMe(me.getId());
+        List<UserRating> usersToRate = new ArrayList<>();
+        System.out.println(usersToRateTemp.size());
+
+        for (int i = 0; i < usersToRateTemp.size(); i++) {
+            System.out.println(usersToRateTemp.get(i).isFilled());
+            if (usersToRateTemp.get(i).isFilled()) {
+                usersToRate.add(usersToRateTemp.get(i));
             }
         }
-
-        users = usersTemp;
-        return users;
+        return usersToRate;
     }
 }

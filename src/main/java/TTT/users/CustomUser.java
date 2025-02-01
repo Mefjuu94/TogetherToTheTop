@@ -188,7 +188,6 @@ public class CustomUser {
                 ", distanceTraveled=" + distanceTraveled +
                 ", city='" + city + '\'' +
                 ", tripsOwned=" + tripsOwned +
-                ", ratings=" + ratings +
                 '}';
     }
 }

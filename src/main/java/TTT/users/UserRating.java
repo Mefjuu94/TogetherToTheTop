@@ -1,5 +1,6 @@
 package TTT.users;
 
+import TTT.trips.Trip;
 import jakarta.persistence.*;
 import java.util.Objects;
 
@@ -12,6 +13,12 @@ public class UserRating {
 
     @Column(nullable = false)
     private int rating;  // Ocena od 1 do 10
+
+    @ManyToOne
+    @JoinColumn(name = "trip_id", nullable = false) // Powiązanie z wycieczką
+    private Trip trip; // Trip jako obiekt, nie ID
+
+    private boolean isFilled;
 
     @Column(nullable = true, length = 1000)  // Opcjonalny komentarz, z limitem długości
     private String comment;
@@ -29,8 +36,10 @@ public class UserRating {
     public UserRating() {
     }
 
-    public UserRating(int rating, String comment, CustomUser user, CustomUser reviewer) {
+    public UserRating(int rating, Trip trip, boolean isFilled, String comment, CustomUser user, CustomUser reviewer) {
         this.rating = rating;
+        this.trip = trip;
+        this.isFilled = isFilled;
         this.comment = comment;
         this.user = user;
         this.reviewer = reviewer;
@@ -77,21 +86,33 @@ public class UserRating {
         this.reviewer = reviewer;
     }
 
+    public Trip getTrip() {
+        return trip;
+    }
+
+    public void setTrip(Trip tripId) {
+        this.trip = tripId;
+    }
+
+    public boolean isFilled() {
+        return isFilled;
+    }
+
+    public void setFilled(boolean filled) {
+        isFilled = filled;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserRating that = (UserRating) o;
-        return rating == that.rating &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(comment, that.comment) &&
-                Objects.equals(user, that.user) &&
-                Objects.equals(reviewer, that.reviewer);  // Porównanie nowego pola
+        return rating == that.rating && trip == that.trip && isFilled == that.isFilled && Objects.equals(id, that.id) && Objects.equals(comment, that.comment) && Objects.equals(user, that.user) && Objects.equals(reviewer, that.reviewer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, rating, comment, user, reviewer);  // Dodano reviewer
+        return Objects.hash(id, rating, trip, isFilled, comment, user, reviewer);
     }
 
     @Override
@@ -99,9 +120,11 @@ public class UserRating {
         return "UserRating{" +
                 "id=" + id +
                 ", rating=" + rating +
+                ", tripId=" + trip +
+                ", isFilled=" + isFilled +
                 ", comment='" + comment + '\'' +
                 ", user=" + user +
-                ", reviewer=" + reviewer +  // Wyświetlanie nowego pola
+                ", reviewer=" + reviewer +
                 '}';
     }
 }

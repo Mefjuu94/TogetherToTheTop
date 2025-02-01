@@ -1,6 +1,7 @@
 import TTT.databaseUtils.CustomUserDAO;
 import TTT.databaseUtils.TripDAO;
 import TTT.databaseUtils.UserRatingDAO;
+import TTT.trips.Trip;
 import TTT.users.CustomUser;
 import TTT.users.UserRating;
 import org.junit.jupiter.api.Assertions;
@@ -11,6 +12,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class UserRatingDAOTests {
     UserRating rate = createRate();
     private UserRatingDAO testObject;
     DockerImageName postgres = DockerImageName.parse("postgres:16");
+    private Trip testTrip = createTestTrip();
     @Container
     PostgreSQLContainer postgresqlContainer;
 
@@ -42,6 +45,24 @@ public class UserRatingDAOTests {
         System.out.println(mappedPort);
     }
 
+    private Trip createTestTrip() {
+        return new Trip.TripBuilder()
+                .withTripDescription("description")
+                .withDestination("destination")
+                .withOwner(customUser)
+                .withTripDuration("5h")
+                .withClosedGroup(false)
+                .withAmountOfClosedGroup(1)
+                .withDriverPeople(false)
+                .withAmountOfDriverPeople(12)
+                .withAnimals(true)
+                .withWaypoints("")
+                .withTripDataTime(LocalDateTime.now())
+                .withDistanceOfTrip("5km")
+                .withGpxFile(null)
+                .build();
+    }
+
     private CustomUser createTestUser() {
         CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
                 "testUser", 99, 0, 0, new ArrayList<>(),
@@ -50,7 +71,7 @@ public class UserRatingDAOTests {
     }
 
     protected UserRating createRate() {
-        UserRating rate = new UserRating(8,"comment",customUser,customUser);
+        UserRating rate = new UserRating(8,testTrip,false,"comment",customUser,customUser);
         return rate;
     }
 
@@ -76,17 +97,17 @@ public class UserRatingDAOTests {
         rate.setComment("new rate here!");
         testObject.addRate(rate);
 
-        Assertions.assertTrue(testObject.editRate(1L,rate));
+        Assertions.assertTrue(testObject.editRate(1L,rate.getRating(),testTrip,"ok"));
     }
 
     @Test
     public void editRateTestFail(){
-        Assertions.assertThrows(IllegalStateException.class,()->testObject.editRate(1L,rate));
+        Assertions.assertThrows(IllegalStateException.class,()->testObject.editRate(1L,rate.getRating(),testTrip,"ok"));
     }
 
 
     @Test
-    public void listAllARatingsTest(){
+    public void listAllRatingsTest(){
         int mappedPort = this.postgresqlContainer.getMappedPort(5432);
         customUserDAO = new CustomUserDAO(TestSessionFactoryCreator.getCustomUserSessionFactory(mappedPort));
 
@@ -98,12 +119,12 @@ public class UserRatingDAOTests {
         rate.setId(1L);
         resultExpected.add(rate);
 
-        Assertions.assertEquals(resultExpected.toString(),testObject.listAllARatings().toString());
+        Assertions.assertEquals(resultExpected.toString(),testObject.listAllRates(customUser.getId()).toString());
     }
 
     @Test
     public void listAllARatingsTestEmptyList(){
-        Assertions.assertEquals(new ArrayList<UserRating>(),testObject.listAllARatings());
+        Assertions.assertEquals(new ArrayList<UserRating>(),testObject.listAllRates(customUser.getId()));
     }
 
 }

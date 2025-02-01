@@ -54,6 +54,33 @@ public class CustomUserDAO {
         }
     }
 
+    public boolean editUsersChanges(List<CustomUser> customUsers, double number) {
+        if (customUsers == null || customUsers.isEmpty()) {
+            return false;
+        }
+
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            for (CustomUser customUser : customUsers) {
+
+                customUser.setDistanceTraveled(customUser.getDistanceTraveled() + number);
+                customUser.setNumbersOfTrips(customUser.getNumbersOfTrips() + 1);
+
+                session.merge(customUser);
+            }
+
+            transaction.commit();
+            System.out.println("Users saved successfully");
+            return true;
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public List<CustomUser> listAllUsers() {
         try (Session session = sessionFactory.openSession()) {
             CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -64,7 +91,6 @@ public class CustomUserDAO {
             return session.createQuery(criteriaQuery).getResultList();
         }
     }
-
 
     public CustomUser findCustomUserByEmail(String email) {
         try (Session session = sessionFactory.openSession()){
@@ -80,7 +106,6 @@ public class CustomUserDAO {
         }
         return null;
     }
-
 
     public CustomUser findCustomUserByID(String ID) {
         try (Session session = sessionFactory.openSession()){

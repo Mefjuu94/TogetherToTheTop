@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -26,29 +23,28 @@ public class CustomUserController {
 
     @GetMapping("/myProfile")
     public String getMainPage(Model model) {
+        UserRatingDAO userRatingDAO = new UserRatingDAO();
         String email = methodsHandler.getLoggedInUserName();
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
 
-        System.out.println(customUser.getCustomUserName());
-
         int numberOfTripsOwned = customUser.getTripsOwned().size();
 
-
-        List<UserRating> rating = customUser.getRatings();
         int rate = 0;
+        List<UserRating> rating = userRatingDAO.listAllRates(customUser.getId());
+        System.out.println(rating.size());
 
-        if (!rating.isEmpty()) {
-            for (int i = 0; i < rating.size(); i++) {
-                rate += rating.get(i).getRating();
-            }
-            rate = rate / rating.size();
-        } else {
+        for (UserRating userRating : rating) {
+            rate += userRating.getRating();
+        }
+        if (rating.size() < 2){
             rate = 1;
+        }else {
+            rate = rate/rating.size();
         }
 
         List<Object[]> objects = tripDAO.listAllTripParticipantIds();
         List<Trip> tripsParticipated = methodsHandler.listOfTrips(objects, customUser);
-        List<CustomUser> users = methodsHandler.usersToRate(customUser);
+        List<UserRating> users = methodsHandler.usersToRate(customUser);
 
         model.addAttribute("customUser", customUser);
         model.addAttribute("numberOfTripsOwned", numberOfTripsOwned);
@@ -89,43 +85,6 @@ public class CustomUserController {
         return "results";
     }
 
-    @GetMapping("/rate")
-    public String getUsersToRate(Model model) {
-
-        String email = methodsHandler.getLoggedInUserName();
-        CustomUser me = customUserDAO.findCustomUserByEmail(email);
-
-        List<CustomUser> users = methodsHandler.usersToRate(me);
-
-        model.addAttribute("users", users);
-        model.addAttribute("me", me);
-
-        return "rate";
-    }
-
-    @PostMapping("/addRate")
-    public String getUsersToRate(@RequestParam String userId, @RequestParam String rate,
-                                 @RequestParam String behavior,
-                                 Model model) {
-
-        String email = methodsHandler.getLoggedInUserName();
-        CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
-
-        CustomUser userToRate = customUserDAO.findCustomUserByID(userId);
-        int rateInt = Integer.parseInt(rate);
-
-        UserRating userRating = new UserRating(rateInt, behavior, userToRate, customUser);
-        UserRatingDAO userRatingDAO = new UserRatingDAO();
-
-        userRatingDAO.addRate(userRating);
-
-        String nextPage = "/rate";
-        model.addAttribute("nextPage", nextPage);
-
-        return "actionSuccess";
-    }
-
-
     @GetMapping("/tripsParticipated")
     public String getTripsWhereParticipated(@RequestParam String userID, Model model) {
 
@@ -157,17 +116,35 @@ public class CustomUserController {
         return "actionSuccess";
     }
 
-    @PostMapping("/rate")
-    public String saveRating(
-            @RequestParam("userId") CustomUser userId,
-            @RequestParam("behavior") String behavior,
-            @RequestParam("rate") Integer rate,
-            @RequestParam("me") CustomUser me) {
-        UserRatingDAO ratingDAO = new UserRatingDAO();
+    @GetMapping("/rate")
+    public String getUsersToRate(Model model) {
 
-        ratingDAO.addRate(new UserRating(rate, behavior, userId, me));
+        String email = methodsHandler.getLoggedInUserName();
+        CustomUser me = customUserDAO.findCustomUserByEmail(email);
 
+        List<UserRating> rates = methodsHandler.usersToRate(me);
 
-        return "redirect:/success";
+        model.addAttribute("rates", rates);
+        model.addAttribute("me", me);
+
+        return "rate";
+    }
+
+    @PostMapping("/addRate")
+    public String getUsersToRate(@RequestParam String rate,
+                                 @RequestParam String behavior,
+                                 @RequestParam String tripId,
+                                 @RequestParam String rateId,
+                                 Model model) {
+
+        Trip trip = tripDAO.findTripID(Long.parseLong(tripId));
+
+        UserRatingDAO userRatingDAO = new UserRatingDAO();
+        userRatingDAO.editRate(Long.parseLong(rateId), Integer.parseInt(rate),trip,behavior);
+
+        String nextPage = "/rate";
+        model.addAttribute("nextPage", nextPage);
+
+        return "actionSuccess";
     }
 }
