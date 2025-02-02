@@ -1,6 +1,7 @@
 import TTT.databaseUtils.CustomUserDAO;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,12 @@ public class CustomUserDAOTests {
         int mappedPort = this.postgresqlContainer.getMappedPort(5432);
         this.testObject = new CustomUserDAO(TestSessionFactoryCreator.getCustomUserSessionFactory(mappedPort));
         System.out.println(mappedPort);
+    }
+    @AfterEach
+    public void tearDown() {
+        if (testObject != null) {
+            testObject.close();
+        }
     }
 
     protected CustomUser createTestUser() {
@@ -121,7 +128,7 @@ public class CustomUserDAOTests {
         List<CustomUser> list = new ArrayList<>();
         list.add(testCustomUser);
 
-        Assertions.assertEquals(list.toString(), testObject.findCustomUserByName("testUser").toString());
+        Assertions.assertEquals(list.toString(), testObject.findCustomUserByName("test").toString());
     }
 
     @Test
@@ -236,7 +243,8 @@ public class CustomUserDAOTests {
                 new ArrayList<>(), "city",0);
         testObject.saveUser(customUser);
         Assertions.assertTrue(testObject.updateUserStats(2, "test@mail.com","numberOfAnnouncements"));
-        Assertions.assertEquals(testObject.findCustomUserByEmail("test@mail.com").getNumbersOfAnnouncements(),2);
+        System.out.println(testObject.findCustomUserByEmail("test@mail.com").getNumbersOfAnnouncements());
+        Assertions.assertEquals(2,testObject.findCustomUserByEmail("test@mail.com").getNumbersOfAnnouncements());
     }
 
     @Test
@@ -292,6 +300,21 @@ public class CustomUserDAOTests {
         Assertions.assertFalse(testObject.updateUserField("MyNewName","test@mail.com","user")); // invalid field
         //city
         Assertions.assertFalse(testObject.updateUserField(null,"test@mail.com","city")); // null value
+    }
+
+    @Test
+    public void editUsersChangesTest(){
+        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
+                "Adam", 99, 0, 0, new ArrayList<>(),
+                new ArrayList<>(), "city",0);
+        customUser.setRatings(new ArrayList<>());
+        testObject.saveUser(customUser);
+        List<CustomUser> list = new ArrayList<>();
+        list.add(customUser);
+
+        Assertions.assertTrue(testObject.editUsersChanges(list,20));
+        list.clear();
+        Assertions.assertFalse(testObject.editUsersChanges(list,20));
     }
 
 }

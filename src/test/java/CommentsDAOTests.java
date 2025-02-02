@@ -1,8 +1,6 @@
 import TTT.databaseUtils.CommentsDAO;
 import TTT.trips.Comments;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -30,6 +28,13 @@ public class CommentsDAOTests {
         int mappedPort = this.postgresqlContainer.getMappedPort(5432);
         this.testObject = new CommentsDAO(TestSessionFactoryCreator.getCustomUserSessionFactory(mappedPort));
         System.out.println(mappedPort);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        if (testObject != null) {
+            testObject.close();
+        }
     }
 
     private Comments createTestComment() {
@@ -112,6 +117,4 @@ public class CommentsDAOTests {
 
         Assertions.assertNotEquals(list,testObject.listAllComments());
     }
-
-
 }

@@ -1,7 +1,6 @@
 package TTT.databaseUtils;
 
 import TTT.trips.Trip;
-import TTT.users.CustomUser;
 import TTT.users.UserRating;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -9,9 +8,12 @@ import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.resource.transaction.spi.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 public class UserRatingDAO {
 
     private SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
@@ -23,21 +25,36 @@ public class UserRatingDAO {
         this.sessionFactory = testSessionFactory;
     }
 
-
-    public boolean addRate(UserRating rate) {
-
-        Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-            session.merge(rate);
-            transaction.commit();
-            return true;
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback(); // back transaction when is error
-            e.printStackTrace();
-            return false;
+    public void close() {
+        if (sessionFactory != null) {
+            sessionFactory.close(); // Zamknięcie fabryki sesji
         }
     }
+
+    public boolean addRate(UserRating rate) {
+        Transaction transaction = null;
+        if (rate == null || rate.getTrip() == null || rate.getId() == null){
+            throw new IllegalStateException("rate, rate.Id or rate.Trip cannot be null!");
+        }
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            System.out.println("Transaction started: " + transaction.isActive());
+
+            session.merge(rate); // Synchronizacja obiektu z bazą danych
+            transaction.commit(); // Zatwierdzenie transakcji
+            System.out.println("Transaction committed.");
+            return true; // Operacja zakończona sukcesem
+        } catch (Exception e) {
+            System.err.println("Error while adding rate: " + e.getMessage());
+            if (transaction != null && transaction.getStatus() == TransactionStatus.ACTIVE) {
+                transaction.rollback(); // Wycofanie transakcji w przypadku błędu
+                System.out.println("Transaction rolled back.");
+            }
+            e.printStackTrace(); // Logowanie błędu
+            return false; // Operacja zakończona niepowodzeniem
+        }
+    }
+
 
     public UserRating getRate(Long id) {
         Transaction transaction = null;
@@ -69,6 +86,11 @@ public class UserRatingDAO {
             return false;
         }
 
+        // Sprawdzenie, czy trip jest null
+        if (trip == null) {
+            throw new IllegalStateException("Trip cannot be null.");
+        }
+
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -78,7 +100,6 @@ public class UserRatingDAO {
             rating.setTrip(trip);
             rating.setComment(behavior);
             rating.setFilled(true);
-            System.out.println(rating.isFilled());
 
             session.merge(rating);
 
@@ -90,6 +111,7 @@ public class UserRatingDAO {
             return false;
         }
     }
+
 
     public List<UserRating> listAllRatings() {
         try (Session session = sessionFactory.openSession()) {

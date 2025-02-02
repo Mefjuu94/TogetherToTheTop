@@ -120,11 +120,9 @@ public class UserRating {
         return "UserRating{" +
                 "id=" + id +
                 ", rating=" + rating +
-                ", tripId=" + trip +
+                ", tripId=" + trip.getId() +
                 ", isFilled=" + isFilled +
                 ", comment='" + comment + '\'' +
-                ", user=" + user +
-                ", reviewer=" + reviewer +
                 '}';
     }
 }

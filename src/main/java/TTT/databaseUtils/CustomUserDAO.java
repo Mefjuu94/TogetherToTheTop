@@ -24,6 +24,12 @@ public class CustomUserDAO {
         this.sessionFactory = testSessionFactory;
     }
 
+    public void close() {
+        if (sessionFactory != null) {
+            sessionFactory.close(); // Zamknięcie fabryki sesji
+        }
+    }
+
     public boolean saveUser(CustomUser customUser) {
 
         if (findCustomUserByEmail(customUser.getEmail()) != null) {
@@ -282,7 +288,7 @@ public class CustomUserDAO {
                         System.out.println("NumbersOfTrips " + user.getCustomUserName() + " " + user.getNumbersOfTrips());
                         break;
                     case "numberOfAnnouncements":
-                        user.setNumbersOfAnnouncements(numberOfAnnouncements);
+                        user.setNumbersOfAnnouncements((int) (numberOfAnnouncements + value));
                         System.out.println("owner " + user.getCustomUserName() + " " + user.getNumbersOfAnnouncements());
                         break;
                     case "distanceTraveled":

@@ -23,6 +23,12 @@ public class CommentsDAO {
         this.sessionFactory = testSessionFactory;
     }
 
+    public void close() {
+        if (sessionFactory != null) {
+            sessionFactory.close(); // Zamknięcie fabryki sesji
+        }
+    }
+
     public boolean addComment(Comments comment) {
 
         Transaction transaction = null;

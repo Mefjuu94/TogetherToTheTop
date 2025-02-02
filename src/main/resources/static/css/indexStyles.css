@@ -280,6 +280,7 @@ h2 {
     cursor: pointer;
 }
 
+
 /* Media Queries */
 
 /* Styl dla małych ekranów - telefony (max-width: 600px) */
@@ -309,9 +310,6 @@ h2 {
         grid-gap: 15px;
     }
 
-    .loginRegisterGrid {
-        flex-direction: column;
-    }
 
     .mail-icon {
         width: 20px;
@@ -344,6 +342,11 @@ h2 {
     .grid {
         grid-template-columns: repeat(2, 1fr); /* Dwie kolumny na średnich ekranach */
         grid-gap: 20px;
+    }
+    .login-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Dwie kolumny na średnich ekranach */
+        gap: 20px; /* Odstęp między kafelkami */
     }
 
     .modal-content {

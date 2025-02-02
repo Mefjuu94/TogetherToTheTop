@@ -30,19 +30,12 @@ public class DateChecker {
                 //load all participants of trip
                 List<CustomUser> participants = tripDAO.findTripID(entity.getId()).getParticipants();
                 CustomUser owner = entity.getOwner();
-                participants.add(owner); // add owner to list of peope to change stats and create rate
+                participants.add(owner); // add owner to list of people to change stats and create rate
 
-
-                double number = Double.parseDouble(entity.getDistanceOfTrip().substring(0, entity.getDistanceOfTrip().length() - 3));
+                double number = Double.parseDouble(entity.getDistanceOfTrip().substring(0, entity.getDistanceOfTrip().indexOf("km")));
 
                 if (entity.getTripDateTime().isBefore(LocalDateTime.now())) {
-
                     customUserDAO.editUsersChanges(participants, number);
-
-//                    customUserDAO.updateUserStats(1, owner.getEmail(), "numberOfAnnouncements");
-//                    customUserDAO.updateUserStats(1, owner.getEmail(), "numbersOfTrips");
-//                    customUserDAO.updateUserStats(number, owner.getEmail(), "distanceTraveled");
-
                     entity.setTripVisible(false);
 
                     for (int i = 0; i < participants.size(); i++) {

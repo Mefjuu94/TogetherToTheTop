@@ -25,6 +25,12 @@ public class TripDAO {
     public TripDAO() {
     }
 
+    public void close() {
+        if (sessionFactory != null) {
+            sessionFactory.close(); // Zamknięcie fabryki sesji
+        }
+    }
+
     public boolean addAnnouncement(Trip trip) {
 
         if (trip == null) {
@@ -175,6 +181,4 @@ public class TripDAO {
         }
         return false;
     }
-
-
 }
