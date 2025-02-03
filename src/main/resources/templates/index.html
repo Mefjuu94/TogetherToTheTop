@@ -10,7 +10,7 @@
 
 <div class="login-container">
     <main class="gridLogin">
-        <!-- Kafelki menu -->
+
         <div class="tile">
             <div th:if="${not #authorization.expression('isAuthenticated()')}">
                 <a href="/login">
@@ -65,7 +65,7 @@
 
 <div class="container">
     <main class="grid">
-        <!-- Kafelki menu -->
+
         <div class="tile">
             <div th:if="${not #authorization.expression('isAuthenticated()')}">
                 <a href="/login">
@@ -148,8 +148,6 @@
     </main>
 </div>
 
-
-<!-- Modal -->
 <div id="loginModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
@@ -178,16 +176,14 @@
     </div>
 </div>
 
-
 <div id="registerModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-        <h2 style="text-align: center;">Register</h2> <!-- Napis Register wyśrodkowany -->
+        <h2 style="text-align: center;">Register</h2>
 
         <form th:action="@{/register}" method="post">
-            <!-- Kontener grid 2x1 -->
+
             <div class="form-grid">
-                <!-- Lewa kolumna: Login i Password -->
                 <div class="form-inputs">
                     <label>
                         <input type="email" name="email" id="emailInput" placeholder="Email" required/>
@@ -199,7 +195,6 @@
                     </label>
                 </div>
 
-                <!-- Prawa kolumna: Tooltip -->
                 <div class="form-hints">
                     <div id="tooltip" class="tooltip">
                         <p id="tooltipContent">Start sing up!</p>
@@ -207,12 +202,10 @@
                 </div>
             </div>
 
-            <!-- Przycisk Register -->
             <input type="submit" id="submitRegister" value="Register"/>
         </form>
     </div>
 </div>
-
 
 <div id="aboutModal" class="modal">
     <div class="modal-content">
@@ -235,7 +228,6 @@
     </div>
 </div>
 
-<!-- Modal z polityką prywatności -->
 <div id="privacyPolicyModal" class="modal">
     <div class="modal-content">
         <span class="close" id="closePrivacyPolicy">&times;</span>
@@ -249,7 +241,6 @@
         <button id="acceptPrivacyPolicy">Accept</button>
     </div>
 </div>
-
 
 <input th:value="${users}"
        id="usersData" typeof="hidden" type="hidden">

@@ -87,7 +87,7 @@ public class UserRatingDAOTests {
     }
 
     protected UserRating createRate() {
-        UserRating rate = new UserRating(8,testTrip,false,"comment",customUser,reviewer);
+        UserRating rate = new UserRating(5,testTrip,false,"comment",customUser,reviewer);
         return rate;
     }
 

@@ -2,9 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const deleteButton = document.getElementById("delete_comment");
 
-    // Sprawdzenie, czy przycisk istnieje (ponieważ jest warunkowy)
     if (deleteButton) {
-        // Dodanie event listenera na kliknięcie
         deleteButton.addEventListener("click", function () {
             console.log("delete button");
         });
@@ -53,20 +51,16 @@ new L.GPX(
 
 
 function renewTrip() {
-    // Pobranie wartości z pól
     const dateTime = document.getElementById("dateTime").value;
     const description = document.getElementById("descriptionTrip").value;
 
-    // Checkboxy
     const driverChecked = document.getElementById("driver").checked;
     const animalsChecked = document.getElementById("animals").checked;
     const closedGroupChecked = document.getElementById("closedGroupCheckbox").checked;
 
-    // Liczba pasażerów
     const driverPeople = driverChecked ? document.getElementById("DriverPeopleInput").value : "";
     const closedGroupPeople = closedGroupChecked ? document.getElementById("peopleInput").value : "";
 
-    // Aktualizacja ukrytych pól w formularzu
     document.getElementById("hidden_date").value = dateTime;
     document.getElementById("hidden_description").value = description;
     document.getElementById("hidden_driver").value = driverChecked ? "yes" : "no";
@@ -75,11 +69,9 @@ function renewTrip() {
     document.getElementById("hidden_closed_group").value = closedGroupChecked ? "yes" : "no";
     document.getElementById("hidden_closed_group_people").value = closedGroupPeople;
 
-    // Wysłanie formularza
     document.getElementById("renew_trip").submit();
 }
 
-// Pokazywanie dodatkowych pól po zaznaczeniu checkboxów
 document.getElementById("driver").addEventListener("change", function () {
     document.getElementById("DriverPeopleInputLabel").style.display = this.checked ? "block" : "none";
 });
@@ -93,7 +85,6 @@ function checkFormCompletion() {
     const description = document.getElementById("descriptionTrip").value;
     const button = document.getElementById("renew_trip_button");
 
-    // Sprawdzanie, czy oba pola są wypełnione
     if (dateTime.trim() !== "" && description.trim() !== "") {
         document.getElementById("time").classList.add("completed");
         document.getElementById("descriptionTrip").classList.add("completed");
@@ -129,11 +120,9 @@ function toggleDiv() {
     }
 }
 
-// Nasłuchiwanie zmian w polach
 document.getElementById("dateTime").addEventListener("input", checkFormCompletion);
 document.getElementById("descriptionTrip").addEventListener("input", checkFormCompletion);
 
-// Pokazywanie dodatkowych pól po zaznaczeniu checkboxów
 document.getElementById("driver").addEventListener("change", function () {
     document.getElementById("DriverPeopleInputLabel").style.display = this.checked ? "block" : "none";
 });

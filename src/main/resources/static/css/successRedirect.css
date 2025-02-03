@@ -15,7 +15,7 @@ body {
     font-family: Arial, sans-serif;
     color: #fff;
     position: relative;
-    background-color: #2c3e50; /* Możesz zmienić kolor tła na dowolny */
+    background-color: #2c3e50;
 }
 
 .success-container {
@@ -28,7 +28,7 @@ body {
 
 .success-container h1 {
     margin: 0 0 20px 0;
-    color: #27ae60; /* Zielony kolor dla komunikatu o sukcesie */
+    color: #27ae60;
 }
 
 .success-container p {
@@ -37,5 +37,5 @@ body {
 
 #countdown {
     font-weight: bold;
-    color: #c0392b; /* Czerwony kolor dla licznika */
+    color: #c0392b;
 }

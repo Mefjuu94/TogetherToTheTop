@@ -6,7 +6,6 @@
     <title>Trip creator</title>
     <meta name="_csrf" content="TWÓJ_TOKEN_CSRF">
 
-
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
 
@@ -21,7 +20,6 @@
     <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet"/>
 
     <link type="text/css" th:href="@{/css/map.css}" rel="stylesheet"/>
-    <!--    th:href="@{/css/map.css}"   || href="/static/css/map.css"-->
 
 </head>
 <body>
@@ -29,9 +27,7 @@
 
     <div id="sidebar">
         <h3>Route Planner</h3>
-<!--        <div id="locateMeBtn-div">-->
-<!--            <button id="locateMeBtn">Locate me 📍</button>-->
-<!--        </div>-->
+
         <label for="searchInput"></label><input type="text" id="searchInput" placeholder="Search..."/>
         <button id="searchBtn">Search</button>
         <div id="searchResults" class="dropdown"></div>
@@ -49,7 +45,6 @@
             <label><input type="checkbox" id="hospital" checked> Hospitals 🏥</label><br>
             <label><input type="checkbox" id="peak" checked> Peaks ⛰️</label><br> <!-- Added Peaks checkbox -->
             <label><input type="checkbox" id="generalPoi"> General POIs 📍</label><br>
-            <!-- Added General POIs checkbox -->
         </div>
 
         <button id="addSavedWaypointBtn">Add Saved Waypoint</button>
@@ -59,13 +54,10 @@
                 <ul id="waypointsList"></ul>
             </div>
         </div>
-
-
     </div>
-    
+
     <div id="map"></div>
 
-    <!-- Sekcja ogłoszenia -->
     <div id="announcement_information">
         <h2>Announcement information</h2>
         <div>
@@ -73,14 +65,12 @@
                th:text="${tekst}"></p>
         </div>
         <form>
-            <!-- describe section -->
             <div class="form-group">
                 <label for="description">describe your trip:</label>
                 <textarea id="description" rows="6"
                           placeholder="Description of destination, route, etc. max 1000 signs!"></textarea>
             </div>
 
-            <!-- Checkbox sextion -->
             <div class="checkbox-group">
                 <div class="checkbox">
                     <label>
@@ -143,7 +133,6 @@
             <input type="hidden" id="date" name="date">
             <input type="hidden" id="jsonGeometryWaypoints" name="jsonGeometryWaypoints">
             <input type="hidden" id="waypointsLength" name="waypointsLength">
-            <!--            must have! TOKEN-->
             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
 
         </form>
@@ -153,21 +142,16 @@
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-
 <!-- Leaflet Locate Control (for finding user location) -->
 <script src="https://unpkg.com/leaflet.locatecontrol@0.72.0/dist/L.Control.Locate.min.js"></script>
-
 <!-- Leaflet Routing Machine (for route planning) -->
 <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
-
 <!-- Leaflet Control Geocoder (for address search) -->
 <script src="https://unpkg.com/leaflet-control-geocoder@1.13.0/dist/Control.Geocoder.js"></script>
-
 <!-- Leaflet MarkerCluster (for marker clustering) -->
 <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
 <script type="text/javascript" th:src="@{/js/map.js}" ></script>
-<!-- src="/static/js/map.js"  || th:src="@{/js/map.js}"-->
 </body>
 </html>
 

@@ -1,7 +1,5 @@
-// Replace with your own API key
 const API_KEY = 'zjEFy9NsTMuP_e3U9_B0sDu_axPSSl28smWg1PXW4i0';
 
-// Initialize temporary coordinates
 let tempCoordinates = null;
 let savedMarker = null;
 let allRouteDuration = null;
@@ -610,8 +608,6 @@ peopleInput.addEventListener('input', function () {
     }
 });
 
-
-///////////////////////////////////////////////////////////////////////
 
 var activeSendButton = false;
 

@@ -8,8 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const loginButton = document.querySelector(".gridLogin .tile a[href='/login']");
     const registerButton = document.querySelector(".gridLogin .tile a[href='/register']");
 
-    //to view login modal
-
     const profileButton = document.querySelector(".grid .tile a[href='/login']");
     const mapButton = document.getElementById("mapButton");
     const announcementButton = document.getElementById("announcementButton");
@@ -62,7 +60,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-/////////////////////////////////
     closeLogin.onclick = function () {
         loginModal.style.display = "none";
     }
@@ -72,7 +69,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-//////////////////////////////////////////////
     window.onclick = function (event) {
         if (event.target === loginModal) {
             loginModal.style.display = "none";
@@ -113,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
         contactModal.style.display = "none";
     }
 
-    // Zamknięcie modalów po kliknięciu w tło
+
     window.onclick = function (event) {
         if (event.target === aboutModal) {
             aboutModal.style.display = "none";
@@ -134,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const tooltipContent = document.getElementById("tooltipContent");
 
-    // Pobranie referencji do elementów podpowiedzi (dla hasła)
+
     const lengthHint = document.createElement('p');
     const uppercaseHint = document.createElement('p');
     const numberHint = document.createElement('p');
@@ -150,7 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let isPasswordCorrect = false;
     let isEmailCorrect = validateEmail(emailInput);
 
-    // Funkcja do aktualizacji tooltipa dla hasła
+
     function updatePasswordTooltip(password) {
         const hasUpperCase = /[A-Z]/.test(password);
         const hasNumber = /[0-9]/.test(password);
@@ -168,13 +164,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Funkcja walidacji e-maila
     function validateEmail(email) {
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return emailRegex.test(email);
     }
 
-    // Funkcja zmiany zawartości tooltipa
     function updateTooltipContent(focusField) {
         if (focusField === "email") {
             const emailValue = emailInput.value;
@@ -196,7 +190,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Obsługa zdarzeń dla e-maila
     emailInput.addEventListener("focus", function () {
         updateTooltipContent("email");
     });
@@ -224,29 +217,21 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     if (!localStorage.getItem('privacyPolicyAccepted')) {
-        // Pokaż modal, jeśli użytkownik jeszcze nie zaakceptował polityki
         document.getElementById('privacyPolicyModal').style.display = 'block';
     }
 
-    // Obsługa zamykania modala
     document.getElementById('closePrivacyPolicy').addEventListener('click', function () {
         document.getElementById('privacyPolicyModal').style.display = 'none';
     });
 
-    // Obsługa akceptacji polityki prywatności
     document.getElementById('acceptPrivacyPolicy').addEventListener('click', function () {
-        // Zapisywanie w localStorage, że polityka została zaakceptowana
         localStorage.setItem('privacyPolicyAccepted', 'true');
         document.getElementById('privacyPolicyModal').style.display = 'none';
     });
 
     document.getElementById('submitRegister').addEventListener('click', function (event) {
-        // Jeśli walidacja nie przeszła, zapobiegamy wysłaniu formularza
         if (!isEmailCorrect || !isPasswordCorrect) {
-            event.preventDefault(); // Zatrzymanie wysłania formularza
+            event.preventDefault();
         }
     });
-
-
 });
-

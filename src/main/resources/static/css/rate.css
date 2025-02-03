@@ -119,6 +119,11 @@ h2,h3 {
     opacity: 0; /* Ukrycie pozostałych */
 }
 
+.cover-item.inactive {
+    pointer-events: none; /* Zablokuj interakcje */
+    opacity: 0.7; /* Zmniejsz przezroczystość */
+}
+
 #button-container {
     display: flex; /* Ustawienie Flexboxa */
     justify-content: center; /* Wyśrodkowanie przycisków w poziomie */

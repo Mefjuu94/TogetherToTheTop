@@ -7,10 +7,10 @@ html, body {
 body {
     justify-content: center;
     align-items: center;
-    background-size: cover; /* Obraz pokrywa całą powierzchnię */
-    background-position: center; /* Obraz wycentrowany */
-    background-repeat: no-repeat; /* Zapobiega powtarzaniu obrazu */
-    background-attachment: fixed; /* Obraz pozostaje nieruchomy podczas przewijania */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     min-height: 100vh;
     font-family: Arial, sans-serif;
     color: #fff;
@@ -26,8 +26,8 @@ body {
     background-color: rgba(255, 255, 255, 0.3);
     border-radius: 8px;
     backdrop-filter: blur(2px);
-    max-height: 90vh; /* Dodaj maksymalną wysokość kontenera */
-    overflow-y: auto; /* Włącz przewijanie w pionie, jeśli zawartość przekroczy wysokość */
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .small-grid {
@@ -66,15 +66,15 @@ h1 {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(1, 1fr);
     flex-direction: column;
-    justify-content: center; /* Wycentrowanie w pionie */
-    align-items: center; /* Wycentrowanie w poziomie */
-    text-align: center; /* Wycentrowanie tekstu */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     background-color: rgba(255, 255, 255, 0.4);
     padding: 5px;
     border: 2px solid white;
     border-radius: 8px;
     transition: transform 0.3s, box-shadow 0.3s;
-    height: 100%; /* Zapewnienie, że element zajmuje pełną wysokość komórki */
+    height: 100%;
 }
 
 .destination {
@@ -153,25 +153,25 @@ h1 {
 }
 
 .announcement-content {
-    display: flex; /* Ustawia flexbox dla zawartości ogłoszenia */
-    justify-content: space-between; /* Rozmieszcza tekst i ikonę w wierszu */
-    width: 100%; /* Zajmuje pełną szerokość */
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .owner-icon {
-    font-size: 1.5em; /* Ustaw rozmiar ikony */
-    color: #FFD700; /* Kolor ikony (złoty) */
-    margin-left: 10px; /* Przerwa między tekstem a ikoną */
+    font-size: 1.5em;
+    color: #FFD700;
+    margin-left: 10px;
 }
 
 .icon-image {
-    width: 24px; /* Szerokość ikony */
-    height: 24px; /* Wysokość ikony */
+    width: 24px;
+    height: 24px;
 }
 
 .icon-image-addme {
-    width: 24px; /* Szerokość ikony */
-    height: 24px; /* Wysokość ikony */
+    width: 24px;
+    height: 24px;
 }
 
 #homeButton {
@@ -179,32 +179,30 @@ h1 {
     top: 10px;
     left: 10px;
     z-index: 1000;
-    text-decoration: none; /* Usuń ewentualne podkreślenie linku */
+    text-decoration: none;
 }
 
 .home-button {
-    background: transparent; /* Tło przycisku przezroczyste */
-    border: none; /* Usuń obramowanie przycisku */
-    padding: 0; /* Usuwamy marginesy domyślne wokół przycisku */
-    cursor: pointer; /* Kursor wskazujący na przycisk */
-    display: flex; /* Umożliwia wyśrodkowanie ikony */
-    align-items: center; /* Wyrównanie ikony w pionie */
-    justify-content: center; /* Wyrównanie ikony w poziomie */
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .home-button img.home-icon {
     width: 50px;
     height: auto;
-    background: transparent; /* Tło ikony przezroczyste */
+    background: transparent;
 }
 
-/* Efekt hover */
+
 .home-button:hover {
-    background-color: #6dc671; /* Zmiana tła przy najechaniu */
+    background-color: #6dc671;
 }
 
-
-/* Styl dla tabletów (max-width: 768px) */
 @media (max-width: 800px) {
     .container {
         flex-direction: column;
@@ -240,9 +238,4 @@ h1 {
         }
     }
 
-
 }
-
-
-
-

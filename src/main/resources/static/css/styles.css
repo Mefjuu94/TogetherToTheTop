@@ -33,7 +33,7 @@ header {
 
 .container {
     display: flex;
-    height: calc(100% - 50px); /* Odjęcie wysokości nagłówka */
+    height: calc(100% - 50px);
 }
 
 .menu {

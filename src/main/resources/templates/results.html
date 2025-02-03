@@ -40,7 +40,6 @@
         </a>
     </div>
 
-    <!-- Sekcja wyświetlania wycieczek, jeśli w modelu są wycieczki -->
     <div class="announcement-list" th:if="${trips != null}">
         <a th:href="@{'/trips/' + ${trip.getId()}}" th:each="trip : ${trips}" class="announcement-item">
             <h3 th:text="${trip.getDestination()}">Destination</h3>

@@ -77,7 +77,7 @@ header .login-register a:hover {
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Trzy kolumny dla dużych ekranów */
+    grid-template-columns: repeat(3, 1fr);
     grid-gap: 20px;
     padding: 20px;
 }
@@ -197,26 +197,25 @@ input[type="submit"]:hover {
     top: 10px;
     left: 10px;
     z-index: 1000;
-    text-decoration: none; /* Usuń ewentualne podkreślenie linku */
+    text-decoration: none;
 }
 
 .home-button {
-    background: transparent; /* Tło przycisku przezroczyste */
-    border: none; /* Usuń obramowanie przycisku */
-    padding: 0; /* Usuwamy marginesy domyślne wokół przycisku */
-    cursor: pointer; /* Kursor wskazujący na przycisk */
-    display: flex; /* Umożliwia wyśrodkowanie ikony */
-    align-items: center; /* Wyrównanie ikony w pionie */
-    justify-content: center; /* Wyrównanie ikony w poziomie */
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .home-button img.home-icon {
     width: 50px;
     height: auto;
-    background: transparent; /* Tło ikony przezroczyste */
+    background: transparent;
 }
 
-/* Styl dymka */
 .modal-content {
     background-color: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(5px);
@@ -229,16 +228,16 @@ input[type="submit"]:hover {
 }
 
 h2 {
-    text-align: center; /* Wyśrodkowanie nagłówka */
+    text-align: center;
     margin-bottom: 20px;
 }
 
 /* Grid 2x1 */
 .form-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Dwie kolumny po równo */
-    gap: 20px; /* Odstęp między kolumnami */
-    align-items: center; /* Wyśrodkowanie w pionie */
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: center;
 }
 
 /* Kolumna z inputami */
@@ -281,8 +280,6 @@ h2 {
 }
 
 
-/* Media Queries */
-
 /* Styl dla małych ekranów - telefony (max-width: 600px) */
 @media (max-width: 600px) {
     body {
@@ -323,7 +320,7 @@ h2 {
         padding: 15px;
     }
 
-    .grid {
+    .grid .gridLogin {
         grid-template-columns: repeat(2, 1fr);
         grid-gap: 15px;
     }
@@ -343,7 +340,7 @@ h2 {
         grid-template-columns: repeat(2, 1fr); /* Dwie kolumny na średnich ekranach */
         grid-gap: 20px;
     }
-    .login-container {
+    .gridLogin {
         display: grid;
         grid-template-columns: repeat(2, 1fr); /* Dwie kolumny na średnich ekranach */
         gap: 20px; /* Odstęp między kafelkami */

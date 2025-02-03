@@ -62,8 +62,8 @@ html, body {
 
 #sidebar ul li {
     padding: 10px 0;
-    background-color: Grey; /* Tło rozwijanej listy */
-    border: 1px solid black; /* Ramka */
+    background-color: Grey;
+    border: 1px solid black;
 }
 
 #sidebar ul li a {
@@ -82,13 +82,13 @@ html, body {
 }
 
 .dropdown {
-    position: absolute; /* Umożliwia umiejscowienie nad innymi elementami */
-    background-color: lightgrey; /* Tło rozwijanej listy */
-    border: 1px solid black; /* Ramka */
-    z-index: 1000; /* Wyższy z-index, aby była nad innymi elementami */
-    max-height: 200px; /* Maksymalna wysokość, aby zachować proporcje */
-    overflow-y: auto; /* Przewijanie, gdy lista jest za długa */
-    display: none; /* Ukryta domyślnie */
+    position: absolute;
+    background-color: lightgrey;
+    border: 1px solid black;
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
 }
 
 
@@ -97,14 +97,14 @@ html, body {
 }
 
 .search-result-item {
-    padding: 8px; /* Padding dla pozycji */
-    cursor: pointer; /* Zmiana kursora na pointer */
-    border: 1px solid black; /* Ramka */
+    padding: 8px;
+    cursor: pointer;
+    border: 1px solid black;
 
 }
 
 .search-result-item:hover {
-    background-color: darkgreen; /* Kolor tła przy najechaniu */
+    background-color: darkgreen;
 }
 
 #searchInput{
@@ -121,8 +121,8 @@ html, body {
 
 #add_announcement {
     margin-top: 10%;
-    padding: 15px 30px; /* Większy przycisk */
-    font-size: 18px; /* Większy tekst */
+    padding: 15px 30px;
+    font-size: 18px;
     background-color: grey;
     color: white;
     border: solid black;
@@ -151,25 +151,24 @@ html, body {
 }
 
 #destination-label{
-    display: flex;            /* Ustawienie flexboxa */
-    justify-content: center;   /* Wyśrodkowanie poziome */
-    text-align: center;        /* Wyśrodkowanie tekstu w labelu */
-    width: 100%;               /* Opcjonalnie, aby label zajmował całą szerokość */
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
 }
 
 #dest {
-    flex: 1;                  /* Input wypełnia dostępne miejsce */
-    padding: 8px;             /* Wewnętrzne odstępy dla inputu */
-    box-sizing: border-box;   /* Uwzględnia padding w szerokości */
+    flex: 1;
+    padding: 8px;
+    box-sizing: border-box;
 }
 
 #description {
-    flex: 1;                  /* Input wypełnia dostępne miejsce */
-    padding: 8px;             /* Wewnętrzne odstępy dla inputu */
-    box-sizing: border-box;   /* Uwzględnia padding w szerokości */
+    flex: 1;
+    padding: 8px;
+    box-sizing: border-box;
 }
 
-/*checkboxy*/
 
 .checkbox{
     border: solid black 2px;
@@ -211,44 +210,41 @@ input[type="text"], textarea {
 }
 
 #DriverPeopleInput {
-    box-sizing: border-box; /* Globalne ustawienie */
+    box-sizing: border-box;
 }
 #peopleInput {
-    box-sizing: border-box; /* Globalne ustawienie */
+    box-sizing: border-box;
 }
 
 @media (max-width: 1050px) {
 
     #map {
-        grid-column: 1 / -1; /* Mapa zajmuje całą szerokość w pierwszym wierszu */
-        grid-row: 1; /* Pierwszy wiersz */
+        grid-column: 1 / -1;
+        grid-row: 1;
         width: 100%;
-        height: 80vh; /* 80% wysokości ekranu */
+        height: 80vh;
     }
 
-
     #announcement_information {
-        grid-column: 2; /* Announcement w drugiej kolumnie */
-        grid-row: 2; /* Drugi wiersz */
+        grid-column: 2;
+        grid-row: 2;
         width: 50%;
         display: grid;
-        flex-direction: column; /* Ustaw elementy jeden pod drugim */
-        align-items: stretch;   /* Rozciąga elementy na pełną szerokość */
+        flex-direction: column;
+        align-items: stretch;
         height: 100%;
         padding: 0;
     }
 
-
     #container {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* Dwie kolumny o równej szerokości */
-        grid-template-rows: 1fr; /* Równy wiersz */
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
     }
 
     #sidebar, #announcement_information {
-        align-self: stretch; /* Rozciąganie na pełną wysokość */
-        width: 100%; /* Wypełnia kolumnę */
+        align-self: stretch;
+        width: 100%;
         box-sizing: border-box;
     }
-
 }
