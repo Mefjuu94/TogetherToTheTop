@@ -34,13 +34,13 @@ public class SecurityConfig {
                                 HttpMethod.POST).fullyAuthenticated()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll().
-                        requestMatchers("/", "/login", "/logout", "/register", "/error/**", "/usersEmails","privacyPolicy")
+                        requestMatchers("/", "/login", "/logout", "/register", "/error/**", "/usersEmails","/passwordRetrieve","privacyPolicy","/reset-password","/information")
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin((form) -> form.loginPage("/login")
                         .usernameParameter("email")
                         .defaultSuccessUrl("/")
-                        .failureUrl("/login?error=true")
+                        .failureUrl("/information")
                         .permitAll());
 
         return security.build();

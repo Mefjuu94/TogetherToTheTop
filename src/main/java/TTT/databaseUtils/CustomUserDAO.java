@@ -224,6 +224,9 @@ public class CustomUserDAO {
                     case "city":
                         user.setCity(value);
                         break;
+                    case "password":
+                        user.setPassword(passwordEncoder.encode(value));
+                        break;
                     default:
                         System.out.println("Wrong field!");
                         return false;
