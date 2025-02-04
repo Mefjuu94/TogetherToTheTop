@@ -8,8 +8,10 @@
 ### 1. **For unauthenticated users:**
 - **Registration:** User can register with validation.
 - **Login:** Secure login system for registered users.
+- **Retrieve Password:** Password recovery for people who forgot it.
 - **About Project Section:** Project information.
 - **Contact Section:** Contact details of the project author.
+- **Privacy Policy:** privacy policy for people who want to know what data is collected.
 
 ### 2. **For authenticated users:**
 - **Browse walking tour offers:** View a list of available walking tours.
@@ -18,6 +20,7 @@
 - **Add Comments:** Leave comments about the walking tour.
 - **Browse Your Tours:** See a list of walking tours you are on.
 - **Browse Other User's Tours:** See tours created by other users.
+- **Browse My rate:** rates, and comments created by other users.
 - **Search by Destination:** Find tours to a specific destination.
 - **Withdraw from a Tour:** Leave a walking tour you are currently on.
 - **Create Your Own Walking Tour:**
