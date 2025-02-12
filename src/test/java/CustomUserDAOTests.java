@@ -1,52 +1,25 @@
 import TTT.databaseUtils.CustomUserDAO;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Testcontainers
 public class CustomUserDAOTests {
     private CustomUserDAO testObject;
-    private final CustomUser testCustomUser = createTestUser();
-    DockerImageName postgres = DockerImageName.parse("postgres:16");
-    @Container
-    PostgreSQLContainer postgresqlContainer;
-
-    public CustomUserDAOTests() {
-        this.postgresqlContainer = (PostgreSQLContainer) (new PostgreSQLContainer(this.postgres)).
-                withDatabaseName("test_container").withUsername("test").withPassword("test").
-                withReuse(true);
-    }
+    private final CustomUser testCustomUser = EntityFactoryForTests.createTestUser();
 
     @BeforeEach
-    public void emptyTest() {
-        int mappedPort = this.postgresqlContainer.getMappedPort(5432);
-        this.testObject = new CustomUserDAO(TestSessionFactoryCreator.getCustomUserSessionFactory(mappedPort));
-        System.out.println(mappedPort);
-    }
-    @AfterEach
-    public void tearDown() {
-        if (testObject != null) {
-            testObject.close();
-        }
+    public void setUp() {
+        DAOFactoryForMockTests.clearDatabase();
+        this.testObject = DAOFactoryForMockTests.getCustomUserDAO();
     }
 
-    protected CustomUser createTestUser() {
-        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
-                "testUser", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city",0);
-        return customUser;
-    }
 
     @Test
     public void saveCustomUserTest() {
@@ -77,6 +50,8 @@ public class CustomUserDAOTests {
     public void listAllUsersTest() {
         this.testObject.saveUser(this.testCustomUser);
         List<CustomUser> list = new ArrayList<>();
+        long id = testObject.listAllUsers().get(0).getId();
+        testCustomUser.setId(id);
         list.add(testCustomUser);
 
         List<CustomUser> listFromDAO = testObject.listAllUsers();
@@ -112,8 +87,9 @@ public class CustomUserDAOTests {
     @Test
     public void findCustomUserByIDTest() {
         this.testObject.saveUser(this.testCustomUser);
-        CustomUser customUserId = testObject.findCustomUserByID("1");
-        Assertions.assertEquals(testCustomUser.getId(), customUserId.getId());
+        long id = testObject.listAllUsers().get(0).getId();
+        CustomUser customUserId = testObject.findCustomUserByID(String.valueOf(id));
+        Assertions.assertEquals(id, customUserId.getId());
     }
 
     @Test
@@ -126,6 +102,8 @@ public class CustomUserDAOTests {
     public void findCustomUserByNameTest() {
         testObject.saveUser(testCustomUser);
         List<CustomUser> list = new ArrayList<>();
+        long id = testObject.listAllUsers().get(0).getId();
+        testCustomUser.setId(id);
         list.add(testCustomUser);
 
         Assertions.assertEquals(list.toString(), testObject.findCustomUserByName("test").toString());
@@ -133,10 +111,7 @@ public class CustomUserDAOTests {
 
     @Test
     public void findCustomUserByNameTestFail() {
-        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
-                "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city",0);
-        this.testObject.saveUser(customUser);
+        this.testObject.saveUser(testCustomUser);
         List<CustomUser> result = testObject.findCustomUserByName("testUser");
 
         List<CustomUser> notExpectedList = new ArrayList<>();
@@ -159,89 +134,48 @@ public class CustomUserDAOTests {
 
     @Test
     public void updateUserTripsTest() {
-        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
-                "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city",0);
-        Trip trip = new Trip.TripBuilder()
-                .withTripDescription("description")
-                .withDestination("destination")
-                .withOwner(customUser)
-                .withTripDuration("5h")
-                .withClosedGroup(false)
-                .withAmountOfClosedGroup(0)
-                .withDriverPeople(false)
-                .withAmountOfDriverPeople(0)
-                .withAnimals(false)
-                .withWaypoints("ok")
-                .withTripDataTime(LocalDateTime.now())
-                .withDistanceOfTrip("distance of trip")
-                .withGpxFile(null)
-                .build();
+
+        Trip trip = EntityFactoryForTests.createTestTrip();
         List<Trip> tripList = new ArrayList<>();
         tripList.add(trip);
-        customUser.setTripsOwned(tripList);
-        this.testObject.saveUser(customUser);
+        testObject.saveUser(testCustomUser);
+        testCustomUser.setTripsOwned(tripList);
 
         Assertions.assertTrue(testObject.updateUserTrips("test@mail.com", tripList));
     }
 
     @Test
     public void updateUserTripsTestFailInvalidEmail() {
-        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
-                "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city",0);
-        Trip trip = new Trip.TripBuilder()
-                .withTripDescription("description")
-                .withDestination("destination")
-                .withOwner(customUser)
-                .withTripDuration("5h")
-                .withClosedGroup(false)
-                .withAmountOfClosedGroup(0)
-                .withDriverPeople(false)
-                .withAmountOfDriverPeople(0)
-                .withAnimals(false)
-                .withWaypoints("ok")
-                .withTripDataTime(LocalDateTime.now())
-                .withDistanceOfTrip("distance of trip")
-                .withGpxFile(null)
-                .build();
+
+        Trip trip = EntityFactoryForTests.createTestTrip();
         List<Trip> tripList = new ArrayList<>();
         tripList.add(trip);
-        customUser.setTripsOwned(tripList);
-        this.testObject.saveUser(customUser);
+        this.testObject.saveUser(testCustomUser);
 
-        Assertions.assertFalse(testObject.updateUserTrips("mail.com", tripList));
+        Assertions.assertFalse(testObject.updateUserTrips("testUser@mail.com", tripList));
     }
 
 
     @Test
     public void updateUserAgeTest() {
-        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
-                "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city",0);
-        testObject.saveUser(customUser);
+        testObject.saveUser(testCustomUser);
         Assertions.assertTrue(this.testObject.updateUserAge("test@mail.com", 90));
         Assertions.assertEquals(testObject.findCustomUserByEmail("test@mail.com").getAge(), 90);
     }
 
     @Test
     public void updateUserAgeTestFail() {
-        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
-                "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city",0);
-        testObject.saveUser(customUser);
+        testObject.saveUser(testCustomUser);
         Assertions.assertFalse(this.testObject.updateUserAge("mail.com", 90)); //invalid email
         Assertions.assertFalse(this.testObject.updateUserAge("test@mail.com", 150)); //invalid Age > 120
+        Assertions.assertFalse(this.testObject.updateUserAge("test@mail.com", -10)); //invalid Age < 1
         Assertions.assertNotEquals(testObject.findCustomUserByEmail("test@mail.com").getAge(), 90);
     }
 
 
     @Test
     public void updateUserStatsTest() {
-        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
-                "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city",0);
-        testObject.saveUser(customUser);
+        testObject.saveUser(testCustomUser);
         Assertions.assertTrue(testObject.updateUserStats(2, "test@mail.com","numberOfAnnouncements"));
         System.out.println(testObject.findCustomUserByEmail("test@mail.com").getNumbersOfAnnouncements());
         Assertions.assertEquals(2,testObject.findCustomUserByEmail("test@mail.com").getNumbersOfAnnouncements());
@@ -249,51 +183,37 @@ public class CustomUserDAOTests {
 
     @Test
     public void updateUserStatsTestFail() {
-        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
-                "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city",0);
-        testObject.saveUser(customUser);
+        testObject.saveUser(testCustomUser);
         Assertions.assertFalse(testObject.updateUserStats(2, "mail.com","numberOfAnnouncements")); //no user = null
         Assertions.assertFalse(testObject.updateUserStats(-2, "test@mail.com","numberOfAnnouncements"));
         Assertions.assertFalse(testObject.updateUserStats(-2, "test@mail.com","something"));
+        //TODO add password
     }
 
     @Test
     public void updateUserFieldEmailTest(){
-        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
-                "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city",0);
-        testObject.saveUser(customUser);
+        testObject.saveUser(testCustomUser);
         //email
         Assertions.assertTrue(testObject.updateUserField("mail@mail.com","test@mail.com","email"));
     }
 
     @Test
     public void updateUserFieldUsernameTest(){
-        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
-                "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city",0);
-        testObject.saveUser(customUser);
+        testObject.saveUser(testCustomUser);
         //username
         Assertions.assertTrue(testObject.updateUserField("MyNewName","test@mail.com","username"));
     }
 
     @Test
     public void updateUserFieldCityTest(){
-        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
-                "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city",0);
-        testObject.saveUser(customUser);
+        testObject.saveUser(testCustomUser);
         //city
         Assertions.assertTrue(testObject.updateUserField("Warsaw","test@mail.com","city"));
     }
 
     @Test
     public void updateUserFieldTestFail(){
-        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
-                "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city",0);
-        testObject.saveUser(customUser);
+        testObject.saveUser(testCustomUser);
         //email
         Assertions.assertFalse(testObject.updateUserField("mail.test@mail.com","mail.com","email")); //invalid email
         //username
@@ -303,18 +223,15 @@ public class CustomUserDAOTests {
     }
 
     @Test
-    public void editUsersChangesTest(){
-        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
-                "Adam", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city",0);
-        customUser.setRatings(new ArrayList<>());
-        testObject.saveUser(customUser);
+    public void updateUserAfterTripTest(){
+        testCustomUser.setRatings(new ArrayList<>());
+        testObject.saveUser(testCustomUser);
         List<CustomUser> list = new ArrayList<>();
-        list.add(customUser);
+        list.add(testCustomUser);
 
-        Assertions.assertTrue(testObject.editUsersChanges(list,20));
+        Assertions.assertTrue(testObject.updateUserAfterTrip(list,20));
         list.clear();
-        Assertions.assertFalse(testObject.editUsersChanges(list,20));
+        Assertions.assertFalse(testObject.updateUserAfterTrip(list,20));
     }
 
 }

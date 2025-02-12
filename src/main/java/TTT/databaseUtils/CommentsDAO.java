@@ -9,9 +9,11 @@ import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class CommentsDAO {
 
     private SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
@@ -21,12 +23,6 @@ public class CommentsDAO {
 
     public CommentsDAO(SessionFactory testSessionFactory) {
         this.sessionFactory = testSessionFactory;
-    }
-
-    public void close() {
-        if (sessionFactory != null) {
-            sessionFactory.close(); // Zamknięcie fabryki sesji
-        }
     }
 
     public boolean addComment(Comments comment) {
@@ -115,7 +111,7 @@ public class CommentsDAO {
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Comments> userQuery = cb.createQuery(Comments.class);
             Root<Comments> root = userQuery.from(Comments.class);
-            userQuery.select(root).where(cb.equal(root.get("id"), id));
+            userQuery.select(root).where(cb.equal(root.get("ID"), id));
             Comments results = session.createQuery(userQuery).getSingleResultOrNull();
             return results;
         } catch (PersistenceException | IllegalArgumentException e) {
@@ -124,7 +120,7 @@ public class CommentsDAO {
         return null;
     }
 
-    public Boolean editComment(long idOfComment, String commentString) {
+    public boolean editComment(long idOfComment, String commentString) {
         Transaction transaction = null;
 
         Comments comment = findCommentID(idOfComment);

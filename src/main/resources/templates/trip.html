@@ -33,7 +33,7 @@
                            th:text="${participant.getCustomUserName()}">Participant</a>
                         <div th:if="${participant.getId() == customUser.getId() and trip.tripVisible == true}">
                             <form id="delete_participant_clone"
-                                  action="/delete_participant" method="POST">
+                                  action="/deleteParticipant" method="POST">
                                 <input type="hidden" name="user_Identity" th:value="${participant.getId()}">
                                 <input type="hidden" name="tripId" th:value="${trip.getId()}">
                                 <!--            must have! TOKEN-->
@@ -48,7 +48,7 @@
                         <a th:href="@{'/userProfile/' +${participant.getId()}}"
                            th:text="${participant.getCustomUserName()}">Participant</a>
                         <form id="delete_participant"
-                              action="/delete_participant" method="POST">
+                              action="/deleteParticipant" method="POST">
                             <input type="hidden" name="user_Identity" th:value="${participant.getId()}">
                             <input type="hidden" name="tripId" th:value="${trip.getId()}">
                             <!--            must have! TOKEN-->
@@ -190,7 +190,7 @@
 
 <div id="deleteTrip" th:if="${trip.getOwner().getId() == customUser.getId() and trip.tripVisible == true}">
     <form id="delete_trip"
-          action="/delete_trip" method="POST">
+          action="/deleteTrip" method="POST">
         <input type="hidden" name="tripId" th:value="${trip.getId()}">
         <!--            must have! TOKEN-->
         <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
@@ -251,7 +251,7 @@
             <button id="renew_trip_button" type="button" onclick="renewTrip()">RENEW YOUR TRIP</button>
         </div>
 
-        <form id="renew_trip" action="/renew_trip" method="POST">
+        <form id="renew_trip" action="/renewTrip" method="POST">
             <input type="hidden" name="trip" th:value="${trip.getId()}">
             <input type="hidden" id="hidden_date" name="date">
             <input type="hidden" id="hidden_description" name="new_description">

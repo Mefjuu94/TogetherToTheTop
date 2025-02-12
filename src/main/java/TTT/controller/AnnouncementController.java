@@ -27,28 +27,25 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class AnnouncementController {
 
-    TripDAO tripDAO = new TripDAO();
-    CommentsDAO commentsDAO = new CommentsDAO();
-    MethodsHandler methodsHandler = new MethodsHandler();
+    private final TripDAO tripDAO = new TripDAO();
+    private final CommentsDAO commentsDAO = new CommentsDAO();
+    private final MethodsHandler methodsHandler = new MethodsHandler();
+    private final CustomUserDAO customUserDAO = new CustomUserDAO();
 
     @GetMapping("/announcement")
     public String getAnnouncementsPage(Model model) {
-        TripDAO tripDAO = new TripDAO();
-        ArrayList<Trip> rawTrips = new ArrayList<>(tripDAO.listAllAnnouncements());
+        List<Trip> rawTrips = tripDAO.listAllAnnouncements();
 
         LocalDateTime localDateTime = LocalDateTime.now();
-        ArrayList<Trip> trips = new ArrayList<>();
-        for (int i = 0; i < rawTrips.size(); i++) {
-            if (!localDateTime.isAfter(rawTrips.get(i).getTripDateTime())) { //added to list only before dateTime of trip
-                trips.add(rawTrips.get(i));
+        List<Trip> trips = new ArrayList<>();
+        for (Trip rawTrip : rawTrips) {
+            if (!localDateTime.isAfter(rawTrip.getTripDateTime())) { //added to list only before dateTime of trip
+                trips.add(rawTrip);
             }
         }
 
@@ -59,23 +56,10 @@ public class AnnouncementController {
         boolean flag = false;
 
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
-        List<Object[]> obejcts = tripDAO.listAllTripParticipantIds();
-        List<String> tripsAndIDs = new ArrayList<>();
-
-        for (Object[] obejct : obejcts) {
-
-            String s1 = Arrays.toString(obejct);
-            String s = s1.replaceAll("[\\[\\]\\s]", "");
-            String[] split = s.split(",");
-            String tripID = split[0];
-            String userID = split[1];
-            tripsAndIDs.add(userID + "," + tripID);
-        }
 
         model.addAttribute("trips", trips);
         model.addAttribute("customUser", customUser);
         model.addAttribute("flag", flag);
-        model.addAttribute("tripsAndIDs", tripsAndIDs);
 
 
         return "announcement";
@@ -115,7 +99,6 @@ public class AnnouncementController {
 
         String filePath = "src/main/resources/routes/" + trip.getOwner().getId() + "_" + trip.getTripDateTime().toString().replace(":", "_") + "_route.gpx";
 
-        // check if do not exist write new file gpx
         File file = new File(filePath);
         if (!file.exists()) {
             try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
@@ -127,18 +110,15 @@ public class AnnouncementController {
             }
         }
 
-        // check if exist and prepare for download
         Path path = Paths.get(filePath);
         if (!Files.exists(path)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
-        // Download file as resource
         Resource fileResource = new FileSystemResource(file);
 
         String fileName = trip.getOwner().getId() + "_" + trip.getTripDateTime().toString().replace(":", "_") + "_route.gpx";
 
-        // set answer HTTP
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM) //  OCTET_STREAM for binary Files
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
@@ -171,8 +151,8 @@ public class AnnouncementController {
             }
         }
 
-        List<Object[]> obejcts = tripDAO.listAllTripParticipantIds();
-        List<Trip> tripsParticipated = methodsHandler.listOfTrips(obejcts, customUser);
+        Map<Long,List<Long>> mapOfTripAndUsersID = tripDAO.listAllTripParticipantIds();
+        List<Trip> tripsParticipated = methodsHandler.listOfTrips(mapOfTripAndUsersID, customUser);
 
         model.addAttribute("customUser", customUser);
         model.addAttribute("rating", rating);
@@ -188,20 +168,18 @@ public class AnnouncementController {
     public String addMeToTrip(@RequestParam String tripId, @RequestParam String userId, Model model) {
 
         Trip trip = tripDAO.findTripID(Long.parseLong(tripId));
-        CustomUserDAO customUserDAO = new CustomUserDAO();
         CustomUser customUser = customUserDAO.findCustomUserByID(userId);
 
         boolean newUserToTrip = false;
-        //check if user with this ID is already on list
+
         List<CustomUser> users = trip.getParticipants();
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getId() == Long.parseLong(userId)) {
+        for (CustomUser user : users) {
+            if (user.getId() == Long.parseLong(userId)) {
                 newUserToTrip = true;
                 break;
             }
         }
 
-        // if user do not exist in list add him
         if (!newUserToTrip) {
             List<CustomUser> participants = trip.getParticipants();
             participants.add(customUser);
@@ -211,13 +189,10 @@ public class AnnouncementController {
             userTrips.add(trip);
             customUser.setTripsParticipated(userTrips);
 
-            // save changes in database
             tripDAO.updateTrip(trip);
 
             String email = methodsHandler.getLoggedInUserName();
             customUserDAO.updateUserTrips(email, userTrips);
-
-           // System.out.println("User " + userId + " added to trip " + tripId);
         }
 
         String nextPage = "/trips/" + tripId;
@@ -254,7 +229,7 @@ public class AnnouncementController {
         return "actionSuccess";
     }
 
-    @PostMapping("/delete_participant")
+    @PostMapping("/deleteParticipant")
     public String deleteParticipant(@RequestParam String user_Identity, @RequestParam String tripId, Model model) {
 
         long userID = Long.parseLong(user_Identity);
@@ -282,7 +257,7 @@ public class AnnouncementController {
         return "actionSuccess";
     }
 
-    @PostMapping("/delete_trip")
+    @PostMapping("/deleteTrip")
     public String deleteTrip(@RequestParam String tripId, Model model) {
 
         long tripID = Long.parseLong(tripId);
@@ -297,7 +272,7 @@ public class AnnouncementController {
         return "actionSuccess";
     }
 
-    @PostMapping("/renew_trip")
+    @PostMapping("/renewTrip")
     public String renew_trip(@RequestParam Long trip,@RequestParam LocalDateTime date,@RequestParam String new_description, Model model) {
 
         Trip renewTrip = tripDAO.findTripID(trip);

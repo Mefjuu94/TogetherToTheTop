@@ -6,6 +6,7 @@ import TTT.databaseUtils.UserRatingDAO;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
 import TTT.users.UserRating;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,13 +16,20 @@ import java.util.List;
 
 @Component
 public class DateChecker {
-    TripDAO tripDAO = new TripDAO();
-    CustomUserDAO customUserDAO = new CustomUserDAO();
-    UserRatingDAO userRatingDAO = new UserRatingDAO();
+    private final TripDAO tripDAO;
+    private final CustomUserDAO customUserDAO;
+    private final UserRatingDAO userRatingDAO;
+
+    @Autowired
+    public DateChecker(TripDAO tripDAO, CustomUserDAO customUserDAO, UserRatingDAO userRatingDAO) {
+        this.tripDAO = tripDAO;
+        this.customUserDAO = customUserDAO;
+        this.userRatingDAO = userRatingDAO;
+    }
 
     @Transactional
     @Scheduled(fixedRate = 60000 * 10) // 60000 = 1 minute // Co 6 godzin 6 * 60 * 60 * 1000
-    public void checkDatesToRateUsersAndVisible() {
+    public void checkDatesToCreateRatesAndUpdateTrips() {
         List<Trip> entities = tripDAO.listAllAnnouncements();
 
         for (Trip entity : entities) {
@@ -35,7 +43,7 @@ public class DateChecker {
                 double number = Double.parseDouble(entity.getDistanceOfTrip().substring(0, entity.getDistanceOfTrip().indexOf("km")));
 
                 if (entity.getTripDateTime().isBefore(LocalDateTime.now())) {
-                    customUserDAO.editUsersChanges(participants, number);
+                    customUserDAO.updateUserAfterTrip(participants, number);
                     entity.setTripVisible(false);
 
                     for (int i = 0; i < participants.size(); i++) {

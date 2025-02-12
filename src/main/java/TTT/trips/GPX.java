@@ -42,8 +42,6 @@ public class GPX {
                 counterOfRepeat += 1;
 
                 if (counterOfRepeat == numberOfWaypoints-1) {
-                    //When number of repeats of starting point is number of (waypoints-1) then:
-                    // reset route to avoid back in to start point, and start Again.
                     gpxContent = new StringBuilder();
                     gpxContent.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
                     gpxContent.append("<gpx version=\"1.1\" creator=\"GPXCreator\">\n");
@@ -57,15 +55,11 @@ public class GPX {
         gpxContent.append("  </rte>\n");
         gpxContent.append("</gpx>");
 
-        // write to file
         String folderPath = "src/main/resources/routes";
 
-        // Tworzymy obiekt File
         File folder = new File(folderPath);
 
-        // Sprawdzamy, czy folder istnieje
         if (!folder.exists()) {
-            // Próba utworzenia folderu
             if (folder.mkdirs()) {
                 System.out.println("Folder został utworzony: " + folderPath);
             } else {

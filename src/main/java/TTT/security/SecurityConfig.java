@@ -1,6 +1,5 @@
 package TTT.security;
 
-import jakarta.ws.rs.HttpMethod;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,14 +26,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
         security.
                 authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/map", "/sendData", "/logout", "/userProfile/", "/updateField",
-                                "/trips/", "/addComment", "/addMe", "/announcement", "/findFriend", "/searchResults",
-                                "/tripsOwned", "/tripsParticipated", "resources/**", "/downloadGpx", "/delete_participant",
-                                "/findTrip", "/myProfile", "/addRate","/kilometers","/renew_trip",
-                                HttpMethod.POST).fullyAuthenticated()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll().
-                        requestMatchers("/", "/login", "/logout", "/register", "/error/**", "/usersEmails","/passwordRetrieve","privacyPolicy","/reset-password","/information")
+                        requestMatchers("/", "/login", "/logout", "/register", "/error/**", "/usersEmails",
+                                "/passwordRetrieve","privacyPolicy", "/resetPassword","/information")
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin((form) -> form.loginPage("/login")

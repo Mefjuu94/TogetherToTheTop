@@ -4,16 +4,19 @@ import TTT.trips.Trip;
 import TTT.users.UserRating;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Transactional
+@Repository
 public class UserRatingDAO {
 
     private SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
@@ -25,40 +28,35 @@ public class UserRatingDAO {
         this.sessionFactory = testSessionFactory;
     }
 
-    public void close() {
-        if (sessionFactory != null) {
-            sessionFactory.close(); // Zamknięcie fabryki sesji
-        }
-    }
-
     public boolean addRate(UserRating rate) {
         Transaction transaction = null;
-        if (rate == null || rate.getTrip() == null || rate.getId() == null){
-            throw new IllegalStateException("rate, rate.Id or rate.Trip cannot be null!");
+        if (rate == null || rate.getTrip() == null){
+            System.out.println(("rate or rate.Trip cannot be null!"));
+            return false;
         }
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             System.out.println("Transaction started: " + transaction.isActive());
 
-            session.merge(rate); // Synchronizacja obiektu z bazą danych
-            transaction.commit(); // Zatwierdzenie transakcji
+            session.merge(rate);
+            transaction.commit();
             System.out.println("Transaction committed.");
-            return true; // Operacja zakończona sukcesem
+            return true;
         } catch (Exception e) {
             System.err.println("Error while adding rate: " + e.getMessage());
             if (transaction != null && transaction.getStatus() == TransactionStatus.ACTIVE) {
-                transaction.rollback(); // Wycofanie transakcji w przypadku błędu
+                transaction.rollback();
                 System.out.println("Transaction rolled back.");
             }
-            e.printStackTrace(); // Logowanie błędu
-            return false; // Operacja zakończona niepowodzeniem
+            e.printStackTrace();
+            return false;
         }
     }
 
 
     public UserRating getRate(Long id) {
         Transaction transaction = null;
-        UserRating rating = null; // Zmienna do przechowywania wyniku
+        UserRating rating = null;
 
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -86,9 +84,9 @@ public class UserRatingDAO {
             return false;
         }
 
-        // Sprawdzenie, czy trip jest null
         if (trip == null) {
-            throw new IllegalStateException("Trip cannot be null.");
+            System.out.println(("Trip cannot be null."));
+            return false;
         }
 
         Transaction transaction = null;
@@ -112,7 +110,6 @@ public class UserRatingDAO {
         }
     }
 
-
     public List<UserRating> listAllRatings() {
         try (Session session = sessionFactory.openSession()) {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
@@ -127,21 +124,30 @@ public class UserRatingDAO {
 
     public List<UserRating> listAllRates(long userId) {
         try (Session session = sessionFactory.openSession()) {
-            session.clear();
-            String sql = "SELECT * FROM userrating WHERE user_id = :userId AND isFilled = true";
-            return session.createNativeQuery(sql, UserRating.class)
-                    .setParameter("userId", userId)
-                    .getResultList();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<UserRating> cr = cb.createQuery(UserRating.class);
+            Root<UserRating> root = cr.from(UserRating.class);
+
+            Predicate userIdPredicate = cb.equal(root.get("user").get("id"), userId);
+            Predicate isFilledPredicate = cb.isTrue(root.get("isFilled"));
+
+            cr.select(root).where(cb.and(userIdPredicate, isFilledPredicate));
+
+            return session.createQuery(cr).getResultList();
         }
     }
 
     public List<UserRating> listUsersToRateByMe(long userId) {
         try (Session session = sessionFactory.openSession()) {
-            session.clear();
-            String sql = "SELECT * FROM userrating WHERE reviewer_id = :userId";
-            return session.createNativeQuery(sql, UserRating.class)
-                    .setParameter("userId", userId)
-                    .getResultList();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<UserRating> cr = cb.createQuery(UserRating.class);
+            Root<UserRating> root = cr.from(UserRating.class);
+
+            Predicate reviewerIdPredicate = cb.equal(root.get("reviewer").get("id"), userId);
+
+            cr.select(root).where(reviewerIdPredicate);
+
+            return session.createQuery(cr).getResultList();
         }
     }
 }

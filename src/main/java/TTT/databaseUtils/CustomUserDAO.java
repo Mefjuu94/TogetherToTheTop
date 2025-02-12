@@ -11,9 +11,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class CustomUserDAO {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -24,11 +26,6 @@ public class CustomUserDAO {
         this.sessionFactory = testSessionFactory;
     }
 
-    public void close() {
-        if (sessionFactory != null) {
-            sessionFactory.close(); // Zamknięcie fabryki sesji
-        }
-    }
 
     public boolean saveUser(CustomUser customUser) {
 
@@ -60,7 +57,7 @@ public class CustomUserDAO {
         }
     }
 
-    public boolean editUsersChanges(List<CustomUser> customUsers, double number) {
+    public boolean updateUserAfterTrip(List<CustomUser> customUsers, double number) {
         if (customUsers == null || customUsers.isEmpty()) {
             return false;
         }
@@ -182,7 +179,7 @@ public class CustomUserDAO {
         }
     }
 
-    public Boolean updateUserTrips(String email, List<Trip> trips) {
+    public boolean updateUserTrips(String email, List<Trip> trips) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {
@@ -207,7 +204,7 @@ public class CustomUserDAO {
 
     }
 
-    public Boolean updateUserField(String value, String email, String field) {
+    public boolean updateUserField(String value, String email, String field) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {
@@ -247,9 +244,9 @@ public class CustomUserDAO {
         }
     }
 
-    public Boolean updateUserAge(String email, int age) {
+    public boolean updateUserAge(String email, int age) {
         Transaction transaction = null;
-        if (age > 120) {
+        if (age > 120 || age < 1) {
             return false;
         }
 
@@ -274,7 +271,7 @@ public class CustomUserDAO {
         }
     }
 
-    public Boolean updateUserStats(double value, String email, String field) {
+    public boolean updateUserStats(double value, String email, String field) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {

@@ -10,18 +10,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class MethodsHandler {
 
-    UserRatingDAO userRatingDAO = new UserRatingDAO();
+    private final UserRatingDAO userRatingDAO = new UserRatingDAO();
+    private final TripDAO tripDAO = new TripDAO();
 
     protected String getLoggedInUserName() {
-        //download active user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
-            // Check if user is instance of UserDetails
             Object principal = authentication.getPrincipal();
             if (principal instanceof UserDetails) {
                 UserDetails userDetails = (UserDetails) principal;
@@ -33,26 +32,42 @@ public class MethodsHandler {
         return null;
     }
 
-    protected ArrayList<Trip> listOfTrips(List<Object[]> objects, CustomUser customUser){
-        TripDAO tripDAO = new TripDAO();
+    protected ArrayList<Trip> listOfTrips(Map<Long, List<Long>> objects, CustomUser customUser) {
         ArrayList<Trip> tripsParticipated = new ArrayList<>();
 
-        for (int i = 0; i < objects.size(); i++) {
-            String s1 = Arrays.toString(objects.get(i));
-            String s = s1.replaceAll("[\\[\\]\\s]", "");
-            String[] split = s.split(",");
-            long tripID = Long.parseLong(split[0]);
-            long user_id = Long.parseLong(split[1]);
-            if (user_id == customUser.getId()) {
-                Trip trip = tripDAO.findTripID(tripID);
+        System.out.println("search for: " + customUser.getCustomUserName() + " id: " + customUser.getId());
+        List<Long> tripIds = new ArrayList<>();
+
+        List<Long> tripIdsForUser = new ArrayList<>();
+        for (Long klucz : objects.keySet()) {
+            long key = klucz.longValue();
+
+            if (customUser.getId() == key) {
+                tripIds = objects.get(klucz);
+
+                if (tripIds != null) {
+                    tripIdsForUser.addAll(tripIds);
+                } else {
+                    System.out.println("list is empty for userID: " + key);
+                }
+            }
+            break;
+        }
+
+        System.out.println(tripIdsForUser.size());
+        for (Long tripId : tripIdsForUser) {
+            Trip trip = tripDAO.findTripID(tripId);
+            if (trip != null) {
                 tripsParticipated.add(trip);
+            } else {
+                System.out.println("trip ID " + tripId + " was not found.");
             }
         }
 
         return tripsParticipated;
     }
 
-    protected List<UserRating> usersToRate(CustomUser me){
+    protected List<UserRating> usersToRate(CustomUser me) {
 
         List<UserRating> usersToRateTemp = userRatingDAO.listUsersToRateByMe(me.getId());
         List<UserRating> usersToRate = new ArrayList<>();
@@ -63,21 +78,6 @@ public class MethodsHandler {
             }
         }
 
-        return usersToRate;
-    }
-
-    protected List<UserRating> whatsMyRate(CustomUser me){
-
-        List<UserRating> usersToRateTemp = userRatingDAO.listUsersToRateByMe(me.getId());
-        List<UserRating> usersToRate = new ArrayList<>();
-        System.out.println(usersToRateTemp.size());
-
-        for (int i = 0; i < usersToRateTemp.size(); i++) {
-            System.out.println(usersToRateTemp.get(i).isFilled());
-            if (usersToRateTemp.get(i).isFilled()) {
-                usersToRate.add(usersToRateTemp.get(i));
-            }
-        }
         return usersToRate;
     }
 }

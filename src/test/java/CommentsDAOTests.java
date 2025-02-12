@@ -1,45 +1,27 @@
 import TTT.databaseUtils.CommentsDAO;
 import TTT.trips.Comments;
-import org.junit.jupiter.api.*;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Nested
 @Testcontainers
-public class CommentsDAOTests {
-    private CommentsDAO testObject;
-    private final Comments testComment = createTestComment();
-    DockerImageName postgres = DockerImageName.parse("postgres:16");
-    @Container
-    PostgreSQLContainer postgresqlContainer;
+class CommentsDAOTests {
 
-    public CommentsDAOTests() {
-        this.postgresqlContainer = (PostgreSQLContainer) (new PostgreSQLContainer(this.postgres)).
-                withDatabaseName("test_container").withUsername("test").withPassword("test").
-                withReuse(true);
-    }
+    private CommentsDAO testObject;
+    private final Comments testComment = EntityFactoryForTests.createTestComment();
 
     @BeforeEach
-    public void emptyTest() {
-        int mappedPort = this.postgresqlContainer.getMappedPort(5432);
-        this.testObject = new CommentsDAO(TestSessionFactoryCreator.getCustomUserSessionFactory(mappedPort));
-        System.out.println(mappedPort);
+    public void setUp() {
+        DAOFactoryForMockTests.clearDatabase();
+        this.testObject = DAOFactoryForMockTests.getCommentsDAO();
     }
 
-    @AfterEach
-    public void tearDown() {
-        if (testObject != null) {
-            testObject.close();
-        }
-    }
-
-    private Comments createTestComment() {
-        return new Comments("new comment", 1, 1, "Alex");
-    }
 
     @Test
     public void saveCommentTest() {
@@ -53,27 +35,48 @@ public class CommentsDAOTests {
 
     @Test
     public void findCommentsByTripIDTest() {
-        saveCommentTest();
+        Comments comments = EntityFactoryForTests.createTestComment();
+        testObject.addComment(comments);
+
 
         List<Comments> list = new ArrayList<>();
-        testComment.setID(1L);
-        list.add(testComment);
+        long id = testObject.listAllComments().get(0).getID();
+        comments.setID(id);
 
-         Assertions.assertEquals(list,testObject.findCommentsByTripID(1L));
+        list.add(comments);
+
+        Assertions.assertEquals(list, testObject.findCommentsByTripID(1L));
+    }
+
+    @Test
+    public void findCommentIDTest() {
+        Comments comments = EntityFactoryForTests.createTestComment();
+
+        testObject.addComment(comments);
+        //because of automatically generated id:
+        long id = testObject.listAllComments().get(0).getID();
+        comments.setID(id);
+
+        List<Comments> result = new ArrayList<>();
+        result.add(comments);
+
+        Assertions.assertEquals(result.toString(), testObject.findCommentsByTripID(1L).toString());
     }
 
     @Test
     public void findCommentsByTripIDTestFail() {
         saveCommentTest();
         Comments comment = testObject.findCommentID(1);
-        Assertions.assertNotEquals(testComment,comment); // wrong Id
+        Assertions.assertNotEquals(testComment, comment); // wrong Id
     }
 
     @Test
     public void deleteCommentTest() {
         saveCommentTest();
-        Assertions.assertTrue(this.testObject.deleteComment(1));
+        long id = testObject.listAllComments().get(0).getID();
+        Assertions.assertTrue(this.testObject.deleteComment(id));
     }
+
     @Test
     public void deleteCommentFail() {
         Assertions.assertFalse(this.testObject.deleteComment(1));
@@ -81,14 +84,17 @@ public class CommentsDAOTests {
 
     @Test
     public void editComment() {
-        saveCommentTest();
-        Assertions.assertTrue(this.testObject.editComment(1,"comment was edited"));
-        Assertions.assertEquals("comment was edited",testObject.findCommentID(1).getComment());
+        testObject.addComment(testComment);
+
+        long id = testObject.listAllComments().get(0).getID();
+
+        Assertions.assertTrue(testObject.editComment(id,"comment was edited"));
+        Assertions.assertEquals("comment was edited", testObject.findCommentID(id).getComment());
     }
 
     @Test
     public void editCommentFail() {
-        Assertions.assertFalse(this.testObject.editComment(1,"comment was edited"));
+        Assertions.assertFalse(this.testObject.editComment(1, "comment was edited"));
     }
 
     @Test
@@ -98,13 +104,14 @@ public class CommentsDAOTests {
         testObject.addComment(testComment);
         Comments comment = new Comments("second comment", 2, 3, "Stefan");
         testObject.addComment(comment);
-        testComment.setID(1L);
-        comment.setID(2L);
+
+        testComment.setID(testObject.listAllComments().get(0).getID());
+        comment.setID(testObject.listAllComments().get(1).getID());
 
         list.add(testComment);
         list.add(comment);
 
-        Assertions.assertEquals(list,testObject.listAllComments());
+        Assertions.assertEquals(list, testObject.listAllComments());
     }
 
     @Test
@@ -115,6 +122,6 @@ public class CommentsDAOTests {
         Comments comment = new Comments("second comment", 2, 3, "Stefan");
         testObject.addComment(comment);
 
-        Assertions.assertNotEquals(list,testObject.listAllComments());
+        Assertions.assertNotEquals(list, testObject.listAllComments());
     }
 }

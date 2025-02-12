@@ -25,7 +25,7 @@ public class PasswordResetController {
 
         model.addAttribute("users", users);
 
-        return "/passwordRetrieve";
+        return "passwordRetrieve";
     }
 
     @GetMapping("information")
@@ -36,10 +36,10 @@ public class PasswordResetController {
 
         model.addAttribute("nextPage", nextPage);
         model.addAttribute("information",information);
-        return "/information";
+        return "information";
     }
 
-    @PostMapping("/reset-password")
+    @PostMapping("/resetPassword")
     public String resetPassword(@RequestParam String email, @RequestParam String newPassword, Model model) {
         customUser = customUserDAO.findCustomUserByEmail(email);
         if (customUser != null) {

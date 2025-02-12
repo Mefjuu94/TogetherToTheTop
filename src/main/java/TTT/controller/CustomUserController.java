@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class CustomUserController {
 
-    CustomUserDAO customUserDAO = new CustomUserDAO();
-    TripDAO tripDAO = new TripDAO();
-    MethodsHandler methodsHandler = new MethodsHandler();
+    private final CustomUserDAO customUserDAO = new CustomUserDAO();
+    private final TripDAO tripDAO = new TripDAO();
+    private final MethodsHandler methodsHandler = new MethodsHandler();
 
     @GetMapping("/myProfile")
     public String getMainPage(Model model) {
@@ -42,7 +43,7 @@ public class CustomUserController {
             rate = rate/rating.size();
         }
 
-        List<Object[]> objects = tripDAO.listAllTripParticipantIds();
+        Map<Long,List<Long>> objects = tripDAO.listAllTripParticipantIds();
         List<Trip> tripsParticipated = methodsHandler.listOfTrips(objects, customUser);
         List<UserRating> users = methodsHandler.usersToRate(customUser);
 
@@ -59,7 +60,6 @@ public class CustomUserController {
     @GetMapping("/findFriend")
     public String findFriend(@RequestParam String friendName, Model model) {
 
-        System.out.println("Search name: " + friendName);
         List<CustomUser> customUsers = customUserDAO.findCustomUserByName(friendName);
         model.addAttribute("customUser", customUsers);
 
@@ -69,7 +69,6 @@ public class CustomUserController {
     @GetMapping("/findTrip")
     public String findTrip(@RequestParam String tripDestination, Model model) {
 
-        System.out.println("Search Trip: " + tripDestination);
         List<Trip> trips = tripDAO.findTrip(tripDestination);
         model.addAttribute("trips", trips);
 
@@ -88,7 +87,7 @@ public class CustomUserController {
     @GetMapping("/tripsParticipated")
     public String getTripsWhereParticipated(@RequestParam String userID, Model model) {
 
-        List<Object[]> obejcts = tripDAO.listAllTripParticipantIds();
+        Map<Long,List<Long>> obejcts = tripDAO.listAllTripParticipantIds();
         CustomUser customUser = customUserDAO.findCustomUserByID(userID);
         List<Trip> trips = methodsHandler.listOfTrips(obejcts, customUser);
 
@@ -103,7 +102,6 @@ public class CustomUserController {
 
         String email = methodsHandler.getLoggedInUserName();
 
-        // update field
         if (fieldName.equals("age")) {
             customUserDAO.updateUserAge(email, Integer.parseInt(newValue));
         } else {

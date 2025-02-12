@@ -1,93 +1,44 @@
 import TTT.component.DateChecker;
-import TTT.databaseUtils.TripDAO;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.mockito.Mockito.*;
 
 public class DateCheckerTest {
 
-    @Mock
-    private TripDAO tripDAO;  // mock TripDAO
-
-    @InjectMocks
-    private DateChecker testObject;
+    private DateChecker testObject = new DateChecker(DAOFactoryForMockTests.getTripDAO(), DAOFactoryForMockTests.getCustomUserDAO(), DAOFactoryForMockTests.getUserRatingDAO());
+    private final Trip testTrip = EntityFactoryForTests.createTestTrip();
+    private final CustomUser reviewer = EntityFactoryForTests.createTestUser();
+    private final CustomUser user = EntityFactoryForTests.createTestUser();
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
+    public void setUp() {
+        DAOFactoryForMockTests.clearDatabase();
+        //clear database and add object - 2 users and trip.
+        reviewer.setEmail("reviewer@mail.com");
+        DAOFactoryForMockTests.getCustomUserDAO().saveUser(reviewer);
+        user.setEmail("user@mail.com");
+        DAOFactoryForMockTests.getCustomUserDAO().saveUser(user);
+        long id1 = DAOFactoryForMockTests.getCustomUserDAO().listAllUsers().get(0).getId();
+        long id2 = DAOFactoryForMockTests.getCustomUserDAO().listAllUsers().get(0).getId();
+        reviewer.setId(id1);
+        user.setId(id2);
+        testTrip.setOwner(reviewer);
+        testTrip.setTripDateTime(LocalDateTime.now());
+        DAOFactoryForMockTests.getTripDAO().addAnnouncement(testTrip);
     }
-
-    private CustomUser testUser = createTestUser();
 
     @Test
-    void testCheckDatesToRateUsersAndVisible() {
-        List<CustomUser> participants = new ArrayList<>();
-        participants.add(testUser);
-        Trip trip1 = createTestTrip();
-        trip1.setId(1L);
-        trip1.setParticipants(participants);
-        trip1.setTripDateTime(LocalDateTime.now().minusDays(1));  // Data w przeszłości
-        trip1.setTripVisible(true);
+    public void checkDatesAndVisibleOfTrip(){
+        testObject.checkDatesToCreateRatesAndUpdateTrips();
+        Trip trip = DAOFactoryForMockTests.getTripDAO().listAllAnnouncements().get(0);
 
-
-        Trip trip2 = createTestTrip();
-        trip2.setId(2L);
-        trip2.setParticipants(participants);
-        trip2.setTripDateTime(LocalDateTime.now().plusDays(1));  // Data w przyszłości
-        trip2.setTripVisible(true);
-
-        // Mockowanie listy podróży
-        List<Trip> trips = Arrays.asList(trip1, trip2);
-        when(tripDAO.listAllAnnouncements()).thenReturn(trips);
-
-        // Mockowanie findTripID dla trip1 i trip2
-        when(tripDAO.findTripID(1L)).thenReturn(trip1);
-        when(tripDAO.findTripID(2L)).thenReturn(trip2);
-
-        testObject.checkDatesToRateUsersAndVisible();
-
-        // check if trip1 had set tripVisible on false (past)
-        verify(tripDAO).updateTrip(trip1);
-        assert !trip1.isTripVisible();  // should be false
-
-        // check if trip2 do not change visible status on false, (future)
-        verify(tripDAO, never()).updateTrip(trip2);
-        assert trip2.isTripVisible();  // should be true
+        Assertions.assertFalse(trip.isTripVisible());
+        Assertions.assertFalse(LocalDateTime.now().isBefore(trip.getTripDateTime()));
     }
 
-    protected CustomUser createTestUser() {
-        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
-                "testUser", 99, 0, 0, new ArrayList<>(),
-                new ArrayList<>(), "city", 0);
-        return customUser;
-    }
 
-    private Trip createTestTrip() {
-        return new Trip.TripBuilder()
-                .withTripDescription("description")
-                .withDestination("destination")
-                .withOwner(testUser)
-                .withTripDuration("5h")
-                .withClosedGroup(false)
-                .withAmountOfClosedGroup(1)
-                .withDriverPeople(false)
-                .withAmountOfDriverPeople(12)
-                .withAnimals(true)
-                .withWaypoints("")
-                .withTripDataTime(LocalDateTime.now())
-                .withDistanceOfTrip("5km")
-                .withGpxFile(null)
-                .build();
-    }
 }

@@ -1,7 +1,9 @@
 package TTT.databaseUtils;
 
 import TTT.trips.Trip;
+import TTT.users.CustomUser;
 import jakarta.persistence.PersistenceException;
+import jakarta.persistence.Tuple;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -9,11 +11,12 @@ import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
+@Repository
 public class TripDAO {
 
     private SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
@@ -23,12 +26,6 @@ public class TripDAO {
     }
 
     public TripDAO() {
-    }
-
-    public void close() {
-        if (sessionFactory != null) {
-            sessionFactory.close(); // Zamknięcie fabryki sesji
-        }
     }
 
     public boolean addAnnouncement(Trip trip) {
@@ -43,7 +40,6 @@ public class TripDAO {
             session.merge(trip);
             transaction.commit();
             System.out.println("The trip has been created!");
-            session.close();
             return true;
         } catch (Exception e) {
             if (transaction != null) transaction.rollback(); // back transaction when is error
@@ -149,19 +145,33 @@ public class TripDAO {
         return null;
     }
 
-    public List<Object[]> listAllTripParticipantIds() {
-        Session session = null;
-        try {
-            session = sessionFactory.openSession();
-            return session.createNativeQuery("SELECT trip_id, user_id FROM trip_participants", Object[].class)
-                    .getResultList();
-        }finally {
-            assert session != null;
-            session.close();
+    public Map<Long, List<Long>> listAllTripParticipantIds() {
+        Map<Long, List<Long>> resultMap = new HashMap<>();
+
+        try (Session session = sessionFactory.openSession()) {
+            String sql = "SELECT user_id, trip_id FROM trip_participants";
+            Query<Tuple> query = session.createNativeQuery(sql, Tuple.class);
+
+            List<Tuple> results = query.getResultList();
+
+            for (Tuple result : results) {
+                Long userId = result.get(0, Number.class) != null ? result.get(0, Number.class).longValue() : null;
+                Long tripId = result.get(1, Number.class) != null ? result.get(1, Number.class).longValue() : null;
+
+                if (userId != null && tripId != null) {
+                    resultMap.computeIfAbsent(userId, k -> new ArrayList<>()).add(tripId);
+                } else {
+                    System.out.println("null for userId or tripId");
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("error when collect data: " + e.getMessage());
         }
+
+        return resultMap;
     }
 
-    public Boolean updateTrip(Trip trip) {
+    public boolean updateTrip(Trip trip) {
         Transaction transaction = null;
 
         if (trip == null) {
