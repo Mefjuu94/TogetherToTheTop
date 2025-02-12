@@ -44,4 +44,5 @@ public class EntityFactoryForTests {
         UserRating rate = new UserRating(5, createTestTrip(), false, "comment", createTestUser(), reviewer);
         return rate;
     }
+
 }
