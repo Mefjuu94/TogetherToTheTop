@@ -19,6 +19,7 @@ import java.util.Map;
 public class CustomUserController {
 
     private final CustomUserDAO customUserDAO = new CustomUserDAO();
+    private final UserRatingDAO userRatingDAO = new UserRatingDAO();
     private final TripDAO tripDAO = new TripDAO();
     private final MethodsHandler methodsHandler = new MethodsHandler();
 
@@ -103,15 +104,36 @@ public class CustomUserController {
         String email = methodsHandler.getLoggedInUserName();
 
         if (fieldName.equals("age")) {
-            customUserDAO.updateUserAge(email, Integer.parseInt(newValue));
+            if(customUserDAO.updateUserAge(email, Integer.parseInt(newValue))){
+                String nextPage = "/myProfile";
+                model.addAttribute("nextPage", nextPage);
+
+                return "actionSuccess";
+            }else {
+                String information = "something went wrong: Cannot set Age. Try again with digits only!";
+                String nextPage = "/passwordRetrieve";
+
+                model.addAttribute("nextPage", nextPage);
+                model.addAttribute("information",information);
+
+                return "information";
+            }
         } else {
-            customUserDAO.updateUserField(newValue, email, fieldName);
+            if (customUserDAO.updateUserField(newValue, email, fieldName)){
+                String nextPage = "/myProfile";
+                model.addAttribute("nextPage", nextPage);
+
+                return "actionSuccess";
+            }else {
+                String information = "something went wrong: Cannot set chosen parameter!";
+                String nextPage = "/passwordRetrieve";
+
+                model.addAttribute("nextPage", nextPage);
+                model.addAttribute("information",information);
+
+                return "information";
+            }
         }
-
-        String nextPage = "/myProfile";
-        model.addAttribute("nextPage", nextPage);
-
-        return "actionSuccess";
     }
 
     @GetMapping("/rate")
@@ -136,13 +158,20 @@ public class CustomUserController {
                                  Model model) {
 
         Trip trip = tripDAO.findTripID(Long.parseLong(tripId));
+        if (userRatingDAO.editRate(Long.parseLong(rateId), Integer.parseInt(rate),trip,behavior)) {
 
-        UserRatingDAO userRatingDAO = new UserRatingDAO();
-        userRatingDAO.editRate(Long.parseLong(rateId), Integer.parseInt(rate),trip,behavior);
+            String nextPage = "/rate";
+            model.addAttribute("nextPage", nextPage);
 
-        String nextPage = "/rate";
-        model.addAttribute("nextPage", nextPage);
+            return "actionSuccess";
+        }else {
+            String information = "something went wrong: Cannot add rate!";
+            String nextPage = "/passwordRetrieve";
 
-        return "actionSuccess";
+            model.addAttribute("nextPage", nextPage);
+            model.addAttribute("information",information);
+
+            return "information";
+        }
     }
 }

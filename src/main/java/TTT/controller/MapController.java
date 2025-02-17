@@ -21,8 +21,8 @@ import java.util.List;
 @Controller
 public class MapController {
 
-    TripDAO tripDAO = new TripDAO();
-    MethodsHandler methodsHandler = new MethodsHandler();
+    private final TripDAO tripDAO = new TripDAO();
+    private final MethodsHandler methodsHandler = new MethodsHandler();
 
     @PostMapping("/sendData")
     public String createTrip(@RequestParam("waypoints") String waypoints,
@@ -87,12 +87,21 @@ public class MapController {
                 .withGpxFile(gpxFile)
                 .build();
 
-        tripDAO.addAnnouncement(trip);
+        if (tripDAO.addAnnouncement(trip)) {
 
-        String nextPage = "/announcement";
-        model.addAttribute("nextPage", nextPage);
+            String nextPage = "/announcement";
+            model.addAttribute("nextPage", nextPage);
 
-        return "actionSuccess";
+            return "actionSuccess";
+        }else {
+            String information = "something went wrong: Cannot add announcement!";
+            String nextPage = "/passwordRetrieve";
+
+            model.addAttribute("nextPage", nextPage);
+            model.addAttribute("information",information);
+
+            return "information";
+        }
     }
 
     @GetMapping("/map")

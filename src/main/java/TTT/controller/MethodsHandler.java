@@ -25,9 +25,9 @@ public class MethodsHandler {
             if (principal instanceof UserDetails) {
                 UserDetails userDetails = (UserDetails) principal;
                 return userDetails.getUsername(); // return name os user (email)
+            }else {
+                throw new ClassCastException("Principal is not an instance of UserDetails.");
             }
-            // if not return something
-            return principal.toString();
         }
         return null;
     }
@@ -54,7 +54,6 @@ public class MethodsHandler {
             break;
         }
 
-        System.out.println(tripIdsForUser.size());
         for (Long tripId : tripIdsForUser) {
             Trip trip = tripDAO.findTripID(tripId);
             if (trip != null) {

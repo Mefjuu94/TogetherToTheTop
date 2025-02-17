@@ -134,8 +134,8 @@ public class AnnouncementController {
         List<UserRating> rating = customUser.getRatings();
         int rate = 0;
         if (!rating.isEmpty()) {
-            for (int i = 0; i < rating.size(); i++) {
-                rate += rating.get(i).getRating();
+            for (UserRating userRating : rating) {
+                rate += userRating.getRating();
             }
             rate = rate / rating.size();
         } else {
@@ -145,8 +145,8 @@ public class AnnouncementController {
         List<Trip> trips = tripDAO.listAllAnnouncements();
 
         int numberOfTripsOwned = 0;
-        for (int i = 0; i < trips.size(); i++) {
-            if (trips.get(i).getOwner().getId() == customUser.getId()) {
+        for (Trip trip : trips) {
+            if (trip.getOwner().getId() == customUser.getId()) {
                 numberOfTripsOwned++;
             }
         }
@@ -180,36 +180,54 @@ public class AnnouncementController {
             }
         }
 
+        String email = "";
+        List<Trip> userTrips = new ArrayList<>();
         if (!newUserToTrip) {
             List<CustomUser> participants = trip.getParticipants();
             participants.add(customUser);
             trip.setParticipants(participants);
 
-            List<Trip> userTrips = customUser.getTripsParticipated();
+            userTrips = customUser.getTripsParticipated();
             userTrips.add(trip);
             customUser.setTripsParticipated(userTrips);
 
             tripDAO.updateTrip(trip);
 
-            String email = methodsHandler.getLoggedInUserName();
-            customUserDAO.updateUserTrips(email, userTrips);
+            email = methodsHandler.getLoggedInUserName();
         }
+        if (customUserDAO.updateUserTrips(email, userTrips)){
+            String nextPage = "/trips/" + tripId;
+            model.addAttribute("nextPage", nextPage);
 
-        String nextPage = "/trips/" + tripId;
-        model.addAttribute("nextPage", nextPage);
+            return "actionSuccess";
+        }else {
+            String information = "something went wrong: Cannot add user as participant to Trip";
+            String nextPage = "/passwordRetrieve";
 
-        return "actionSuccess";
+            model.addAttribute("nextPage", nextPage);
+            model.addAttribute("information",information);
+
+            return "information";
+        }
     }
 
     @PostMapping("/addComment")
     public String addComment(@RequestParam long tripIdComment, @RequestParam String comment, @RequestParam long userIdComment, @RequestParam String userName, Model model) {
 
-        commentsDAO.addComment(new Comments(comment, userIdComment, tripIdComment, userName));
+        if (commentsDAO.addComment(new Comments(comment, userIdComment, tripIdComment, userName))){
+            String nextPage = "/trips/" + tripIdComment;
+            model.addAttribute("nextPage", nextPage);
 
-        String nextPage = "/trips/" + tripIdComment;
-        model.addAttribute("nextPage", nextPage);
+            return "actionSuccess";
+        }else {
+            String information = "something went wrong: Cannot add Comment to Trip";
+            String nextPage = "/passwordRetrieve";
 
-        return "actionSuccess";
+            model.addAttribute("nextPage", nextPage);
+            model.addAttribute("information",information);
+
+            return "information";
+        }
     }
 
     @PostMapping("/deleteComment")
@@ -219,14 +237,19 @@ public class AnnouncementController {
 
         if (commentsDAO.deleteComment(commentID)) {
             System.out.println("comment was deleted!");
+            String page = "/trips/" + idOfTrip;
+            model.addAttribute("page", page);
+
+            return "actionSuccess";
         } else {
-            System.out.println("something went wrong");
+            String information = "something went wrong: Cannot delete comment";
+            String nextPage = "/passwordRetrieve";
+
+            model.addAttribute("nextPage", nextPage);
+            model.addAttribute("information",information);
+
+            return "information";
         }
-
-        String page = "/trips/" + idOfTrip;
-        model.addAttribute("page", page);
-
-        return "actionSuccess";
     }
 
     @PostMapping("/deleteParticipant")
@@ -249,12 +272,21 @@ public class AnnouncementController {
         }
 
         trip.setParticipants(newParticipants);
-        tripDAO.updateTrip(trip);
+        if (tripDAO.updateTrip(trip)) {
 
-        String nextPage = "/trips/" + tripId;
-        model.addAttribute("nextPage", nextPage);
+            String nextPage = "/trips/" + tripId;
+            model.addAttribute("nextPage", nextPage);
 
-        return "actionSuccess";
+            return "actionSuccess";
+        }else {
+            String information = "something went wrong: Cannot delete Participant from list!";
+            String nextPage = "/passwordRetrieve";
+
+            model.addAttribute("nextPage", nextPage);
+            model.addAttribute("information",information);
+
+            return "information";
+        }
     }
 
     @PostMapping("/deleteTrip")
@@ -264,12 +296,20 @@ public class AnnouncementController {
 
         Trip trip = tripDAO.findTripID(tripID);
 
-        tripDAO.deleteTrip(trip);
+        if (tripDAO.deleteTrip(trip)){
+            String nextPage = "/announcement";
+            model.addAttribute("nextPage", nextPage);
 
-        String nextPage = "/announcement";
-        model.addAttribute("nextPage", nextPage);
+            return "actionSuccess";
+        }else {
+            String information = "something went wrong: Cannot delete Participant from list!";
+            String nextPage = "/passwordRetrieve";
 
-        return "actionSuccess";
+            model.addAttribute("nextPage", nextPage);
+            model.addAttribute("information",information);
+
+            return "information";
+        }
     }
 
     @PostMapping("/renewTrip")
@@ -283,11 +323,20 @@ public class AnnouncementController {
         Trip trip1 = new Trip(); // to automatically create new ID
         renewTrip.setId(trip1.getId());
 
-        tripDAO.addAnnouncement(renewTrip);
+        if (tripDAO.addAnnouncement(renewTrip)) {
 
-        String nextPage = "/announcement";
-        model.addAttribute("nextPage", nextPage);
+            String nextPage = "/announcement";
+            model.addAttribute("nextPage", nextPage);
 
-        return "actionSuccess";
+            return "actionSuccess";
+        }else {
+            String information = "something went wrong: cannot renew trip!";
+            String nextPage = "/passwordRetrieve";
+
+            model.addAttribute("nextPage", nextPage);
+            model.addAttribute("information",information);
+
+            return "information";
+        }
     }
 }

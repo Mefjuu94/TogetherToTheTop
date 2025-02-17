@@ -43,15 +43,28 @@ public class PasswordResetController {
     public String resetPassword(@RequestParam String email, @RequestParam String newPassword, Model model) {
         customUser = customUserDAO.findCustomUserByEmail(email);
         if (customUser != null) {
+            String pass = customUser.getPassword();
+            if (customUserDAO.isValidPassword(pass)){
+
             customUser.setPassword(newPassword);
             customUserDAO.updateUserField(newPassword, customUser.getEmail(),"password");
 
             String nextPage = "/";
             model.addAttribute("nextPage", nextPage);
 
-            return "actionSuccess";}
+            return "actionSuccess";
+            }else {
+                String information = "enter valid PASSWORD";
+                String nextPage = "/passwordRetrieve";
+
+                model.addAttribute("nextPage", nextPage);
+                model.addAttribute("information",information);
+
+                return "information";
+            }
+        }
         else {
-            String information = "enter valid email";
+            String information = "enter valid EMAIL";
             String nextPage = "/passwordRetrieve";
 
             model.addAttribute("nextPage", nextPage);

@@ -21,9 +21,32 @@ public class CustomUserDAO {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private SessionFactory sessionFactory = UserSessionFactory.getUserSessionFactory();
 
-    public CustomUserDAO() {}
+    public CustomUserDAO() {
+    }
+
     public CustomUserDAO(SessionFactory testSessionFactory) {
         this.sessionFactory = testSessionFactory;
+    }
+
+
+    public boolean isValidPassword(String password) {
+        if (password.length() < 8) {
+            return false;
+        }
+
+        boolean hasUppercase = false;
+        boolean hasDigit = false;
+
+        for (int i = 0; i < password.length(); i++) {
+            char c = password.charAt(i);
+            if (Character.isUpperCase(c)) {
+                hasUppercase = true;
+            } else if (Character.isDigit(c)) {
+                hasDigit = true;
+            }
+        }
+
+        return hasUppercase && hasDigit;
     }
 
 
@@ -32,7 +55,7 @@ public class CustomUserDAO {
         if (findCustomUserByEmail(customUser.getEmail()) != null) {
             return false;
         }
-        if (customUser.getPassword() == null || customUser.getPassword().length() < 8) {
+        if (customUser.getPassword() == null || isValidPassword(customUser.getPassword())) {
             return false;
         }
         String username = customUser.getEmail().substring(0, customUser.getEmail().indexOf("@"));
@@ -96,7 +119,7 @@ public class CustomUserDAO {
     }
 
     public CustomUser findCustomUserByEmail(String email) {
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
 
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
@@ -111,7 +134,7 @@ public class CustomUserDAO {
     }
 
     public CustomUser findCustomUserByID(String ID) {
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
 
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
@@ -126,7 +149,7 @@ public class CustomUserDAO {
     }
 
     public List<CustomUser> findCustomUserByName(String name) {
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
 
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<CustomUser> userQuery = cb.createQuery(CustomUser.class);
@@ -222,8 +245,12 @@ public class CustomUserDAO {
                         user.setCity(value);
                         break;
                     case "password":
-                        user.setPassword(passwordEncoder.encode(value));
-                        break;
+                        if (isValidPassword(value)) {
+                            user.setPassword(passwordEncoder.encode(value));
+                            break;
+                        }else {
+                            return false;
+                        }
                     default:
                         System.out.println("Wrong field!");
                         return false;
