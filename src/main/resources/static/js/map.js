@@ -1,7 +1,5 @@
-// Replace with your own API key
 const API_KEY = 'zjEFy9NsTMuP_e3U9_B0sDu_axPSSl28smWg1PXW4i0';
 
-// Initialize temporary coordinates
 let tempCoordinates = null;
 let savedMarker = null;
 let allRouteDuration = null;
@@ -552,9 +550,6 @@ function locateUser() {
     }
 }
 
-// add listener to localize user
-document.getElementById('locateMeBtn').addEventListener('click', locateUser);
-
 // get checkbox and display field
 const closedGroupCheckbox = document.getElementById('closedGroupCheckbox');
 const peopleInputLabel = document.getElementById('peopleInputLabel');
@@ -614,7 +609,6 @@ peopleInput.addEventListener('input', function () {
 });
 
 
-///////////////////////////////////////////////////////////////////////
 var activeSendButton = false;
 
 var descriptionInput = document.getElementById('description');
@@ -622,10 +616,10 @@ var descriptionBool = false;
 
 descriptionInput.addEventListener('input', function () {
     if (descriptionInput.value !== '') {
-        document.getElementById('description').style.backgroundColor = 'green';
+        document.getElementById('description').style.border = '2px solid green';
         descriptionBool = true;
     } else {
-        document.getElementById('description').style.backgroundColor = '#c0392b';
+        document.getElementById('description').style.borderColor = 'darkred';
         descriptionBool = false;
     }
     checkInputs();
@@ -718,18 +712,3 @@ function sendToJava() {
         }
     }
 }
-
-
-// Add event listener to button to add this POI as a waypoint
-// document.addEventListener('DOMContentLoaded', () => {
-//     addToRouteBtn.addEventListener('click', () => {
-//         if (poi.name) {
-//             waypoints.push({coords: poi.coords, name: poi.name || 'Nieznany'});
-//             updateWaypointsList();  // update list of route points
-//             route();
-//             console.log(`Point added ${poi.name} (${poi.coords.join(', ')}) to route`);
-//         } else {
-//             console.log("No name for this point.");
-//         }
-//     });
-// });

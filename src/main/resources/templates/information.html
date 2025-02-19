@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>information Page</title>
+    <link rel="stylesheet" th:href="@{/css/successRedirect.css}">
+</head>
+<body class="background-image" style="background-image: url('/images/background.jpg');">
+
+<div class="info-container">
+    <h1 id="redHeader" th:text="${information}">information</h1>
+    <p>You will be redirected <span id="countdown"> 3</span> seconds...</p>
+</div>
+
+<input type="hidden" th:value="${nextPage}" id="nextPage">
+
+<script>
+    // time to redirect (in sec)
+    var countdownTime = 4;
+    var countdownElement = document.getElementById("countdown");
+    var nextPage = document.getElementById("nextPage").value;
+
+
+    var countdownInterval = setInterval(function () {
+        countdownTime--;
+        countdownElement.textContent = countdownTime;
+
+        if (countdownTime === 0) {
+            clearInterval(countdownInterval);
+
+            // actual URL
+            var currentURL = window.location.pathname;
+            window.location.href = nextPage; //default
+
+        }
+    }, 1000);
+</script>
+
+</body>
+</html>

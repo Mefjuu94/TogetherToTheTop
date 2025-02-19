@@ -53,9 +53,9 @@ public class PeaksAndSummitsHandler {
                         String latitude = String.valueOf(row.getCell((short) 2));
                         String longitude = String.valueOf(row.getCell((short) 3));
                         String[] height = heightDouble.split("\\.");
-                        latitude = latitude.replace(",",".");
-                        longitude = longitude.replace(",",".");
-                        polishSummits.add(new Top(name,Integer.parseInt(height[0]),Float.parseFloat(latitude),Float.parseFloat(longitude)));
+                        latitude = latitude.replace(",", ".");
+                        longitude = longitude.replace(",", ".");
+                        polishSummits.add(new Top(name, Integer.parseInt(height[0]), Float.parseFloat(latitude), Float.parseFloat(longitude)));
                     }
 
                 }
