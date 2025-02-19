@@ -28,34 +28,12 @@ public class CustomUserDAO {
         this.sessionFactory = testSessionFactory;
     }
 
-
-    public boolean isValidPassword(String password) {
-        if (password.length() < 8) {
-            return false;
-        }
-
-        boolean hasUppercase = false;
-        boolean hasDigit = false;
-
-        for (int i = 0; i < password.length(); i++) {
-            char c = password.charAt(i);
-            if (Character.isUpperCase(c)) {
-                hasUppercase = true;
-            } else if (Character.isDigit(c)) {
-                hasDigit = true;
-            }
-        }
-
-        return hasUppercase && hasDigit;
-    }
-
-
     public boolean saveUser(CustomUser customUser) {
 
         if (findCustomUserByEmail(customUser.getEmail()) != null) {
             return false;
         }
-        if (customUser.getPassword() == null || isValidPassword(customUser.getPassword())) {
+        if (customUser.getPassword() == null || !isValidPassword(customUser.getPassword())) {
             return false;
         }
         String username = customUser.getEmail().substring(0, customUser.getEmail().indexOf("@"));
@@ -337,5 +315,25 @@ public class CustomUserDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public boolean isValidPassword(String password) {
+        if (password.length() < 8) {
+            return false;
+        }
+
+        boolean hasUppercase = false;
+        boolean hasDigit = false;
+
+        for (int i = 0; i < password.length(); i++) {
+            char c = password.charAt(i);
+            if (Character.isUpperCase(c)) {
+                hasUppercase = true;
+            } else if (Character.isDigit(c)) {
+                hasDigit = true;
+            }
+        }
+
+        return hasUppercase && hasDigit;
     }
 }

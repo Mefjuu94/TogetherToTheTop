@@ -9,13 +9,13 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 public class DAOFactoryForMockTests {
-    private static CustomUserDAO customUserDAO;
-    private static UserRatingDAO userRatingDAO;
-    private static TripDAO tripDAO;
-    private static CommentsDAO commentsDAO;
+    private static final CustomUserDAO customUserDAO;
+    private static final UserRatingDAO userRatingDAO;
+    private static final TripDAO tripDAO;
+    private static final CommentsDAO commentsDAO;
 
-    private static PostgreSQLContainer<?> postgresqlContainer;
-    private static SessionFactory sessionFactory;
+    private static final PostgreSQLContainer<?> postgresqlContainer;
+    private static final SessionFactory sessionFactory;
 
     static {
         postgresqlContainer = new PostgreSQLContainer<>(DockerImageName.parse("postgres:16"))
@@ -36,10 +36,8 @@ public class DAOFactoryForMockTests {
     }
 
     public static void clearDatabase() {
-        Session session = sessionFactory.openSession();
         Transaction transaction = null;
-
-        try {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
 
             session.createQuery("DELETE FROM Comments").executeUpdate();
@@ -52,8 +50,6 @@ public class DAOFactoryForMockTests {
                 transaction.rollback();
             }
             e.printStackTrace();
-        } finally {
-            session.close();
         }
     }
 

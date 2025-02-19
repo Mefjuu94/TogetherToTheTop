@@ -9,10 +9,9 @@ import java.util.ArrayList;
 public class EntityFactoryForTests {
 
     protected static CustomUser createTestUser() {
-        CustomUser customUser = new CustomUser(1, "test@mail.com", "testUser123!",
+        return new CustomUser(1, "test@mail.com", "TestUser123!",
                 "testUser", 99, 0, 0, new ArrayList<>(),
                 new ArrayList<>(), "city", 0);
-        return customUser;
     }
 
     protected static Trip createTestTrip() {

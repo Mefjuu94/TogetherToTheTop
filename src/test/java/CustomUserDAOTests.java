@@ -212,6 +212,13 @@ public class CustomUserDAOTests {
     }
 
     @Test
+    public void updateUserFieldPasswordTest(){
+        testObject.saveUser(testCustomUser);
+        //password
+        Assertions.assertTrue(testObject.updateUserField("TestUser1234","test@mail.com","password"));
+    }
+
+    @Test
     public void updateUserFieldTestFail(){
         testObject.saveUser(testCustomUser);
         //email
@@ -220,6 +227,10 @@ public class CustomUserDAOTests {
         Assertions.assertFalse(testObject.updateUserField("MyNewName","test@mail.com","user")); // invalid field
         //city
         Assertions.assertFalse(testObject.updateUserField(null,"test@mail.com","city")); // null value
+        //password
+        Assertions.assertFalse(testObject.updateUserField(null,"test@mail.com","password")); // null value
+        Assertions.assertFalse(testObject.updateUserField("123abc","test@mail.com","password")); //too short
+
     }
 
     @Test
