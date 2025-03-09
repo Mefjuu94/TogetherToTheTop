@@ -29,7 +29,7 @@ public class IndexPageController {
     }
 
     @GetMapping("privacyPolicy")
-    public String getPrivacyPolicyPage(Model model) {
+    public String getPrivacyPolicyPage() {
 
         return "privacyPolicy";
     }

@@ -196,18 +196,16 @@ public class AnnouncementController {
             email = methodsHandler.getLoggedInUserName();
         }
         if (customUserDAO.updateUserTrips(email, userTrips)){
-            String nextPage = "/trips/" + tripId;
-            model.addAttribute("nextPage", nextPage);
-
-            return "actionSuccess";
+            return "redirect:/trips/" + tripId; //reload page
         }else {
-            String information = "something went wrong: Cannot add user as participant to Trip";
-            String nextPage = "/passwordRetrieve";
+            String message = "something went wrong: Cannot add user as participant to Trip";
+            String nextPage = "/trips/" + tripId;
 
             model.addAttribute("nextPage", nextPage);
-            model.addAttribute("information",information);
+            model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            model.addAttribute("message",message);
 
-            return "information";
+            return "error/generic";
         }
     }
 
@@ -215,18 +213,16 @@ public class AnnouncementController {
     public String addComment(@RequestParam long tripIdComment, @RequestParam String comment, @RequestParam long userIdComment, @RequestParam String userName, Model model) {
 
         if (commentsDAO.addComment(new Comments(comment, userIdComment, tripIdComment, userName))){
-            String nextPage = "/trips/" + tripIdComment;
-            model.addAttribute("nextPage", nextPage);
-
-            return "actionSuccess";
+            return "redirect:/trips/" + tripIdComment; //reload page
         }else {
-            String information = "something went wrong: Cannot add Comment to Trip";
-            String nextPage = "/passwordRetrieve";
+            String message = "something went wrong: Cannot add Comment to Trip";
+            String nextPage = "/trips/" + tripIdComment;
 
             model.addAttribute("nextPage", nextPage);
-            model.addAttribute("information",information);
+            model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            model.addAttribute("message",message);
 
-            return "information";
+            return "error/generic";
         }
     }
 
@@ -236,19 +232,16 @@ public class AnnouncementController {
         long commentID = Long.parseLong(idComment);
 
         if (commentsDAO.deleteComment(commentID)) {
-            System.out.println("comment was deleted!");
-            String page = "/trips/" + idOfTrip;
-            model.addAttribute("page", page);
-
-            return "actionSuccess";
+            return "redirect:/trips/" + idOfTrip; //reload page
         } else {
-            String information = "something went wrong: Cannot delete comment";
-            String nextPage = "/passwordRetrieve";
+            String message = "something went wrong: Cannot delete comment";
+            String nextPage = "/trips/" + idOfTrip;
 
             model.addAttribute("nextPage", nextPage);
-            model.addAttribute("information",information);
+            model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            model.addAttribute("message",message);
 
-            return "information";
+            return "error/generic";
         }
     }
 
@@ -273,19 +266,16 @@ public class AnnouncementController {
 
         trip.setParticipants(newParticipants);
         if (tripDAO.updateTrip(trip)) {
-
-            String nextPage = "/trips/" + tripId;
-            model.addAttribute("nextPage", nextPage);
-
-            return "actionSuccess";
+            return "redirect:/trips/" + tripId; //reload page
         }else {
-            String information = "something went wrong: Cannot delete Participant from list!";
-            String nextPage = "/passwordRetrieve";
+            String message = "something went wrong: Cannot delete Participant from list!";
+            String nextPage = "/trips/" + tripId;
 
             model.addAttribute("nextPage", nextPage);
-            model.addAttribute("information",information);
+            model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            model.addAttribute("message",message);
 
-            return "information";
+            return "error/generic";
         }
     }
 
@@ -294,7 +284,7 @@ public class AnnouncementController {
 
         long tripID = Long.parseLong(tripId);
 
-        Trip trip = tripDAO.findTripID(tripID);
+        Trip trip = tripDAO.findTripID(0);
 
         if (tripDAO.deleteTrip(trip)){
             String nextPage = "/announcement";
@@ -302,13 +292,14 @@ public class AnnouncementController {
 
             return "actionSuccess";
         }else {
-            String information = "something went wrong: Cannot delete Participant from list!";
-            String nextPage = "/passwordRetrieve";
+            String message = "something went wrong: Cannot delete Trip!";
+            String nextPage = "/trips/" + tripId;
 
             model.addAttribute("nextPage", nextPage);
-            model.addAttribute("information",information);
+            model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            model.addAttribute("message",message);
 
-            return "information";
+            return "error/generic";
         }
     }
 
@@ -330,13 +321,14 @@ public class AnnouncementController {
 
             return "actionSuccess";
         }else {
-            String information = "something went wrong: cannot renew trip!";
-            String nextPage = "/passwordRetrieve";
+            String message = "something went wrong: cannot renew trip!";
+            String nextPage = "/trips/" + trip;
 
             model.addAttribute("nextPage", nextPage);
-            model.addAttribute("information",information);
+            model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            model.addAttribute("message",message);
 
-            return "information";
+            return "error/generic";
         }
     }
 }

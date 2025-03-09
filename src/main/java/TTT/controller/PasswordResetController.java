@@ -2,6 +2,7 @@ package TTT.controller;
 
 import TTT.databaseUtils.CustomUserDAO;
 import TTT.users.CustomUser;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +13,7 @@ import java.util.List;
 @Controller
 public class PasswordResetController {
 
-    CustomUserDAO customUserDAO = new CustomUserDAO();
-    CustomUser customUser = new CustomUser();
+    private final CustomUserDAO customUserDAO = new CustomUserDAO();
 
     @GetMapping("passwordRetrieve")
     public String getPasswordRetrievePage(Model model) {
@@ -28,20 +28,22 @@ public class PasswordResetController {
         return "passwordRetrieve";
     }
 
-    @GetMapping("information")
+    @GetMapping("loginFailure")
     public String getInformationPage(Model model) {
 
-        String information = "please enter valid email or password";
+        String message = "please enter valid email or password";
         String nextPage = "/";
 
         model.addAttribute("nextPage", nextPage);
-        model.addAttribute("information",information);
-        return "information";
+        model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        model.addAttribute("message",message);
+
+        return "error/generic";
     }
 
     @PostMapping("/resetPassword")
     public String resetPassword(@RequestParam String email, @RequestParam String newPassword, Model model) {
-        customUser = customUserDAO.findCustomUserByEmail(email);
+        CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
         if (customUser != null) {
             String pass = customUser.getPassword();
             if (customUserDAO.isValidPassword(pass)){
@@ -54,23 +56,25 @@ public class PasswordResetController {
 
             return "actionSuccess";
             }else {
-                String information = "enter valid PASSWORD";
-                String nextPage = "/passwordRetrieve";
+                String message = "enter valid PASSWORD";
+                String nextPage = "passwordRetrieve";
 
                 model.addAttribute("nextPage", nextPage);
-                model.addAttribute("information",information);
+                model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+                model.addAttribute("message",message);
 
-                return "information";
+                return "error/generic";
             }
         }
         else {
-            String information = "enter valid EMAIL";
-            String nextPage = "/passwordRetrieve";
+            String message = "enter valid EMAIL";
+            String nextPage = "passwordRetrieve";
 
             model.addAttribute("nextPage", nextPage);
-            model.addAttribute("information",information);
+            model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            model.addAttribute("message",message);
 
-            return "information";
+            return "error/generic";
         }
     }
 }

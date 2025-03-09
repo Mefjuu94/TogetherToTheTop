@@ -5,6 +5,7 @@ import TTT.databaseUtils.TripDAO;
 import TTT.trips.GPX;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -94,13 +95,14 @@ public class MapController {
 
             return "actionSuccess";
         }else {
-            String information = "something went wrong: Cannot add announcement!";
-            String nextPage = "/passwordRetrieve";
+            String message = "something went wrong: Cannot add announcement!";
+            String nextPage = "/map";
 
             model.addAttribute("nextPage", nextPage);
-            model.addAttribute("information",information);
+            model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            model.addAttribute("message",message);
 
-            return "information";
+            return "error/generic";
         }
     }
 

@@ -28,7 +28,7 @@ public class DateChecker {
     }
 
     @Transactional
-    @Scheduled(fixedRate = 60000 * 10) // 60000 = 1 minute // Co 6 godzin 6 * 60 * 60 * 1000
+    @Scheduled(fixedRate = 60000) // 60000 = 1 minute // Co 6 godzin 6 * 60 * 60 * 1000
     public void checkDatesToCreateRatesAndUpdateTrips() {
         List<Trip> entities = tripDAO.listAllAnnouncements();
 
@@ -47,9 +47,9 @@ public class DateChecker {
                     entity.setTripVisible(false);
 
                     for (int i = 0; i < participants.size(); i++) {
-                        for (int j = 0; j < participants.size(); j++) {
-                            if (participants.get(i) != participants.get(j)) {
-                                userRatingDAO.addRate(new UserRating(0, entity, false, "", participants.get(i), participants.get(j)));
+                        for (CustomUser participant : participants) {
+                            if (participants.get(i) != participant) {
+                                userRatingDAO.addRate(new UserRating(0, entity, false, "", participants.get(i), participant));
                             }
                         }
                     }

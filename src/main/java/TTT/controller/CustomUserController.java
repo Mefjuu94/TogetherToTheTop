@@ -6,6 +6,7 @@ import TTT.databaseUtils.UserRatingDAO;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
 import TTT.users.UserRating;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -105,18 +106,16 @@ public class CustomUserController {
 
         if (fieldName.equals("age")) {
             if(customUserDAO.updateUserAge(email, Integer.parseInt(newValue))){
-                String nextPage = "/myProfile";
-                model.addAttribute("nextPage", nextPage);
-
-                return "actionSuccess";
+                return "redirect:/myProfile"; //reload page
             }else {
-                String information = "something went wrong: Cannot set Age. Try again with digits only!";
-                String nextPage = "/passwordRetrieve";
+                String message = "something went wrong: Cannot set Age. Try again with digits only!";
+                String nextPage = "/myProfile";
 
                 model.addAttribute("nextPage", nextPage);
-                model.addAttribute("information",information);
+                model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+                model.addAttribute("message",message);
 
-                return "information";
+                return "error/generic";
             }
         } else {
             if (customUserDAO.updateUserField(newValue, email, fieldName)){
@@ -125,13 +124,14 @@ public class CustomUserController {
 
                 return "actionSuccess";
             }else {
-                String information = "something went wrong: Cannot set chosen parameter!";
-                String nextPage = "/passwordRetrieve";
+                String message = "something went wrong: Cannot set chosen parameter!";
+                String nextPage = "/myProfile";
 
                 model.addAttribute("nextPage", nextPage);
-                model.addAttribute("information",information);
+                model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+                model.addAttribute("message",message);
 
-                return "information";
+                return "error/generic";
             }
         }
     }
@@ -159,19 +159,16 @@ public class CustomUserController {
 
         Trip trip = tripDAO.findTripID(Long.parseLong(tripId));
         if (userRatingDAO.editRate(Long.parseLong(rateId), Integer.parseInt(rate),trip,behavior)) {
-
-            String nextPage = "/rate";
-            model.addAttribute("nextPage", nextPage);
-
-            return "actionSuccess";
+            return "redirect:/rate/";
         }else {
-            String information = "something went wrong: Cannot add rate!";
-            String nextPage = "/passwordRetrieve";
+            String message = "something went wrong: Cannot add rate!";
+            String nextPage = "/trips/" + trip;
 
             model.addAttribute("nextPage", nextPage);
-            model.addAttribute("information",information);
+            model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            model.addAttribute("message",message);
 
-            return "information";
+            return "error/generic";
         }
     }
 }

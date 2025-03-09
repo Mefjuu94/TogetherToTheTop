@@ -61,12 +61,12 @@ public class GPX {
 
         if (!folder.exists()) {
             if (folder.mkdirs()) {
-                System.out.println("Folder został utworzony: " + folderPath);
+                System.out.println("The folder has been created: " + folderPath);
             } else {
-                System.out.println("Nie udało się utworzyć folderu.");
+                System.out.println("Failed to create folder.");
             }
         } else {
-            System.out.println("Folder już istnieje.");
+            System.out.println("The folder already exists.");
         }
 
         try (FileWriter fileWriter = new FileWriter(filePath)) {

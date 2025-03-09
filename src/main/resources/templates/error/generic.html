@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error 500</title>
+    <link rel="stylesheet" th:href="@{/css/redirectMessage.css}">
+</head>
+<body>
+<div class="error-container">
+    <h1 th:text="${message}">message</h1>
+    <div th:if="request != null">
+    </div>
+    <div th:if="request == null">
+        <p>The server encountered an internal error that it cannot handle. This is usually a problem on the server side, not the client.</p>
+    </div>
+    <p>You will be redirected to previous page in <span id="countdown">10</span> seconds...</p>
+    <p id="nextPage" th:text="${nextPage}" style="display:none;"></p>
+</div>
+<script th:inline="javascript">
+    // time to redirect (in sec)
+    var countdownTime = 10;
+    var countdownElement = document.getElementById("countdown");
+
+    var countdownInterval = setInterval(function () {
+        countdownTime--;
+        countdownElement.textContent = countdownTime;
+
+        if (countdownTime === 0) {
+            clearInterval(countdownInterval);
+            window.location.href = document.getElementById("nextPage").textContent;
+
+        }
+    }, 1000);
+</script>
+</body>
+</html>

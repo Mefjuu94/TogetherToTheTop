@@ -39,11 +39,11 @@
                          th:src="@{/images/announcement/owner.png}"
                          alt="You are the owner of Trip" class="icon-image owner-icon">
 
-                    <img th:if="${trip.owner.id != customUser.id and !#lists.contains(tripsAndIDs,helperVar)}"
+                    <img th:if="${trip.owner.id != customUser.id and !#lists.contains(flag,helperVar)}"
                          th:src="@{/images/announcement/add.png}"
                          alt="Add me to trip" class="icon-image flag-icon">
 
-                    <img th:if="${trip.getId() != customUser.getId() and #lists.contains(tripsAndIDs,helperVar)}"
+                    <img th:if="${trip.getId() != customUser.getId() and #lists.contains(flag,helperVar)}"
                          th:src="@{/images/announcement/ok.png}"
                          alt="You are already on this trip" class="icon-image flag-icon">
                 </h2></div>

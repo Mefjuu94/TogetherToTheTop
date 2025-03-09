@@ -14,7 +14,7 @@ import java.io.IOException;
 public class CustomErrorController implements ErrorController {
 
     @RequestMapping("/error")
-    public String handleError(HttpServletRequest request, Model model) throws IOException {
+    public String handleError(HttpServletRequest request, Model model,String message,String nextPage) throws IOException {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
         if (status != null) {
@@ -38,6 +38,10 @@ public class CustomErrorController implements ErrorController {
                 return "error/400";
             }
         }
+
+        model.addAttribute("nextPage",nextPage);
+        model.addAttribute("message",message);
+        model.addAttribute("request",request);
         return "error/generic";
     }
 

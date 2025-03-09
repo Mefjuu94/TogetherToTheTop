@@ -13,7 +13,7 @@ body {
     background-repeat: no-repeat;
     min-height: 100vh;
     font-family: Arial, sans-serif;
-    color: #fff;
+    color: black;
     position: relative;
     background-color: #2c3e50;
 }
@@ -26,7 +26,7 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.info-container {
+.error-container {
     background-color: rgba(255, 255, 255, 0.8);
     padding: 40px;
     border-radius: 10px;
@@ -48,7 +48,7 @@ body {
 }
 
 
-.info-container h1 {
+.error-container h1 {
     margin: 0 0 20px 0;
     font-weight: bold;
     color: #c0392b;

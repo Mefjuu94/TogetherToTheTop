@@ -45,13 +45,9 @@ public class SecurityController {
 
             return "actionSuccess";
         } else {
-            String information = "something went wrong: cannot register user!";
-            String nextPage = "/passwordRetrieve";
-
-            model.addAttribute("nextPage", nextPage);
-            model.addAttribute("information", information);
-
-            return "information";
+            String errorMessage = "Something went wrong: cannot register user!";
+            model.addAttribute("errorMessage", errorMessage);
+            return "/error";
         }
     }
 }
