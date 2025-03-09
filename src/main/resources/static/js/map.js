@@ -1,7 +1,5 @@
-// Replace with your own API key
-const API_KEY = 'zjEFy9NsTMuP_e3U9_B0sDu_axPSSl28smWg1PXW4i0';
+import { API_KEY_MAP_CZ } from './apiKeys.js';
 
-// Initialize temporary coordinates
 let tempCoordinates = null;
 let savedMarker = null;
 let allRouteDuration = null;
@@ -18,7 +16,7 @@ const map = new maplibregl.Map({
         sources: {
             'basic-tiles': {
                 type: 'raster',
-                url: `https://api.mapy.cz/v1/maptiles/outdoor/tiles.json?apikey=${API_KEY}`,
+                url: `https://api.mapy.cz/v1/maptiles/outdoor/tiles.json?apikey=${API_KEY_MAP_CZ}`,
                 tileSize: 256,
             },
             'route-geometry': {
@@ -277,7 +275,7 @@ async function route() {
     if (waypoints.length < 2) return;
 
     const url = new URL('https://api.mapy.cz/v1/routing/route');
-    url.searchParams.set('apikey', API_KEY);
+    url.searchParams.set('apikey', API_KEY_MAP_CZ);
     url.searchParams.set('lang', 'cs');
     url.searchParams.set('start', waypoints[0].coords.join(','));
     url.searchParams.set('end', waypoints[waypoints.length - 1].coords.join(','));
@@ -294,7 +292,7 @@ async function route() {
         source.setData(json.geometry);
 
         // console.log(json.geometry);
-        console.log(json.geometry.geometry);
+        // console.log(json.geometry.geometry);
 
         getArraryOfCoordinates(json.geometry);
 
@@ -326,7 +324,7 @@ function getArraryOfCoordinates(feature) {
 map.on('click', (e) => {
     const coords = [e.lngLat.lng, e.lngLat.lat];
     tempCoordinates = coords;
-    console.log(`coordinates saved: ${coords.join(', ')}`);
+    // console.log(`coordinates saved: ${coords.join(', ')}`);
 
     // add marker where clicked
     if (savedMarker) {
@@ -347,7 +345,7 @@ map.on('click', (e) => {
         waypoints.push({coords: tempCoordinates, name: 'My Point'});
         updateWaypointsList();
         route();  // count route
-        console.log("Waypoint added at:", tempCoordinates);
+        // console.log("Waypoint added at:", tempCoordinates);
         popup.remove();  // delete popup after add point
     });
 
@@ -388,7 +386,7 @@ function updateWaypointsList() {
             updateWaypointsList(); // update list
             route(); // count route
 
-            console.log(waypoints.length)
+            // console.log(waypoints.length)
             if (waypoints.length < 2) {
                 document.getElementById('distance').textContent = `0 km`;
                 document.getElementById('duration').textContent = `0 s`;
@@ -409,14 +407,14 @@ document.getElementById('addSavedWaypointBtn').addEventListener('click', () => {
         waypoints.push({coords: tempCoordinates, name: 'My Point'});
         updateWaypointsList();
         route();  // count route
-        console.log("Added saved point:", tempCoordinates);
+        // console.log("Added saved point:", tempCoordinates);
 
         // add marker to saved waypoint
         const savedMarker = new maplibregl.Marker()
             .setLngLat(tempCoordinates)
             .addTo(map);
     } else {
-        console.log("no coordinates tom save.");
+        // console.log("no coordinates tom save.");
     }
 });
 
@@ -431,12 +429,12 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
             method: 'GET',
             headers: {
                 'accept': 'application/json',
-                'X-Mapy-Api-Key': API_KEY
+                'X-Mapy-Api-Key': API_KEY_MAP_CZ
             }
         });
 
         const data = await response.json();
-        console.log('Results:', data); // Logowanie wyników w konsoli
+        // console.log('Results:', data); // Logowanie wyników w konsoli
 
         // Wyczyść poprzednie wyniki
         const searchResults = document.getElementById('searchResults');
@@ -505,7 +503,7 @@ document.getElementById('addSavedWaypointBtn').addEventListener('click', () => {
         waypoints.push({coords: tempCoordinates, name: 'My Point'}); // change nape of point to  "My Point" instead of coordinates
         updateWaypointsList();
         route();
-        console.log("added saved point:", tempCoordinates);
+        // console.log("added saved point:", tempCoordinates);
     } else {
         console.log("No coordinates to save.");
     }
@@ -514,7 +512,7 @@ document.getElementById('addSavedWaypointBtn').addEventListener('click', () => {
 map.on('click', (e) => {
     const coords = [e.lngLat.lng, e.lngLat.lat];
     tempCoordinates = coords;
-    console.log(`coordinates saved: ${coords.join(', ')}`);
+    // console.log(`coordinates saved: ${coords.join(', ')}`);
 
     // add marker when clicked
     if (savedMarker) {
@@ -542,7 +540,7 @@ function locateUser() {
                 zoom: 14
             });
 
-            console.log(`User localized:: ${userCoords.join(', ')}`);
+            // console.log(`User localized:: ${userCoords.join(', ')}`);
         }, (error) => {
             console.error("localization error: ", error.message);
             alert("can't localize user.");
@@ -551,9 +549,6 @@ function locateUser() {
         alert("Your browser does not support geolocation.");
     }
 }
-
-// add listener to localize user
-document.getElementById('locateMeBtn').addEventListener('click', locateUser);
 
 // get checkbox and display field
 const closedGroupCheckbox = document.getElementById('closedGroupCheckbox');
@@ -614,7 +609,6 @@ peopleInput.addEventListener('input', function () {
 });
 
 
-///////////////////////////////////////////////////////////////////////
 var activeSendButton = false;
 
 var descriptionInput = document.getElementById('description');
@@ -622,10 +616,10 @@ var descriptionBool = false;
 
 descriptionInput.addEventListener('input', function () {
     if (descriptionInput.value !== '') {
-        document.getElementById('description').style.backgroundColor = 'green';
+        document.getElementById('description').style.border = '2px solid green';
         descriptionBool = true;
     } else {
-        document.getElementById('description').style.backgroundColor = '#c0392b';
+        document.getElementById('description').style.borderColor = 'darkred';
         descriptionBool = false;
     }
     checkInputs();
@@ -675,6 +669,17 @@ function checkInputs() {
     }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    // Dodaj listener do przycisku "Add announcement"
+    const addAnnouncementButton = document.getElementById('add_announcement');
+    if (addAnnouncementButton) {
+        addAnnouncementButton.addEventListener('click', sendToJava);
+    } else {
+        console.error("Nie znaleziono elementu o id 'add_announcement'");
+    }
+});
+
+
 function sendToJava() {
 
     if(activeSendButton) {
@@ -718,18 +723,3 @@ function sendToJava() {
         }
     }
 }
-
-
-// Add event listener to button to add this POI as a waypoint
-// document.addEventListener('DOMContentLoaded', () => {
-//     addToRouteBtn.addEventListener('click', () => {
-//         if (poi.name) {
-//             waypoints.push({coords: poi.coords, name: poi.name || 'Nieznany'});
-//             updateWaypointsList();  // update list of route points
-//             route();
-//             console.log(`Point added ${poi.name} (${poi.coords.join(', ')}) to route`);
-//         } else {
-//             console.log("No name for this point.");
-//         }
-//     });
-// });

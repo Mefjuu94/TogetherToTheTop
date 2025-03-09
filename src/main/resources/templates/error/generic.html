@@ -3,24 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Error 500</title>
-    <link rel="stylesheet" th:href="@{/css/errorStyles.css}">
+    <link rel="stylesheet" th:href="@{/css/redirectMessage.css}">
 </head>
 <body>
 <div class="error-container">
-    <h1>Error Page 500 – "Internal Server Error"</h1>
+    <h1 th:text="${message}">message</h1>
     <div th:if="request != null">
-        <p>Incorrect Login or Password!</p>
     </div>
     <div th:if="request == null">
         <p>The server encountered an internal error that it cannot handle. This is usually a problem on the server side, not the client.</p>
     </div>
-    <p>You will be redirected to the home page in <span id="countdown">10</span> seconds...</p>
+    <p>You will be redirected to previous page in <span id="countdown">10</span> seconds...</p>
+    <p id="nextPage" th:text="${nextPage}" style="display:none;"></p>
 </div>
-<script>
+<script th:inline="javascript">
     // time to redirect (in sec)
     var countdownTime = 10;
     var countdownElement = document.getElementById("countdown");
-
 
     var countdownInterval = setInterval(function () {
         countdownTime--;
@@ -28,10 +27,7 @@
 
         if (countdownTime === 0) {
             clearInterval(countdownInterval);
-
-            // actual URL
-            var currentURL = window.location.pathname;
-            window.location.href = '/'; //default
+            window.location.href = document.getElementById("nextPage").textContent;
 
         }
     }, 1000);

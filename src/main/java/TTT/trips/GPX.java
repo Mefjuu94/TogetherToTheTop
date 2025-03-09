@@ -3,13 +3,14 @@ package TTT.trips;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class GPX {
 
 
-    public void makeGPX(String geoJsonString, int numberOfWaypoints, String filePath) throws IOException {
+    public void makeGPX(String geoJsonString, int numberOfWaypoints, String filePath) {
 
         String jsonString = "{\"geometry\": {\"type\": \"LineString\", \"coordinates\": [" + geoJsonString + "]}}";
         JSONObject geoJson = new JSONObject(jsonString);
@@ -23,7 +24,8 @@ public class GPX {
         double start1 = 0;
         double start2 = 0;
 
-        int counterOfRepeat = 0; 
+        int counterOfRepeat = 0;
+
 
         for (int i = 0; i < coordinates.length(); i++) {
             JSONArray coord = coordinates.getJSONArray(i);
@@ -40,8 +42,6 @@ public class GPX {
                 counterOfRepeat += 1;
 
                 if (counterOfRepeat == numberOfWaypoints-1) {
-                    //When number of repeats of starting point is number of (waypoints-1) then:
-                    // reset route to avoid back in to start point, and start Again.
                     gpxContent = new StringBuilder();
                     gpxContent.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
                     gpxContent.append("<gpx version=\"1.1\" creator=\"GPXCreator\">\n");
@@ -55,7 +55,20 @@ public class GPX {
         gpxContent.append("  </rte>\n");
         gpxContent.append("</gpx>");
 
-        // write to file
+        String folderPath = "src/main/resources/routes";
+
+        File folder = new File(folderPath);
+
+        if (!folder.exists()) {
+            if (folder.mkdirs()) {
+                System.out.println("The folder has been created: " + folderPath);
+            } else {
+                System.out.println("Failed to create folder.");
+            }
+        } else {
+            System.out.println("The folder already exists.");
+        }
+
         try (FileWriter fileWriter = new FileWriter(filePath)) {
             fileWriter.write(gpxContent.toString());
             fileWriter.close();
@@ -63,7 +76,5 @@ public class GPX {
         } catch (IOException e) {
             System.err.println("Error when trying to save: " + e.getMessage());
         }
-
     }
-
 }

@@ -17,8 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const tripInfo = document.getElementById("trip_info");
 
-
-//////////////////////////////////////////////
     window.onclick = function (event) {
         if (event.target === tripInfo) {
             tripInfo.style.display = "none";
@@ -32,15 +30,12 @@ document.addEventListener("DOMContentLoaded", function () {
             tripInfo.style.display = "block";
         }
 
-
         const closeAbout = tripInfo.querySelector(".close");
 
         closeAbout.onclick = function () {
             tripInfo.style.display = "none";
         }
 
-
-        // Zamknięcie modalów po kliknięciu w tło
         window.onclick = function (event) {
             if (event.target === tripInfo) {
                 tripInfo.style.display = "none";
@@ -48,4 +43,3 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 });
-
