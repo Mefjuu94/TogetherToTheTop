@@ -13,9 +13,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,53 +32,34 @@ import java.util.*;
 @Controller
 public class AnnouncementController {
 
-    TripDAO tripDAO = new TripDAO();
-    CommentsDAO commentsDAO = new CommentsDAO();
+    private final TripDAO tripDAO = new TripDAO();
+    private final CommentsDAO commentsDAO = new CommentsDAO();
+    private final MethodsHandler methodsHandler = new MethodsHandler();
+    private final CustomUserDAO customUserDAO = new CustomUserDAO();
 
     @GetMapping("/announcement")
     public String getAnnouncementsPage(Model model) {
-        TripDAO tripDAO = new TripDAO();
-        ArrayList<Trip> rawtrips = new ArrayList<>(tripDAO.listAllAnnouncements());
+        List<Trip> rawTrips = tripDAO.listAllAnnouncements();
 
         LocalDateTime localDateTime = LocalDateTime.now();
-        ArrayList<Trip> trips = new ArrayList<>();
-        for (int i = 0; i < rawtrips.size(); i++) {
-            if (localDateTime.isAfter(rawtrips.get(i).getTripDateTime())){
-                System.out.println("ten trip: " + rawtrips.get(i).getDestination() + " jest już odbyta!");
-            }else {
-                trips.add(rawtrips.get(i));
+        List<Trip> trips = new ArrayList<>();
+        for (Trip rawTrip : rawTrips) {
+            if (!localDateTime.isAfter(rawTrip.getTripDateTime())) { //added to list only before dateTime of trip
+                trips.add(rawTrip);
             }
         }
 
-
-
         Collections.reverse(trips);
-        String email = getLoggedInUserName();
+        String email = methodsHandler.getLoggedInUserName();
         CustomUserDAO customUserDAO = new CustomUserDAO();
 
         boolean flag = false;
 
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
-        List<Object[]> obejcts = tripDAO.listAllTripParticipantIds();
-        List<String> tripsAndIDs = new ArrayList<>();
-
-        for (int i = 0; i < obejcts.size(); i++) {
-
-            String s1 = Arrays.toString(obejcts.get(i));
-            String s = s1.replaceAll("[\\[\\]\\s]", "");
-            String[] split = s.split(",");
-            String tripID = split[0];
-            String userID = split[1];
-            System.out.println("trip id = " + tripID);
-            System.out.println("user id = " + userID);
-            tripsAndIDs.add(userID + "," + tripID);
-        }
-
 
         model.addAttribute("trips", trips);
         model.addAttribute("customUser", customUser);
         model.addAttribute("flag", flag);
-        model.addAttribute("tripsAndIDs", tripsAndIDs);
 
 
         return "announcement";
@@ -89,13 +67,13 @@ public class AnnouncementController {
 
     @GetMapping("/trips/{id}")
     public String getTripDetails(@PathVariable Long id, Model model) {
-        String email = getLoggedInUserName();
+        String email = methodsHandler.getLoggedInUserName();
         CustomUserDAO customUserDAO = new CustomUserDAO();
 
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
         Trip trip = tripDAO.findTripID(id);
         CustomUser owner = trip.getOwner();
-        List<Comments> comments = commentsDAO.findByTripID(trip.getId());
+        List<Comments> comments = commentsDAO.findCommentsByTripID(trip.getId());
 
         boolean isParticipant = false;
 
@@ -121,7 +99,6 @@ public class AnnouncementController {
 
         String filePath = "src/main/resources/routes/" + trip.getOwner().getId() + "_" + trip.getTripDateTime().toString().replace(":", "_") + "_route.gpx";
 
-        // if didnbt exist write new file gpx
         File file = new File(filePath);
         if (!file.exists()) {
             try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
@@ -133,18 +110,15 @@ public class AnnouncementController {
             }
         }
 
-        // check if exist and preapare for download
         Path path = Paths.get(filePath);
         if (!Files.exists(path)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
-        // Pobranie pliku jako zasób
         Resource fileResource = new FileSystemResource(file);
 
         String fileName = trip.getOwner().getId() + "_" + trip.getTripDateTime().toString().replace(":", "_") + "_route.gpx";
 
-        // set answer HTTP
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM) //  OCTET_STREAM for binary Files
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
@@ -160,8 +134,8 @@ public class AnnouncementController {
         List<UserRating> rating = customUser.getRatings();
         int rate = 0;
         if (!rating.isEmpty()) {
-            for (int i = 0; i < rating.size(); i++) {
-                rate += rating.get(i).getRating();
+            for (UserRating userRating : rating) {
+                rate += userRating.getRating();
             }
             rate = rate / rating.size();
         } else {
@@ -171,95 +145,85 @@ public class AnnouncementController {
         List<Trip> trips = tripDAO.listAllAnnouncements();
 
         int numberOfTripsOwned = 0;
-        for (int i = 0; i < trips.size(); i++) {
-            if (trips.get(i).getOwner().getId() == customUser.getId()){
-                numberOfTripsOwned ++;
+        for (Trip trip : trips) {
+            if (trip.getOwner().getId() == customUser.getId()) {
+                numberOfTripsOwned++;
             }
         }
 
-        List<Object[]> obejcts = tripDAO.listAllTripParticipantIds();
-        List<Trip> tripsParticipated = new ArrayList<>();
-
-        for (int i = 0; i < obejcts.size(); i++) {
-            String s1 = Arrays.toString(obejcts.get(i));
-            String s = s1.replaceAll("[\\[\\]\\s]", "");
-            String[] split = s.split(",");
-            long tripID = Long.parseLong(split[0]);
-            long user_id = Long.parseLong(split[1]);
-            System.out.println("trip id = " + tripID);
-            System.out.println("user id = " + user_id);
-            if (user_id == customUser.getId()){
-                Trip trip = tripDAO.findTripID(tripID);
-                tripsParticipated.add(trip);
-            }
-        }
+        Map<Long,List<Long>> mapOfTripAndUsersID = tripDAO.listAllTripParticipantIds();
+        List<Trip> tripsParticipated = methodsHandler.listOfTrips(mapOfTripAndUsersID, customUser);
 
         model.addAttribute("customUser", customUser);
         model.addAttribute("rating", rating);
         model.addAttribute("rate", rate);
-        model.addAttribute("tripsParticipated",tripsParticipated);
-        model.addAttribute("numberOfTripsOwned",numberOfTripsOwned);
+        model.addAttribute("tripsParticipated", tripsParticipated);
+        model.addAttribute("numberOfTripsOwned", numberOfTripsOwned);
+
 
         return "userProfile";
     }
 
     @PostMapping("/addMe")
-    public String addMeToTrip(@RequestParam String tripId, @RequestParam String userId,Model model) {
-
-        System.out.println("get data trip ID: " + tripId);
-        System.out.println("get data user ID: " + userId);
+    public String addMeToTrip(@RequestParam String tripId, @RequestParam String userId, Model model) {
 
         Trip trip = tripDAO.findTripID(Long.parseLong(tripId));
-        CustomUserDAO customUserDAO = new CustomUserDAO();
         CustomUser customUser = customUserDAO.findCustomUserByID(userId);
 
         boolean newUserToTrip = false;
-        //check if user owith this ID is arleady on list
+
         List<CustomUser> users = trip.getParticipants();
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getId() == Long.parseLong(userId)) {
+        for (CustomUser user : users) {
+            if (user.getId() == Long.parseLong(userId)) {
                 newUserToTrip = true;
                 break;
             }
         }
 
-        // if user didnt exist in list add
+        String email = "";
+        List<Trip> userTrips = new ArrayList<>();
         if (!newUserToTrip) {
             List<CustomUser> participants = trip.getParticipants();
             participants.add(customUser);
             trip.setParticipants(participants);
-            //add number to trips participated
-            int changeNumberOfTrips = customUser.getNumbersOfTrips();
-            customUser.setNumbersOfTrips(changeNumberOfTrips + 1);
 
-            List<Trip> userTrips = customUser.getTripsParticipated();
+            userTrips = customUser.getTripsParticipated();
             userTrips.add(trip);
             customUser.setTripsParticipated(userTrips);
 
-            // Zapisz zmiany w bazie danych
-            tripDAO.updateTrip(Long.parseLong(tripId), trip);
+            tripDAO.updateTrip(trip);
 
-            String email = getLoggedInUserName();
-            customUserDAO.updateUserTrips(email, userTrips);
-
-            System.out.println("User " + userId + " added to trip " + tripId);
+            email = methodsHandler.getLoggedInUserName();
         }
+        if (customUserDAO.updateUserTrips(email, userTrips)){
+            return "redirect:/trips/" + tripId; //reload page
+        }else {
+            String message = "something went wrong: Cannot add user as participant to Trip";
+            String nextPage = "/trips/" + tripId;
 
-        String nextPage = "/trips/" + tripId;
-        model.addAttribute("nextPage",nextPage);
+            model.addAttribute("nextPage", nextPage);
+            model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            model.addAttribute("message",message);
 
-        return "actionSuccess";
+            return "error/generic";
+        }
     }
 
     @PostMapping("/addComment")
-    public String addComment(@RequestParam long tripIdComment, @RequestParam String comment, @RequestParam long userIdComment, @RequestParam String userName,Model model) {
+    public String addComment(@RequestParam long tripIdComment, @RequestParam String comment, @RequestParam long userIdComment, @RequestParam String userName, Model model) {
 
-        commentsDAO.addComment(new Comments(comment, userIdComment, tripIdComment, userName));
+        if (commentsDAO.addComment(new Comments(comment, userIdComment, tripIdComment, userName))){
+            return "redirect:/trips/" + tripIdComment; //reload page
+        }else {
+            String message = "something went wrong: Cannot add Comment to Trip";
+            String nextPage = "/trips/" + tripIdComment;
 
-        String nextPage = "/trips/" + tripIdComment;
-        model.addAttribute("nextPage",nextPage);
+            model.addAttribute("nextPage", nextPage);
+            model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            model.addAttribute("message",message);
 
-        return "actionSuccess";
+            return "error/generic";
+        }
     }
 
     @PostMapping("/deleteComment")
@@ -267,23 +231,22 @@ public class AnnouncementController {
 
         long commentID = Long.parseLong(idComment);
 
-        System.out.println(commentID);
-        System.out.println(idOfTrip);
-
         if (commentsDAO.deleteComment(commentID)) {
-            System.out.println("comment was deleted!");
+            return "redirect:/trips/" + idOfTrip; //reload page
         } else {
-            System.out.println("something went wrong");
+            String message = "something went wrong: Cannot delete comment";
+            String nextPage = "/trips/" + idOfTrip;
+
+            model.addAttribute("nextPage", nextPage);
+            model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            model.addAttribute("message",message);
+
+            return "error/generic";
         }
-
-        String page = "/trips/" + idOfTrip;
-        model.addAttribute("page",page);
-
-        return "actionSuccess";
     }
 
-    @PostMapping("/delete_participant")
-    public String deleteParticipant(@RequestParam String user_Identity,@RequestParam String tripId,Model model) {
+    @PostMapping("/deleteParticipant")
+    public String deleteParticipant(@RequestParam String user_Identity, @RequestParam String tripId, Model model) {
 
         long userID = Long.parseLong(user_Identity);
         long tripID = Long.parseLong(tripId);
@@ -302,25 +265,70 @@ public class AnnouncementController {
         }
 
         trip.setParticipants(newParticipants);
-        tripDAO.updateTrip(Long.parseLong(tripId), trip);
+        if (tripDAO.updateTrip(trip)) {
+            return "redirect:/trips/" + tripId; //reload page
+        }else {
+            String message = "something went wrong: Cannot delete Participant from list!";
+            String nextPage = "/trips/" + tripId;
 
-        String nextPage = "/trips/" + tripId;
-        model.addAttribute("nextPage",nextPage);
+            model.addAttribute("nextPage", nextPage);
+            model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            model.addAttribute("message",message);
 
-        return "actionSuccess";
-    }
-
-    private String getLoggedInUserName() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserDetails) {
-                UserDetails userDetails = (UserDetails) principal;
-                return userDetails.getUsername();
-            }
-            return principal.toString();
+            return "error/generic";
         }
-        return null;
     }
 
+    @PostMapping("/deleteTrip")
+    public String deleteTrip(@RequestParam String tripId, Model model) {
+
+        long tripID = Long.parseLong(tripId);
+
+        Trip trip = tripDAO.findTripID(tripID);
+
+        if (tripDAO.deleteTrip(trip)){
+            String nextPage = "/announcement";
+            model.addAttribute("nextPage", nextPage);
+
+            return "actionSuccess";
+        }else {
+            String message = "something went wrong: Cannot delete Trip!";
+            String nextPage = "/trips/" + tripId;
+
+            model.addAttribute("nextPage", nextPage);
+            model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            model.addAttribute("message",message);
+
+            return "error/generic";
+        }
+    }
+
+    @PostMapping("/renewTrip")
+    public String renew_trip(@RequestParam Long trip,@RequestParam LocalDateTime date,@RequestParam String new_description, Model model) {
+
+        Trip renewTrip = tripDAO.findTripID(trip);
+        renewTrip.setTripDateTime(date);
+        renewTrip.setParticipants(new ArrayList<>());
+        renewTrip.setTripVisible(true);
+        renewTrip.setTripDescription(new_description);
+        Trip trip1 = new Trip(); // to automatically create new ID
+        renewTrip.setId(trip1.getId());
+
+        if (tripDAO.addAnnouncement(renewTrip)) {
+
+            String nextPage = "/announcement";
+            model.addAttribute("nextPage", nextPage);
+
+            return "actionSuccess";
+        }else {
+            String message = "something went wrong: cannot renew trip!";
+            String nextPage = "/trips/" + trip;
+
+            model.addAttribute("nextPage", nextPage);
+            model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            model.addAttribute("message",message);
+
+            return "error/generic";
+        }
+    }
 }

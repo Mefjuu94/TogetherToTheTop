@@ -5,25 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <link rel="stylesheet" href="/css/userPanelStyles.css">
-    <!--    href="/css/userPanelStyles.css"-->
 </head>
 <body>
 <div class="background-image" style="background-image: url('/images/userProfile/backgroundUserProfile.jpg');"></div>
-<!--url('/images/userProfile/backgroundUserProfile.jpg');"-->
+<a href="/" id="homeButton">
+    <button class="home-button"><img src="/images/mainMenu_png/home-button.png" alt="return home" class="home-icon"></button>
+</a>
 
 <div class="profile-container">
     <h1>My Profile</h1>
 
     <div class="grid-container">
-        <!-- Edytowalne kafelki -->
+
         <div class="tile-editable" data-field="username" data-label="Username">
             <h3>Username</h3>
             <p id="username-display" th:text="${customUser.getCustomUserName()}">Username</p>
-        </div>
-
-        <div class="tile" data-field="ID" data-label="id">
-            <h3>User ID</h3>
-            <p id="user-id" th:text="${customUser.getId()}">User ID</p>
         </div>
 
         <div class="tile-editable" data-field="age" data-label="Age">
@@ -36,64 +32,64 @@
             <p id="city" th:text="${customUser.getCity()}">?</p>
         </div>
 
-        <!-- Nieedytowalne kafelki -->
+        <div class="tile" data-field="ID" data-label="id">
+            <h3>User ID</h3>
+            <p id="user-id" th:text="${customUser.getId()}">User ID</p>
+        </div>
         <div class="tile" data-field="email" data-label="Email">
             <h3>Email</h3>
             <p id="email-display" th:text="${customUser.getEmail()}">Email</p>
         </div>
 
-        <div class="tile">
+        <div class="tile-link">
             <h3>Total Trips</h3>
             <p th:text="${customUser.getNumbersOfTrips()}">numbers</p>
         </div>
 
         <form action="/tripsOwned" method="GET">
             <input type="hidden" name="userID" th:value="${customUser.getId()}">
-            <div class="tile" onclick="this.closest('form').submit()">
+            <div class="tile-link" onclick="this.closest('form').submit()">
                 <h3>Trips Created</h3>
-                <p th:text="${numberOfTripsOwned}">?</p>
+                <p th:text="${customUser.tripsOwned.size()}">?</p>
             </div>
         </form>
 
         <form action="/tripsParticipated" method="GET">
             <input type="hidden" name="userID" th:value="${customUser.getId()}">
-            <div class="tile" onclick="this.closest('form').submit()">
+            <div class="tile-link" onclick="this.closest('form').submit()">
                 <h3>Trips Participated</h3>
                 <p th:text="${tripsParticipated.size()}">?</p>
             </div>
         </form>
 
         <div class="tile">
-            <h3>Rating</h3>
-            <p th:text="${rate}">?</p>
+            <h3>Distance Traveled [km]</h3>
+                <p th:text="${customUser.getDistanceTraveled()}">?</p>
         </div>
 
-        <div th:if="${#authorization.expression('isAuthenticated()')}">
-            <form action="/rate" method="GET">
-                <div class="tile" onclick="this.closest('form').submit()">
-                    <h3>Users to rate:</h3>
-                    <p>?</p>
-                </div>
-            </form>
-        </div>
+        <form action="/userRating" method="GET">
+            <input type="hidden" name="userID" th:value="${customUser.getId()}">
+            <div class="tile-link" onclick="this.closest('form').submit()">
+                <h3>Rating</h3>
+                <p th:text="${rate}">?</p>
+            </div>
+        </form>
 
     </div>
 </div>
 
-<!-- Modal do edycji -->
 <div id="edit-modal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-        <h2 id="modal-header">Edit Information</h2> <!-- Nagłówek zmienia się dynamicznie -->
+        <h2 id="modal-header">Edit Information</h2>
         <form th:action="@{/updateField}" method="POST">
-            <input type="hidden" name="fieldName" id="fieldName"> <!-- Nazwa pola np. email, username -->
+            <input type="hidden" name="fieldName" id="fieldName">
             <div>
                 <label>
                     <input type="text" name="newValue" id="field-value" placeholder="Enter new value" required>
                 </label>
             </div>
             <input type="submit" value="Save">
-            <!-- Token CSRF dla zabezpieczenia -->
             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
         </form>
     </div>
