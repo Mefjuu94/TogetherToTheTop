@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const stars = activeItem.querySelectorAll('.star');
         const hiddenRate = activeItem.querySelector('.hiddenRate');
         const ratingValue = activeItem.querySelector('.rating-value');
+        const approveButton = activeItem.querySelector('#approveButton');
 
         stars.forEach(star => {
             star.addEventListener('click', function () {
@@ -18,17 +19,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 ratingValue.textContent = value;
 
                 stars.forEach(s => s.classList.remove('selected'));
-
                 this.classList.add('selected');
                 let nextSibling = this.nextElementSibling;
                 while (nextSibling) {
                     nextSibling.classList.add('selected');
                     nextSibling = nextSibling.nextElementSibling;
                 }
+
+                // Enable or disable the button based on the rating
+                approveButton.disabled = hiddenRate.value === "" || hiddenRate.value <= 0;
             });
         });
-    }
 
+        // Initial check to disable the button if no stars are selected
+        approveButton.disabled = hiddenRate.value === "" || hiddenRate.value <= 0;
+    }
 
     function updateCoverFlow() {
         const itemWidth = coverItems[0].offsetWidth;

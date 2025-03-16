@@ -67,10 +67,13 @@
                 <p th:text="${customUser.getDistanceTraveled()}">?</p>
         </div>
 
-        <div class="tile">
-            <h3>Rating</h3>
-            <p th:text="${rate}">?</p>
-        </div>
+        <form action="/userRating" method="GET">
+            <input type="hidden" name="userID" th:value="${customUser.getId()}">
+            <div class="tile-link" onclick="this.closest('form').submit()">
+                <h3>Rating</h3>
+                <p th:text="${rate}">?</p>
+            </div>
+        </form>
 
     </div>
 </div>

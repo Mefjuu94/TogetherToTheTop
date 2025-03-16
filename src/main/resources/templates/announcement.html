@@ -15,7 +15,7 @@
 <div class="container">
     <h1>Announcements</h1>
 
-    <div class="announcement-list" th:each="trip : ${trips}">
+    <div class="rating-list" th:each="trip : ${trips}">
         <a th:if="${trip.tripVisible == true}" th:href="@{'/trips/' + ${trip.id}}" class="announcement-item">
 
             <div id="destination" class="small-grid">

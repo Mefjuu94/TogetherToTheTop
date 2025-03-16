@@ -284,7 +284,7 @@ public class AnnouncementController {
 
         long tripID = Long.parseLong(tripId);
 
-        Trip trip = tripDAO.findTripID(0);
+        Trip trip = tripDAO.findTripID(tripID);
 
         if (tripDAO.deleteTrip(trip)){
             String nextPage = "/announcement";

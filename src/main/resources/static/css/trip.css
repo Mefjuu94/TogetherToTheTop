@@ -323,9 +323,9 @@ visibility: hidden;
 }
 
 .hidden {
-    max-height: 0;
+    height: 0;
     overflow: hidden;
-    transition: max-height 0.5s ease-in-out;
+    transition: height 0.5s ease-in-out;
 }
 
 #toggleButton{
@@ -334,7 +334,7 @@ visibility: hidden;
 }
 
 .show {
-    max-height: 500px;
+    height: auto; /* Ustawia wysokość na 'auto', by rozwinąć zawartość */
 }
 
 

@@ -68,6 +68,24 @@ public class CustomUserController {
         return "results";
     }
 
+    @GetMapping("/userRating")
+    public String userRating(@RequestParam String userID, Model model) {
+
+        List<UserRating> userRating = userRatingDAO.listAllRates(Long.parseLong(userID));
+
+        int averageRate = 0;
+        for (UserRating rating : userRating) {
+            averageRate += rating.getRating();
+        }
+
+        averageRate = averageRate /userRating.size();
+
+        model.addAttribute("averageRate",averageRate);
+        model.addAttribute("userRating", userRating);
+
+        return "userRating";
+    }
+
     @GetMapping("/findTrip")
     public String findTrip(@RequestParam String tripDestination, Model model) {
 
@@ -159,7 +177,7 @@ public class CustomUserController {
 
         Trip trip = tripDAO.findTripID(Long.parseLong(tripId));
         if (userRatingDAO.editRate(Long.parseLong(rateId), Integer.parseInt(rate),trip,behavior)) {
-            return "redirect:/rate/";
+            return "redirect:/rate";
         }else {
             String message = "something went wrong: Cannot add rate!";
             String nextPage = "/trips/" + trip;

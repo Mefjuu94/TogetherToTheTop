@@ -23,6 +23,12 @@ html, body {
     z-index: 1000;
 }
 
+#approveButton:disabled {
+    background-color: #ccc; /* Gray background */
+    color: #666; /* Gray text */
+    cursor: not-allowed; /* Change cursor to indicate it's not clickable */
+}
+
 .home-button {
     padding: 10px 20px;
     background: none;

@@ -57,7 +57,7 @@
                     <div id="button-approve">
                         <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                         <input type="hidden" name="rate" class="hiddenRate">
-                        <button onclick="prepareFormData()">Approve Comment</button>
+                        <button id="approveButton" onclick="prepareFormData()">Approve Comment</button>
                     </div>
                 </form>
             </div>

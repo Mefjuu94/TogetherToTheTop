@@ -50,27 +50,7 @@ new L.GPX(
 }).addTo(map);
 
 
-function renewTrip() {
-    const dateTime = document.getElementById("dateTime").value;
-    const description = document.getElementById("descriptionTrip").value;
 
-    const driverChecked = document.getElementById("driver").checked;
-    const animalsChecked = document.getElementById("animals").checked;
-    const closedGroupChecked = document.getElementById("closedGroupCheckbox").checked;
-
-    const driverPeople = driverChecked ? document.getElementById("DriverPeopleInput").value : "";
-    const closedGroupPeople = closedGroupChecked ? document.getElementById("peopleInput").value : "";
-
-    document.getElementById("hidden_date").value = dateTime;
-    document.getElementById("hidden_description").value = description;
-    document.getElementById("hidden_driver").value = driverChecked ? "yes" : "no";
-    document.getElementById("hidden_driver_people").value = driverPeople;
-    document.getElementById("hidden_animals").value = animalsChecked ? "yes" : "no";
-    document.getElementById("hidden_closed_group").value = closedGroupChecked ? "yes" : "no";
-    document.getElementById("hidden_closed_group_people").value = closedGroupPeople;
-
-    document.getElementById("renew_trip").submit();
-}
 
 document.getElementById("driver").addEventListener("change", function () {
     document.getElementById("DriverPeopleInputLabel").style.display = this.checked ? "block" : "none";
@@ -109,16 +89,44 @@ function checkFormCompletion() {
         document.getElementById("dateTime").classList.remove("completed");;
     }
 }
+document.addEventListener("DOMContentLoaded", function () {
 
-function toggleDiv() {
-    let div = document.getElementById("toggleDiv");
-    div.classList.toggle("show");
-    if (div.classList.contains("show")) {
-        setTimeout(() => {
-            div.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 500); // Czekamy na zakończenie animacji
+    document.getElementById('toggleButton').addEventListener('click', toggleDiv);
+
+    function toggleDiv() {
+        let div = document.getElementById("toggleDiv");
+        div.classList.toggle("show");
+        if (div.classList.contains("show")) {
+            setTimeout(() => {
+                div.scrollIntoView({behavior: "smooth", block: "start"});
+            }, 500); // Czekamy na zakończenie animacji
+        }
     }
-}
+
+    document.getElementById('renew_trip_button').addEventListener('click', renewTrip);
+
+    function renewTrip() {
+        const dateTime = document.getElementById("dateTime").value;
+        const description = document.getElementById("descriptionTrip").value;
+
+        const driverChecked = document.getElementById("driver").checked;
+        const animalsChecked = document.getElementById("animals").checked;
+        const closedGroupChecked = document.getElementById("closedGroupCheckbox").checked;
+
+        const driverPeople = driverChecked ? document.getElementById("DriverPeopleInput").value : "";
+        const closedGroupPeople = closedGroupChecked ? document.getElementById("peopleInput").value : "";
+
+        document.getElementById("hidden_date").value = dateTime;
+        document.getElementById("hidden_description").value = description;
+        document.getElementById("hidden_driver").value = driverChecked ? "yes" : "no";
+        document.getElementById("hidden_driver_people").value = driverPeople;
+        document.getElementById("hidden_animals").value = animalsChecked ? "yes" : "no";
+        document.getElementById("hidden_closed_group").value = closedGroupChecked ? "yes" : "no";
+        document.getElementById("hidden_closed_group_people").value = closedGroupPeople;
+
+        document.getElementById("renew_trip").submit();
+    }
+});
 
 document.getElementById("dateTime").addEventListener("input", checkFormCompletion);
 document.getElementById("descriptionTrip").addEventListener("input", checkFormCompletion);

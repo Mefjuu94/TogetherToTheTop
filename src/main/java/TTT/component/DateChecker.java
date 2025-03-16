@@ -28,7 +28,7 @@ public class DateChecker {
     }
 
     @Transactional
-    @Scheduled(fixedRate = 60000) // 60000 = 1 minute // Co 6 godzin 6 * 60 * 60 * 1000
+    @Scheduled(fixedRate = 60000 * 10) // 60000 = 1 minute // Co 6 godzin 6 * 60 * 60 * 1000
     public void checkDatesToCreateRatesAndUpdateTrips() {
         List<Trip> entities = tripDAO.listAllAnnouncements();
 

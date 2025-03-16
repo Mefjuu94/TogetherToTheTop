@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rates</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/userRating.css}">
+</head>
+<body style="background-image: url('/images/background.jpg');">
+
+<a href="/" id="homeButton">
+    <button class="home-button" id="home-button"><img src="/images/mainMenu_png/home-button.png" alt="return home"
+                                                      class="home-icon"></button>
+</a>
+
+<div class="container">
+    <h1>Rates</h1>
+    <div id="head">
+        <div><h2>mark</h2></div>
+        <div><h2>comment</h2></div>
+    </div>
+
+    <div class="rating-list" th:each="rate : ${userRating}">
+        <div class="rating-item">
+            <div id="mark" class="small-grid">
+                <div id="stars">
+                    <div th:each="i : ${#numbers.sequence(1, rate.getRating())}">
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div id="rateDescribe" class="small-grid">
+                <div id="rateDescribe2"><p th:text="${rate.getComment()}">rate</p></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="stats-container">
+    <div class="stats-card">
+        <div class="stat-item">
+            <h3 class="stat-title">Marks number</h3>
+            <p class="stat-value" th:text="${userRating.size()}">12</p>
+        </div>
+        <div class="stat-item">
+            <h3 class="stat-title">Average</h3>
+            <p class="stat-value" th:text="${averageRate}">4.8/5</p>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

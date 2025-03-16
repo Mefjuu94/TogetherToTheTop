@@ -60,7 +60,6 @@ public class TripDAO {
             for (Trip preResult : preResults) {
                 String[] tag = preResult.getDestination().split("[ ,]+");
                 for (String s : tag) {
-                    System.out.println(s);
                     if (Objects.equals(s.toLowerCase(), destination.toLowerCase())) {
                         results.add(preResult);
                         break;

@@ -16,7 +16,7 @@
 <div class="container announcements-container">
     <h1>Results</h1>
 
-    <div class="announcement-list" th:if="${customUser != null}">
+    <div class="rating-list" th:if="${customUser != null}">
         <a th:href="@{'/userProfile/' + ${user.getId()}}" th:each="user : ${customUser}" class="announcement-item">
             <div id="destination" class="small-grid">
                 <div id="dest1"><h2>Name:</h2></div>
@@ -40,7 +40,7 @@
         </a>
     </div>
 
-    <div class="announcement-list" th:if="${trips != null}">
+    <div class="rating-list" th:if="${trips != null}">
         <a th:href="@{'/trips/' + ${trip.getId()}}" th:each="trip : ${trips}" class="announcement-item">
             <h3 th:text="${trip.getDestination()}">Destination</h3>
             <p th:text="${trip.getTripDuration()}">Duration</p>

@@ -36,11 +36,9 @@ public class UserRatingDAO {
         }
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            System.out.println("Transaction started: " + transaction.isActive());
 
             session.merge(rate);
             transaction.commit();
-            System.out.println("Transaction committed.");
             return true;
         } catch (Exception e) {
             System.err.println("Error while adding rate: " + e.getMessage());
@@ -64,7 +62,7 @@ public class UserRatingDAO {
             rating = session.get(UserRating.class, id);
 
             if (rating != null) {
-                System.out.println("The rate has been retrieved: ");
+                System.out.println("The rate has been retrieved: " + rating.getRating() + " to user: " + rating.getUser());
             } else {
                 System.out.println("No rate found with ID: " + id);
             }
