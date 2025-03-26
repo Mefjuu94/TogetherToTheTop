@@ -79,7 +79,17 @@ cd TogetherToTheTop
 - Make sure you have **PostgreSQL** installed.
 - Create a database in PostgreSQL and configure the connection settings in the `application.properties` file.
 
-3. **Build the project using Gradle:**
+3. **Get the API KEYS:**
+
+- Get API keys from https://leafletjs.com and https://www.thunderforest.com/docs/apikeys/ .
+- Create a javascript file named "apiKeys.js" in
+  
+```bash
+src/main/resources/static/js/apiKeys.js
+```
+Now map should work properly.
+
+4. **Build the project using Gradle:**
 
 ```bash
 ./gradlew build
