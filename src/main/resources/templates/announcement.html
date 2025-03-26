@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Announcements</title>
     <link rel="stylesheet" th:href="@{/css/anoucements.css}">
-    <!--    th:href="@{/css/anoucements.css}"  || href="/static/css/anoucements.css"-->
 </head>
 <body style="background-image: url('/images/background.jpg');">
-<!--url('/images/background.jpg');"      || url('/static/images/background.jpg');"-->
+
+<a href="/" id="homeButton">
+    <button class="home-button" id="home-button"><img src="/images/mainMenu_png/home-button.png" alt="return home" class="home-icon"></button>
+</a>
+
 <div class="container">
     <h1>Announcements</h1>
 
-    <div class="announcement-list" th:each="trip : ${trips}">
+    <div class="rating-list" th:each="trip : ${trips}">
         <a th:if="${trip.tripVisible == true}" th:href="@{'/trips/' + ${trip.id}}" class="announcement-item">
 
             <div id="destination" class="small-grid">
@@ -36,11 +39,11 @@
                          th:src="@{/images/announcement/owner.png}"
                          alt="You are the owner of Trip" class="icon-image owner-icon">
 
-                    <img th:if="${trip.owner.id != customUser.id and !#lists.contains(tripsAndIDs,helperVar)}"
+                    <img th:if="${trip.owner.id != customUser.id and !#lists.contains(flag,helperVar)}"
                          th:src="@{/images/announcement/add.png}"
                          alt="Add me to trip" class="icon-image flag-icon">
 
-                    <img th:if="${trip.getId() != customUser.getId() and #lists.contains(tripsAndIDs,helperVar)}"
+                    <img th:if="${trip.getId() != customUser.getId() and #lists.contains(flag,helperVar)}"
                          th:src="@{/images/announcement/ok.png}"
                          alt="You are already on this trip" class="icon-image flag-icon">
                 </h2></div>

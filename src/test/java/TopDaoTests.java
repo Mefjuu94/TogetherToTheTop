@@ -117,6 +117,7 @@ public class TopDaoTests {
 
     @Test
     public void findSummitsByHeightLessThan2isEmpty() {
+        //testlist.add(new Top("Łysa Górka", 0, 52.436092F, 17.760887F));
         Assertions.assertEquals(testlist, testObject.findSummitsByHeightLessThan(2));
     }
 

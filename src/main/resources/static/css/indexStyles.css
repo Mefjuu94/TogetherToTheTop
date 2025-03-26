@@ -77,7 +77,7 @@ header .login-register a:hover {
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Trzy kolumny dla dużych ekranów */
+    grid-template-columns: repeat(3, 1fr);
     grid-gap: 20px;
     padding: 20px;
 }
@@ -144,17 +144,6 @@ header .login-register a:hover {
     background-color: rgba(0, 0, 0, 0.7);
 }
 
-.modal-content {
-    background-color: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(5px);
-    margin: 15% auto;
-    padding: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.7);
-    border-radius: 8px;
-    width: 80%;
-    max-width: 500px;
-}
-
 .close {
     color: #aaa;
     float: right;
@@ -203,7 +192,93 @@ input[type="submit"]:hover {
     height: auto;
 }
 
-/* Media Queries */
+#homeButton {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+    text-decoration: none;
+}
+
+.home-button {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-button img.home-icon {
+    width: 50px;
+    height: auto;
+    background: transparent;
+}
+
+.modal-content {
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+    margin: 15% auto;
+    padding: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Grid 2x1 */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+/* Kolumna z inputami */
+.form-inputs label {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.tooltip {
+    position: relative;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    color: #333;
+    min-width: 200px;
+}
+
+.invalid {
+    color: red;
+}
+
+.valid {
+    color: #05af0e;
+    font-weight: bold; /* Pogrubienie dla spełnionych warunków */
+}
+
+#submitRegister {
+    display: block;
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: grey;
+    color: white;
+    cursor: pointer;
+}
+
 
 /* Styl dla małych ekranów - telefony (max-width: 600px) */
 @media (max-width: 600px) {
@@ -232,9 +307,6 @@ input[type="submit"]:hover {
         grid-gap: 15px;
     }
 
-    .loginRegisterGrid {
-        flex-direction: column;
-    }
 
     .mail-icon {
         width: 20px;
@@ -248,7 +320,7 @@ input[type="submit"]:hover {
         padding: 15px;
     }
 
-    .grid {
+    .grid .gridLogin {
         grid-template-columns: repeat(2, 1fr);
         grid-gap: 15px;
     }
@@ -268,10 +340,19 @@ input[type="submit"]:hover {
         grid-template-columns: repeat(2, 1fr); /* Dwie kolumny na średnich ekranach */
         grid-gap: 20px;
     }
+    .gridLogin {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Dwie kolumny na średnich ekranach */
+        gap: 20px; /* Odstęp między kafelkami */
+    }
 
     .modal-content {
         width: 70%;
     }
+}
+
+@media (max-width: 800px) {
+
 }
 
 

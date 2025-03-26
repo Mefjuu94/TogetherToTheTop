@@ -4,8 +4,6 @@ import TTT.databaseUtils.CustomUserDAO;
 import TTT.users.CustomUser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.coyote.Request;
-import org.springframework.security.config.http.HttpSecurityBeanDefinitionParser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -14,10 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import java.util.Objects;
 
 @Controller
 public class SecurityController {
@@ -25,34 +19,35 @@ public class SecurityController {
     private final CustomUserDAO dao = new CustomUserDAO();
 
     @GetMapping("/login")
-    public String getLoginPage(){
-        return "/";
+    public String getLoginPage() {
+        return "/index";
     }
 
-    @RequestMapping(value="/logout", method = RequestMethod.GET)
-    public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
+    @GetMapping("/logout")
+    public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null){
+        if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
         return "logout";
     }
 
     @PostMapping("/register")
-    public String registerUser(CustomUser customUser, BindingResult bindingResult){
+    public String registerUser(CustomUser customUser, BindingResult bindingResult, Model model) {
 
-
-        if (customUser.getPassword().length() < 8){
-            return "index";
-        }
-
-        dao.saveUser(customUser);
-        // if has errors, return customUser to register form
         if (bindingResult.hasErrors()) {
-            return "security/register";
+            return "/passwordRetrieve";
         }
-      
-        return "index";
+
+        if (dao.saveUser(customUser)) {
+            String nextPage = "/";
+            model.addAttribute("nextPage", nextPage);
+
+            return "actionSuccess";
+        } else {
+            String errorMessage = "Something went wrong: cannot register user!";
+            model.addAttribute("errorMessage", errorMessage);
+            return "/error/generic";
+        }
     }
-    
 }

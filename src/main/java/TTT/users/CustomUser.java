@@ -24,35 +24,36 @@ public class CustomUser {
     @Column(nullable = false, columnDefinition = "int default 0")
     private int numbersOfTrips;
     @Column(nullable = false, columnDefinition = "int default 0")
-    private int numbersOfAnnoucements;
+    private int numbersOfAnnouncements;
+    private double distanceTraveled = 0.00;
     private String city;
 
     // Lista wycieczek, których użytkownik jest właścicielem
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Trip> tripsOwned; // Wycieczki, których użytkownik jest właścicielem
 
     // Lista wycieczek, w których użytkownik bierze udział
-    @ManyToMany(mappedBy = "participants")
+    @ManyToMany(mappedBy = "participants", fetch = FetchType.EAGER)
     private List<Trip> tripsParticipated; // Wycieczki, w których użytkownik uczestniczy
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<UserRating> ratings;
 
     public CustomUser() {
     }
 
-    public CustomUser(long id, String email, String password, String customUserName, int age, int numbersOfTrips, int numbersOfAnnoucements, List<Trip> tripsOwned, List<Trip> tripsParticipated,String city) {
+    public CustomUser(long id, String email, String password, String customUserName, int age, int numbersOfTrips, int numbersOfAnnouncements, List<Trip> tripsOwned, List<Trip> tripsParticipated, String city, double distanceTraveled) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.customUserName = customUserName;
         this.age = age;
         this.numbersOfTrips = numbersOfTrips;
-        this.numbersOfAnnoucements = numbersOfAnnoucements;
+        this.numbersOfAnnouncements = numbersOfAnnouncements;
         this.tripsOwned = tripsOwned;
         this.tripsParticipated = tripsParticipated;
         this.city = city;
-
+        this.distanceTraveled = distanceTraveled;
     }
 
     public long getId() {
@@ -103,12 +104,12 @@ public class CustomUser {
         this.numbersOfTrips = numbersOfTrips;
     }
 
-    public int getNumbersOfAnnoucements() {
-        return numbersOfAnnoucements;
+    public int getNumbersOfAnnouncements() {
+        return numbersOfAnnouncements;
     }
 
-    public void setNumbersOfAnnoucements(int numbersOfAnnoucements) {
-        this.numbersOfAnnoucements = numbersOfAnnoucements;
+    public void setNumbersOfAnnouncements(int numbersOfAnnoucements) {
+        this.numbersOfAnnouncements = numbersOfAnnoucements;
     }
 
     public List<Trip> getTripsOwned() {
@@ -135,6 +136,14 @@ public class CustomUser {
         this.city = city;
     }
 
+    public double getDistanceTraveled() {
+        return distanceTraveled;
+    }
+
+    public void setDistanceTraveled(double distanceTraveled) {
+        this.distanceTraveled = distanceTraveled;
+    }
+
     public List<UserRating> getRatings() {
         return ratings;
     }
@@ -159,12 +168,12 @@ public class CustomUser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomUser that = (CustomUser) o;
-        return id == that.id && age == that.age && numbersOfTrips == that.numbersOfTrips && numbersOfAnnoucements == that.numbersOfAnnoucements && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(customUserName, that.customUserName) && Objects.equals(city, that.city) && Objects.equals(tripsOwned, that.tripsOwned) && Objects.equals(tripsParticipated, that.tripsParticipated) && Objects.equals(ratings, that.ratings);
+        return id == that.id && age == that.age && numbersOfTrips == that.numbersOfTrips && numbersOfAnnouncements == that.numbersOfAnnouncements && distanceTraveled == that.distanceTraveled && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(customUserName, that.customUserName) && Objects.equals(city, that.city) && Objects.equals(tripsOwned, that.tripsOwned) && Objects.equals(tripsParticipated, that.tripsParticipated) && Objects.equals(ratings, that.ratings);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, customUserName, age, numbersOfTrips, numbersOfAnnoucements, city, tripsOwned, tripsParticipated, ratings);
+        return Objects.hash(id, email, password, customUserName, age, numbersOfTrips, numbersOfAnnouncements, distanceTraveled, city, tripsOwned, tripsParticipated, ratings);
     }
 
     @Override
@@ -172,11 +181,11 @@ public class CustomUser {
         return "CustomUser{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", customUserName='" + customUserName + '\'' +
                 ", age=" + age +
                 ", numbersOfTrips=" + numbersOfTrips +
-                ", numbersOfAnnoucements=" + numbersOfAnnoucements +
+                ", numbersOfAnnouncements=" + numbersOfAnnouncements +
+                ", distanceTraveled=" + distanceTraveled +
                 ", city='" + city + '\'' +
                 ", tripsOwned=" + tripsOwned +
                 '}';

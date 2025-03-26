@@ -1,0 +1,260 @@
+/* Globalne style */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-image: url('/images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+}
+
+/* Przycisk powrotu na stronę główną */
+#homeButton {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.home-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.home-icon {
+    width: 40px;
+    height: 40px;
+}
+
+/* Container główny */
+.container {
+    width: 70%;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* Nagłówek */
+h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.rating-list {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); /* Zamiast 520px */
+    gap: 30px;
+    margin: 20px 0;
+    padding: 20px;
+    border-style: ridge;
+    border-width: 2px;
+    border-color: #ddd;
+}
+
+
+.rating-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+}
+
+.rating-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+#stars {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#rateDescribe2 {
+    padding: 10px;
+    font-size: 1.1rem;
+    color: #666;
+}
+
+
+#head {
+    display: flex;
+    grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+    justify-content: space-around;
+}
+
+/* Karta oceny */
+.announcement-item {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-align: left;
+}
+
+.announcement-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Ocena */
+.rating {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.rating h2 {
+    font-size: 1.6rem;
+    color: #FFD700; /* Złota gwiazdka */
+    margin-right: 10px;
+}
+
+.rating p {
+    font-size: 1.4rem;
+    color: #333;
+}
+
+/* Komentarz */
+.comment {
+    font-size: 1.2rem;
+    color: #555;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+    margin-top: 15px;
+}
+
+/* Sekcja Statystyk */
+.stats-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 50px auto;
+    padding: 1rem;
+    position: sticky;
+    top: 20px;
+    width: 300px;
+}
+
+.stats-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.stat-item {
+    margin: 1rem 0;
+    padding: 1rem;
+    border-radius: 6px;
+    background: #f8f9fa;
+    transition: transform 0.2s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.stat-title {
+    color: #6c757d;
+    font-weight: 600;
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.stat-value {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0.5rem 0 0;
+}
+
+/* Flexbox do layoutu na dużych ekranach */
+.main-content {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.rating-list {
+    flex: 1;
+}
+
+@media (max-width: 1100px) {
+    .container {
+        width: 90%;
+    }
+
+    body {
+        display: grid;
+    }
+
+    .main-content {
+        flex-direction: column;
+    }
+
+    .stats-container {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .rating-list {
+        width: 100%;
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+    #homeButton {
+        top: 10px;
+        left: 10px;
+    }
+
+    .home-icon {
+        width: 25px;
+        height: 25px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+}
+
+#stars {
+    display: inline-flex;
+}
+
+.fa-star {
+    color: goldenrod;
+}
+
+.rating {
+    font-size: 1.5rem; /* Dostosuj rozmiar gwiazdek */
+    color: #FFD700; /* Złota kolor gwiazdek */
+    display: inline-flex;
+}
+
+.rating i {
+    margin-right: 5px; /* Odstęp między gwiazdkami */
+}
