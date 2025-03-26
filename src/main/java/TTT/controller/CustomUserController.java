@@ -137,10 +137,7 @@ public class CustomUserController {
             }
         } else {
             if (customUserDAO.updateUserField(newValue, email, fieldName)){
-                String nextPage = "/myProfile";
-                model.addAttribute("nextPage", nextPage);
-
-                return "actionSuccess";
+                return "redirect:/myProfile";
             }else {
                 String message = "something went wrong: Cannot set chosen parameter!";
                 String nextPage = "/myProfile";
