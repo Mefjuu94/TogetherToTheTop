@@ -136,7 +136,7 @@ public class AnnouncementController {
 
         int rate = 0;
         List<UserRating> rating = userRatingDAO.listAllRates(customUser.getId());
-        System.out.println(rating.size());
+        System.out.println("rating: " + rating.size());
 
         for (UserRating userRating : rating) {
             rate += userRating.getRating();
