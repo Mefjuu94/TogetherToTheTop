@@ -3,6 +3,7 @@ package TTT.controller;
 import TTT.databaseUtils.CommentsDAO;
 import TTT.databaseUtils.CustomUserDAO;
 import TTT.databaseUtils.TripDAO;
+import TTT.databaseUtils.UserRatingDAO;
 import TTT.trips.Comments;
 import TTT.trips.Trip;
 import TTT.users.CustomUser;
@@ -131,15 +132,19 @@ public class AnnouncementController {
         CustomUserDAO customUserDAO = new CustomUserDAO();
 
         CustomUser customUser = customUserDAO.findCustomUserByID(String.valueOf(id));
-        List<UserRating> rating = customUser.getRatings();
+        UserRatingDAO userRatingDAO = new UserRatingDAO();
+
         int rate = 0;
-        if (!rating.isEmpty()) {
-            for (UserRating userRating : rating) {
-                rate += userRating.getRating();
-            }
-            rate = rate / rating.size();
-        } else {
+        List<UserRating> rating = userRatingDAO.listAllRates(customUser.getId());
+        System.out.println(rating.size());
+
+        for (UserRating userRating : rating) {
+            rate += userRating.getRating();
+        }
+        if (rating.size() < 2){
             rate = 1;
+        }else {
+            rate = rate/rating.size();
         }
 
         List<Trip> trips = tripDAO.listAllAnnouncements();
