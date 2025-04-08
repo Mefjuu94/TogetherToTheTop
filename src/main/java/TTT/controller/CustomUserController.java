@@ -136,7 +136,7 @@ public class CustomUserController {
                 return "error/generic";
             }
         } else {
-            if (customUserDAO.updateUserField(newValue, email, fieldName)){
+            if (customUserDAO.updateUserField(newValue, email, fieldName,"")){
                 String nextPage = "/myProfile";
                 model.addAttribute("nextPage", nextPage);
 

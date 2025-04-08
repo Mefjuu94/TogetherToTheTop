@@ -29,7 +29,7 @@ public class SecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll().
                         requestMatchers("/", "/login", "/logout", "/register", "/error/**","/error", "/usersEmails",
-                                "/passwordRetrieve","privacyPolicy", "/resetPassword","/information")
+                                "/sendVerifyCode","/sendCode","sendCodeToEmail","/passwordRetrieve","privacyPolicy", "/resetPassword","/information")
                         .permitAll()
                         .anyRequest().authenticated())
                 .formLogin((form) -> form.loginPage("/login")
