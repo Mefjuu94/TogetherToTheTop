@@ -2,33 +2,40 @@ document.addEventListener('DOMContentLoaded', function() {
     const newPasswordInput = document.getElementById('newPassword');
     const confirmPasswordInput = document.getElementById('confirmPassword');
     const resetButton = document.getElementById('resetButton');
+    const codeInput = document.getElementById('codeText');
     document.getElementById('resetButton').style.backgroundColor = "grey";
 
-    // Funkcja do walidacji hasła
     function validatePassword() {
         const password = newPasswordInput.value;
 
-        // Sprawdzenie warunków
         const isValidLength = password.length >= 8;
         const hasUppercase = /[A-Z]/.test(password);
         const hasDigit = /\d/.test(password);
 
-        // Sprawdzenie, czy hasło jest poprawne
         return isValidLength && hasUppercase && hasDigit;
     }
 
-    // Funkcja do sprawdzania, czy oba hasła są takie same
+    function validateCode() {
+        const code = codeInput.value;
+        const userCode = document.getElementById('userCode').value;
+
+        const isTheSame = (userCode === code);
+
+        return isTheSame;
+    }
+
+
     function checkPasswordsMatch() {
-        if (newPasswordInput.value === confirmPasswordInput.value && validatePassword()) {
+        if (newPasswordInput.value === confirmPasswordInput.value && validatePassword() && validateCode()) {
             document.getElementById('resetButton').style.backgroundColor = "#28a745";
-            resetButton.disabled = false; // Odblokuj przycisk
+            resetButton.disabled = false; // unblock button
         } else {
             document.getElementById('resetButton').style.backgroundColor = "grey";
-            resetButton.disabled = true; // Zablokuj przycisk
+            resetButton.disabled = true; // block button
         }
     }
 
-    // Nasłuchuj zmiany w polach hasła
     newPasswordInput.addEventListener('input', checkPasswordsMatch);
     confirmPasswordInput.addEventListener('input', checkPasswordsMatch);
+    codeInput.addEventListener('input', validateCode);
 });

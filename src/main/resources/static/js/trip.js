@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 var tripId = document.getElementById("IDofTrip").textContent;
-import { Thunderforest_API_KEY } from './apiKeys.js';
+import { Thunderforest_API_KEY } from '../passwords/apiKeys.js';
 
 const map = L.map('map');
 

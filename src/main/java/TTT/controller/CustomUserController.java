@@ -127,7 +127,7 @@ public class CustomUserController {
         return "results";
     }
 
-    @PostMapping("/updateField")
+   @PostMapping("/updateField")
     public String updateField(@RequestParam("fieldName") String fieldName,
                               @RequestParam("newValue") String newValue, Model model) {
 
@@ -147,8 +147,11 @@ public class CustomUserController {
                 return "error/generic";
             }
         } else {
-            if (customUserDAO.updateUserField(newValue, email, fieldName)){
-                return "redirect:/myProfile";
+            if (customUserDAO.updateUserField(newValue, email, fieldName,"")){
+                String nextPage = "/myProfile";
+                model.addAttribute("nextPage", nextPage);
+
+                return "actionSuccess";
             }else {
                 String message = "something went wrong: Cannot set chosen parameter!";
                 String nextPage = "/myProfile";
