@@ -40,14 +40,14 @@ public class SecurityController {
         }
 
         if (dao.saveUser(customUser)) {
-            String nextPage = "index";
+            String nextPage = "/";
             model.addAttribute("nextPage", nextPage);
 
             return "actionSuccess";
         } else {
             String errorMessage = "Something went wrong: cannot register user!";
             model.addAttribute("errorMessage", errorMessage);
-            return "/error";
+            return "/error/generic";
         }
     }
 }
