@@ -1,4 +1,4 @@
-import { API_KEY_MAP_CZ } from './apiKeys.js';
+import { API_KEY_MAP_CZ } from '../passwords/apiKeys.js';
 
 let tempCoordinates = null;
 let savedMarker = null;

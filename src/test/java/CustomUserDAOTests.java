@@ -187,49 +187,48 @@ public class CustomUserDAOTests {
         Assertions.assertFalse(testObject.updateUserStats(2, "mail.com","numberOfAnnouncements")); //no user = null
         Assertions.assertFalse(testObject.updateUserStats(-2, "test@mail.com","numberOfAnnouncements"));
         Assertions.assertFalse(testObject.updateUserStats(-2, "test@mail.com","something"));
-        //TODO add password
     }
 
     @Test
     public void updateUserFieldEmailTest(){
         testObject.saveUser(testCustomUser);
         //email
-        Assertions.assertTrue(testObject.updateUserField("mail@mail.com","test@mail.com","email"));
+        Assertions.assertTrue(testObject.updateUserField("mail@mail.com","test@mail.com","email",""));
     }
 
     @Test
     public void updateUserFieldUsernameTest(){
         testObject.saveUser(testCustomUser);
         //username
-        Assertions.assertTrue(testObject.updateUserField("MyNewName","test@mail.com","username"));
+        Assertions.assertTrue(testObject.updateUserField("MyNewName","test@mail.com","username",""));
     }
 
     @Test
     public void updateUserFieldCityTest(){
         testObject.saveUser(testCustomUser);
         //city
-        Assertions.assertTrue(testObject.updateUserField("Warsaw","test@mail.com","city"));
+        Assertions.assertTrue(testObject.updateUserField("Warsaw","test@mail.com","city",""));
     }
 
     @Test
     public void updateUserFieldPasswordTest(){
         testObject.saveUser(testCustomUser);
         //password
-        Assertions.assertTrue(testObject.updateUserField("TestUser1234","test@mail.com","password"));
+        Assertions.assertTrue(testObject.updateUserField("TestUser1234$","test@mail.com","password","123"));
     }
 
     @Test
     public void updateUserFieldTestFail(){
         testObject.saveUser(testCustomUser);
         //email
-        Assertions.assertFalse(testObject.updateUserField("mail.test@mail.com","mail.com","email")); //invalid email
+        Assertions.assertFalse(testObject.updateUserField("mail.test@mail.com","mail.com","email","")); //invalid email
         //username
-        Assertions.assertFalse(testObject.updateUserField("MyNewName","test@mail.com","user")); // invalid field
+        Assertions.assertFalse(testObject.updateUserField("MyNewName","test@mail.com","user","")); // invalid field
         //city
-        Assertions.assertFalse(testObject.updateUserField(null,"test@mail.com","city")); // null value
+        Assertions.assertFalse(testObject.updateUserField(null,"test@mail.com","city","")); // null value
         //password
-        Assertions.assertFalse(testObject.updateUserField(null,"test@mail.com","password")); // null value
-        Assertions.assertFalse(testObject.updateUserField("123abc","test@mail.com","password")); //too short
+        Assertions.assertFalse(testObject.updateUserField(null,"test@mail.com","password","")); // null value
+        Assertions.assertFalse(testObject.updateUserField("123abc","test@mail.com","password","")); //too short
 
     }
 

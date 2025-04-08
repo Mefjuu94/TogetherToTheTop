@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Random;
 
 @Repository
 public class CustomUserDAO {
@@ -41,6 +42,8 @@ public class CustomUserDAO {
         customUser.setCustomUserName(username);
 
         customUser.setDistanceTraveled(0.00);
+        Random rand = new Random();
+        customUser.setAcivationCode(String.valueOf(rand.nextInt(99999)));
 
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
@@ -205,7 +208,7 @@ public class CustomUserDAO {
 
     }
 
-    public boolean updateUserField(String value, String email, String field) {
+    public boolean updateUserField(String value, String email, String field,String activationCode) {
         Transaction transaction = null;
 
         try (Session session = sessionFactory.openSession()) {
@@ -225,6 +228,7 @@ public class CustomUserDAO {
                     case "password":
                         if (isValidPassword(value)) {
                             user.setPassword(passwordEncoder.encode(value));
+                            user.setAcivationCode(activationCode);
                             break;
                         }else {
                             return false;
