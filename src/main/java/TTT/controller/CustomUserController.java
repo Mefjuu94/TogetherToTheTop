@@ -34,7 +34,7 @@ public class CustomUserController {
 
         int rate = 0;
         List<UserRating> rating = userRatingDAO.listAllRates(customUser.getId());
-        System.out.println("rating: " + rating.size());
+        System.out.println(rating.size());
 
         for (UserRating userRating : rating) {
             rate += userRating.getRating();
@@ -78,23 +78,12 @@ public class CustomUserController {
             averageRate += rating.getRating();
         }
 
-        String myEmail = methodsHandler.getLoggedInUserName();
-        CustomUser me = customUserDAO.findCustomUserByEmail(myEmail);
-        String myId = String.valueOf(me.getId());
+        averageRate = averageRate /userRating.size();
 
-        if(averageRate > 0) {
-            averageRate = averageRate / userRating.size();
+        model.addAttribute("averageRate",averageRate);
+        model.addAttribute("userRating", userRating);
 
-            model.addAttribute("averageRate",averageRate);
-            model.addAttribute("userRating", userRating);
-
-            return "userRating";
-        }else if(!userID.equals(myId)){
-            return "redirect:/userProfile/" + userID;
-        }else {
-            return "redirect:/myProfile";
-        }
-
+        return "userRating";
     }
 
     @GetMapping("/findTrip")

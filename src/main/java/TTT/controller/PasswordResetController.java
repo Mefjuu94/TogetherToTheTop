@@ -77,11 +77,12 @@ public class PasswordResetController {
             String code = customUser.getAcivationCode();
             EmailService emailService = new EmailService();
 
-            //change second email for tests
+            //change first email (second arg) for tests
             if (emailService.sendEmail("TogetherToTheTop", email, "Verify Code", email)) {
 
                 model.addAttribute("code", code);
                 model.addAttribute("email", email);
+                System.out.println("email changed Successfully for user: " + customUser.getCustomUserName() + " with email: " + customUser.getEmail());
 
                 return "/passwordRetrieve";
             } else {
