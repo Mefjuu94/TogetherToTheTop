@@ -116,7 +116,7 @@ public class CustomUserController {
         return "results";
     }
 
-    @PostMapping("/updateField")
+   @PostMapping("/updateField")
     public String updateField(@RequestParam("fieldName") String fieldName,
                               @RequestParam("newValue") String newValue, Model model) {
 
