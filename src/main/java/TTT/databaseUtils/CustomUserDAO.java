@@ -43,7 +43,7 @@ public class CustomUserDAO {
 
         customUser.setDistanceTraveled(0.00);
         Random rand = new Random();
-        customUser.setAcivationCode(String.valueOf(rand.nextInt(99999)));
+        customUser.setActivationCode(String.valueOf(rand.nextInt(99999)));
 
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
@@ -228,7 +228,7 @@ public class CustomUserDAO {
                     case "password":
                         if (isValidPassword(value)) {
                             user.setPassword(passwordEncoder.encode(value));
-                            user.setAcivationCode(activationCode);
+                            user.setActivationCode(activationCode);
                             break;
                         }else {
                             return false;

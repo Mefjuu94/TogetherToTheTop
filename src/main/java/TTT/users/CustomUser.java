@@ -18,7 +18,7 @@ public class CustomUser {
     private String email;
     private String password;
 
-    private String acivationCode;
+    private String activationCode;
 
     private String customUserName;
     @Column(nullable = false, columnDefinition = "int default 0")
@@ -154,12 +154,12 @@ public class CustomUser {
         this.ratings = ratings;
     }
 
-    public String getAcivationCode() {
-        return acivationCode;
+    public String getActivationCode() {
+        return activationCode;
     }
 
-    public void setAcivationCode(String acivationCode) {
-        this.acivationCode = acivationCode;
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
     }
 
     public void addRating(UserRating rating) {
@@ -177,12 +177,12 @@ public class CustomUser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomUser that = (CustomUser) o;
-        return id == that.id && age == that.age && numbersOfTrips == that.numbersOfTrips && numbersOfAnnouncements == that.numbersOfAnnouncements && Double.compare(distanceTraveled, that.distanceTraveled) == 0 && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(acivationCode, that.acivationCode) && Objects.equals(customUserName, that.customUserName) && Objects.equals(city, that.city) && Objects.equals(tripsOwned, that.tripsOwned) && Objects.equals(tripsParticipated, that.tripsParticipated) && Objects.equals(ratings, that.ratings);
+        return id == that.id && age == that.age && numbersOfTrips == that.numbersOfTrips && numbersOfAnnouncements == that.numbersOfAnnouncements && Double.compare(distanceTraveled, that.distanceTraveled) == 0 && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(activationCode, that.activationCode) && Objects.equals(customUserName, that.customUserName) && Objects.equals(city, that.city) && Objects.equals(tripsOwned, that.tripsOwned) && Objects.equals(tripsParticipated, that.tripsParticipated) && Objects.equals(ratings, that.ratings);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, acivationCode, customUserName, age, numbersOfTrips, numbersOfAnnouncements, distanceTraveled, city, tripsOwned, tripsParticipated, ratings);
+        return Objects.hash(id, email, password, activationCode, customUserName, age, numbersOfTrips, numbersOfAnnouncements, distanceTraveled, city, tripsOwned, tripsParticipated, ratings);
     }
 
 

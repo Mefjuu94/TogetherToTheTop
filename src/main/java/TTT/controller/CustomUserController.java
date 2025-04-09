@@ -70,8 +70,16 @@ public class CustomUserController {
 
     @GetMapping("/userRating")
     public String userRating(@RequestParam String userID, Model model) {
+        String me = methodsHandler.getLoggedInUserName();
+        String myId = String.valueOf(customUserDAO.findCustomUserByEmail(me).getId());
 
         List<UserRating> userRating = userRatingDAO.listAllRates(Long.parseLong(userID));
+        if (userRating.size() < 2){
+            if (userID.equals(myId)){
+                return "redirect:/myProfile";
+            }
+            return "redirect:/userProfile/" + userID;
+        }
 
         int averageRate = 0;
         for (UserRating rating : userRating) {
