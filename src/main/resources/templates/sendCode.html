@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset</title>
+    <link rel="stylesheet" th:href="@{/css/passwordRetrieve.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Password Reset</h1>
+    <p>Enter the email address with which the account was registered</p>
+    <form id="resetPasswordForm" action="/sendCodeToEmail" method="POST">
+        <div class="form-group">
+            <label for="email">e-mail:</label>
+            <input type="email" id="email" name="email" required placeholder="enter your e-mail">
+        </div>
+
+        <div id="sendButtonDiv">
+        <button type="submit" id="sendButton" name="_csrf" th:value="${_csrf.token}" >send verification code</button>
+        </div>
+
+    </form>
+    <p class="message" id="responseMessage"></p>
+</div>
+
+<script th:src="@{/js/passwordRetrieve.js}"></script>
+</body>
+</html>
