@@ -92,7 +92,7 @@ Now map should work properly.
 - Create a specyfic email to handle emailService and paste your own unique password for app.
   
 ```bash
-resources/static/passwords/emailPassword.txt
+src/main/resources/static/passwords/emailPassword.txt
 ```
 Now email Service for reset password should work properly.
 
