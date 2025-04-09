@@ -54,6 +54,8 @@ public class PasswordResetController {
             customUserDAO.updateUserField(newPassword, customUser.getEmail(), "password",
                     String.valueOf(random.nextInt(99999)));
 
+            System.out.println("email changed Successfully for user: " + customUser.getCustomUserName() + " with email: " + customUser.getEmail());
+
             String nextPage = "/";
             model.addAttribute("nextPage", nextPage);
 
@@ -74,17 +76,19 @@ public class PasswordResetController {
     public String sendVerifyCode(@RequestParam String email, Model model) throws IOException {
         CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
         if (customUser != null) {
-            String code = customUser.getAcivationCode();
+            String code = customUser.getActivationCode();
             EmailService emailService = new EmailService();
 
-            //change second email for tests
+            //change first email (second arg) for tests
             if (emailService.sendEmail("TogetherToTheTop", email, "Verify Code", email)) {
+
+                System.out.println("sending email with code to user: " + customUser.getCustomUserName() + " with email: " + customUser.getEmail());
 
                 model.addAttribute("code", code);
                 model.addAttribute("email", email);
-                System.out.println("email changed Successfully for user: " + customUser.getCustomUserName() + " with email: " + customUser.getEmail());
 
-                return "/passwordRetrieve";
+
+                return "passwordRetrieve";
             } else {
                 String message = "Cannot send verification code";
                 String nextPage = "/sendVerifyCode";
@@ -109,6 +113,6 @@ public class PasswordResetController {
 
     @GetMapping("/sendVerifyCode")
     public String sendVerifyCodePage() {
-        return "/sendCode";
+        return "sendVerifyCode";
     }
 }

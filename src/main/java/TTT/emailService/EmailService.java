@@ -6,8 +6,8 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 public class EmailService {
@@ -29,7 +29,7 @@ public class EmailService {
         properties.put("mail.smtp.connectiontimeout", "15000");
 
         String username = "togethertothetop2025@gmail.com";
-        String password = Files.readString(Paths.get("src/main/resources/static/passwords/emailPassword.txt"));
+        String password = readPasswordFromResource("static/passwords/emailPassword.txt");
 
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
@@ -40,7 +40,10 @@ public class EmailService {
 
 
         try {
-            String text = "Your Code is: " + customUserDAO.findCustomUserByEmail(email).getAcivationCode();
+            String text = "Hello, you received this email because you chose to change your password in " +
+                    "the Together to The top app. Below is a unique password reset code, please enter it " +
+                    "in the space provided." +
+                    "\nYour Code is: " + customUserDAO.findCustomUserByEmail(email).getActivationCode();
 
             Message message = new MimeMessage(session);
 
@@ -59,6 +62,17 @@ public class EmailService {
         }
 
         return flag;
+    }
+
+    private String readPasswordFromResource(String resourcePath) throws IOException {
+
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(resourcePath);
+
+        if (inputStream == null) {
+            throw new IOException("cannot find file with password to email: " + resourcePath);
+        }
+
+        return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
     }
 
 }
