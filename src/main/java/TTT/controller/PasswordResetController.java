@@ -78,7 +78,7 @@ public class PasswordResetController {
             EmailService emailService = new EmailService();
 
             //change second email for tests
-            if (emailService.sendEmail("TogetherToTheTop", "qasa21@gmail.com", "Verify Code", email)) {
+            if (emailService.sendEmail("TogetherToTheTop", email, "Verify Code", email)) {
 
                 model.addAttribute("code", code);
                 model.addAttribute("email", email);
