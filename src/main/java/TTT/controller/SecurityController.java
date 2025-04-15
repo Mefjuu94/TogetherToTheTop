@@ -20,7 +20,7 @@ public class SecurityController {
 
     @GetMapping("/login")
     public String getLoginPage() {
-        return "/index";
+        return "index";
     }
 
     @GetMapping("/logout")
