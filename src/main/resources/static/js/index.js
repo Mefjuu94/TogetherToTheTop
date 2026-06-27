@@ -1,135 +1,126 @@
 document.addEventListener("DOMContentLoaded", function () {
 
+    // --- Pobranie Modali ---
     const contactModal = document.getElementById("contactModal");
     const aboutModal = document.getElementById("aboutModal");
     const loginModal = document.getElementById("loginModal");
     const registerModal = document.getElementById("registerModal");
+    const findFriendModal = document.getElementById("findFriendModal");
+    const findTripModal = document.getElementById("findTripModal");
+    const privacyPolicyModal = document.getElementById("privacyPolicyModal");
 
-    const loginButton = document.querySelector(".gridLogin .tile a[href='/login']");
-    const registerButton = document.querySelector(".gridLogin .tile a[href='/register']");
-
-    const profileButton = document.querySelector(".grid .tile a[href='/login']");
+    // --- Pobranie Przycisków/Kafelków (Poprawione selektory pod nową strukturę HTML) ---
+    const loginButton = document.querySelector(".main-grid .tile a[href='/login']");
+    const registerButton = document.querySelector(".main-grid .tile a[href='/register']");
+    
+    // Zabezpieczenie selektora profilu, szukamy kafelka z profile_not_active w obrazku
+    const profileButton = document.querySelector(".main-grid .tile a[href='/login'] img[src*='user-profile_not_active']");
+    
     const mapButton = document.getElementById("mapButton");
     const announcementButton = document.getElementById("announcementButton");
     const find_TripButton = document.getElementById("find_TripButton");
+    const aboutButton = document.getElementById("aboutButton");
+    const contactButton = document.getElementById("contactButton");
+    
+    // Nowe kafelki-przyciski dla zalogowanych użytkowników
+    const findFriendTileBtn = document.getElementById("findFriendTileBtn");
+    const findTripTileBtn = document.getElementById("findTripTileBtn");
 
-    const closeLogin = loginModal.querySelector(".close");
-    const closeRegister = registerModal.querySelector(".close");
-
-
+    // --- Otwieranie Modali ---
     if (loginButton) {
         loginButton.onclick = function (event) {
             event.preventDefault();
-
-            loginModal.style.display = "block";
+            loginModal.style.display = "flex"; 
         }
     }
 
     if (registerButton) {
         registerButton.onclick = function (event) {
             event.preventDefault();
-            registerModal.style.display = "block";
+            registerModal.style.display = "flex";
         }
     }
 
-    if (mapButton) {
-        mapButton.onclick = function (event) {
+    // Przekierowania na login dla niezalogowanych
+    const loginRedirects = [mapButton, profileButton, announcementButton, find_TripButton];
+    loginRedirects.forEach(btn => {
+        if (btn) {
+            btn.onclick = function (event) {
+                event.preventDefault();
+                loginModal.style.display = "flex";
+            }
+        }
+    });
+
+    if (aboutButton) {
+        aboutButton.onclick = function (event) {
             event.preventDefault();
-            loginModal.style.display = "block";
+            aboutModal.style.display = "flex";
         }
     }
 
-    if (profileButton) {
-        profileButton.onclick = function (event) {
+    if (contactButton) {
+        contactButton.onclick = function (event) {
             event.preventDefault();
-            loginModal.style.display = "block";
+            contactModal.style.display = "flex";
         }
     }
 
-    if (announcementButton) {
-        announcementButton.onclick = function (event) {
+    // Otwieranie nowych wyszukiwarek (dla zalogowanych)
+    if (findFriendTileBtn) {
+        findFriendTileBtn.onclick = function (event) {
             event.preventDefault();
-            loginModal.style.display = "block";
+            findFriendModal.style.display = "flex";
         }
     }
 
-    if (find_TripButton) {
-        find_TripButton.onclick = function (event) {
+    if (findTripTileBtn) {
+        findTripTileBtn.onclick = function (event) {
             event.preventDefault();
-            loginModal.style.display = "block";
+            findTripModal.style.display = "flex";
         }
     }
 
-    closeLogin.onclick = function () {
-        loginModal.style.display = "none";
+    // --- Zamykanie Modali przez kliknięcie w ikonę "X" ---
+    const closeButtons = document.querySelectorAll(".modal .close");
+    closeButtons.forEach(btn => {
+        btn.onclick = function () {
+            this.closest(".modal").style.display = "none";
+        };
+    });
+
+    if (document.getElementById('closePrivacyPolicy')) {
+        document.getElementById('closePrivacyPolicy').onclick = function () {
+            privacyPolicyModal.style.display = 'none';
+        };
     }
 
-    closeRegister.onclick = function () {
-        registerModal.style.display = "none";
-    }
-
-
+    // --- Zamykanie Modali przez kliknięcie w tło (Zunifikowane) ---
     window.onclick = function (event) {
-        if (event.target === loginModal) {
-            loginModal.style.display = "none";
+        if (event.target.classList.contains("modal")) {
+            event.target.style.display = "none";
         }
-        if (event.target === registerModal) {
-            registerModal.style.display = "none";
-        }
-        if (event.target === aboutModal) {
-            aboutModal.style.display = "none";
-        }
-        if (event.target === contactModal) {
-            contactModal.style.display = "none";
-        }
+    };
+
+    // --- Polityka Prywatności ---
+    if (!localStorage.getItem('privacyPolicyAccepted') && privacyPolicyModal) {
+        privacyPolicyModal.style.display = 'flex';
     }
 
-
-    const aboutButton = document.getElementById("aboutButton");
-    const contactButton = document.getElementById("contactButton");
-
-    aboutButton.onclick = function (event) {
-        event.preventDefault();
-        aboutModal.style.display = "block";
+    if (document.getElementById('acceptPrivacyPolicy')) {
+        document.getElementById('acceptPrivacyPolicy').onclick = function () {
+            localStorage.setItem('privacyPolicyAccepted', 'true');
+            privacyPolicyModal.style.display = 'none';
+        };
     }
 
-    contactButton.onclick = function (event) {
-        event.preventDefault();
-        contactModal.style.display = "block";
-    }
-
-    const closeAbout = aboutModal.querySelector(".close");
-    const closeContact = contactModal.querySelector(".close");
-
-    closeAbout.onclick = function () {
-        aboutModal.style.display = "none";
-    }
-
-    closeContact.onclick = function () {
-        contactModal.style.display = "none";
-    }
-
-
-    window.onclick = function (event) {
-        if (event.target === aboutModal) {
-            aboutModal.style.display = "none";
-        }
-        if (event.target === contactModal) {
-            contactModal.style.display = "none";
-        }
-        if (event.target === loginModal) {
-            loginModal.style.display = "none";
-        }
-        if (event.target === registerModal) {
-            registerModal.style.display = "none";
-        }
-    }
-
+    // --- Logika Walidacji Rejestracji ---
     const emailInput = document.getElementById("emailInput");
     const passwordInput = document.getElementById("passwordInput");
-
     const tooltipContent = document.getElementById("tooltipContent");
 
+    let isPasswordCorrect = false;
+    let isEmailCorrect = emailInput ? validateEmail(emailInput.value) : false;
 
     const lengthHint = document.createElement('p');
     const uppercaseHint = document.createElement('p');
@@ -143,10 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
     uppercaseHint.classList.add("invalid");
     numberHint.classList.add("invalid");
 
-    let isPasswordCorrect = false;
-    let isEmailCorrect = validateEmail(emailInput);
-
-
     function updatePasswordTooltip(password) {
         const hasUpperCase = /[A-Z]/.test(password);
         const hasNumber = /[0-9]/.test(password);
@@ -156,12 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
         uppercaseHint.className = hasUpperCase ? "valid" : "invalid";
         numberHint.className = hasNumber ? "valid" : "invalid";
 
-        if (hasMinLength && hasNumber && hasUpperCase){
-            isPasswordCorrect = true;
-        }else {
-            isPasswordCorrect = false;
-            console.log('incorrect password')
-        }
+        isPasswordCorrect = !!(hasMinLength && hasNumber && hasUpperCase);
     }
 
     function validateEmail(email) {
@@ -170,6 +152,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateTooltipContent(focusField) {
+        if (!tooltipContent) return;
+        
         if (focusField === "email") {
             const emailValue = emailInput.value;
             if (!emailValue) {
@@ -183,55 +167,46 @@ document.addEventListener("DOMContentLoaded", function () {
                 isEmailCorrect = false;
             }
         } else if (focusField === "password") {
-            tooltipContent.innerHTML = ""; // Czyszczenie zawartości
+            tooltipContent.innerHTML = "";
             tooltipContent.appendChild(lengthHint);
             tooltipContent.appendChild(uppercaseHint);
             tooltipContent.appendChild(numberHint);
         }
     }
 
-    emailInput.addEventListener("focus", function () {
-        updateTooltipContent("email");
-    });
+    if (emailInput && passwordInput) {
+        emailInput.addEventListener("focus", function () {
+            updateTooltipContent("email");
+        });
 
-    passwordInput.addEventListener("focus", function () {
-        updateTooltipContent("password");
-    });
+        passwordInput.addEventListener("focus", function () {
+            updateTooltipContent("password");
+        });
 
-    passwordInput.addEventListener("input", function (){
-        updatePasswordTooltip(passwordInput.value);
-        if (isEmailCorrect && isPasswordCorrect){
-            document.getElementById('submitRegister').style.backgroundColor = "#2baf31";
-        }else {
-            document.getElementById('submitRegister').style.backgroundColor = "grey";
+        function toggleSubmitButtonState() {
+            const submitBtn = document.getElementById('submitRegister');
+            if (submitBtn) {
+                submitBtn.style.backgroundColor = (isEmailCorrect && isPasswordCorrect) ? "#2baf31" : "grey";
+            }
         }
-    })
 
-    emailInput.addEventListener("input", function () {
-        updateTooltipContent("email");
-        if (isEmailCorrect && isPasswordCorrect){
-            document.getElementById('submitRegister').style.backgroundColor = "#2baf31";
-        }else {
-            document.getElementById('submitRegister').style.backgroundColor = "grey";
+        passwordInput.addEventListener("input", function () {
+            updatePasswordTooltip(passwordInput.value);
+            toggleSubmitButtonState();
+        });
+
+        emailInput.addEventListener("input", function () {
+            updateTooltipContent("email");
+            toggleSubmitButtonState();
+        });
+
+        const submitRegister = document.getElementById('submitRegister');
+        if (submitRegister) {
+            submitRegister.addEventListener('click', function (event) {
+                if (!isEmailCorrect || !isPasswordCorrect) {
+                    event.preventDefault();
+                }
+            });
         }
-    });
-
-    if (!localStorage.getItem('privacyPolicyAccepted')) {
-        document.getElementById('privacyPolicyModal').style.display = 'block';
     }
-
-    document.getElementById('closePrivacyPolicy').addEventListener('click', function () {
-        document.getElementById('privacyPolicyModal').style.display = 'none';
-    });
-
-    document.getElementById('acceptPrivacyPolicy').addEventListener('click', function () {
-        localStorage.setItem('privacyPolicyAccepted', 'true');
-        document.getElementById('privacyPolicyModal').style.display = 'none';
-    });
-
-    document.getElementById('submitRegister').addEventListener('click', function (event) {
-        if (!isEmailCorrect || !isPasswordCorrect) {
-            event.preventDefault();
-        }
-    });
 });

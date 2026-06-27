@@ -12,7 +12,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 
@@ -145,10 +151,7 @@ public class CustomUserController {
             }
         } else {
             if (customUserDAO.updateUserField(newValue, email, fieldName,"")){
-                String nextPage = "/myProfile";
-                model.addAttribute("nextPage", nextPage);
-
-                return "actionSuccess";
+                return "redirect:/myProfile"; //reload page
             }else {
                 String message = "something went wrong: Cannot set chosen parameter!";
                 String nextPage = "/myProfile";
@@ -175,6 +178,7 @@ public class CustomUserController {
 
         return "rate";
     }
+    
 
     @PostMapping("/addRate")
     public String getUsersToRate(@RequestParam String rate,
@@ -196,5 +200,59 @@ public class CustomUserController {
 
             return "error/generic";
         }
+    }
+
+    @PostMapping("/updateAvatar")
+    public String updateAvatar(@RequestParam("avatarFile") MultipartFile file, Model model) {
+        String email = methodsHandler.getLoggedInUserName();
+        CustomUser customUser = customUserDAO.findCustomUserByEmail(email);
+
+        if (!file.isEmpty() && customUser != null) {
+            try {
+                // Ścieżka docelowa do zapisu plików statycznych w projekcie
+                String uploadDir = "src/main/resources/static/images/avatars/";
+                Path uploadPath = Paths.get(uploadDir);
+
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                // Wyciągamy oryginalne rozszerzenie pliku (.jpg, .png itp.)
+                String originalFileName = file.getOriginalFilename();
+                String fileExtension = "";
+                if (originalFileName != null && originalFileName.contains(".")) {
+                    fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                } else {
+                    fileExtension = ".jpg"; // Domyślny fallback
+                }
+
+                // Generujemy unikalną nazwę opartą o ID użytkownika
+                String fileName = "avatar_" + customUser.getId() + fileExtension;
+                Path filePath = uploadPath.resolve(fileName);
+
+                // Kopiujemy strumień pliku na dysk, nadpisując stary, jeśli istnieje
+                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                // Ścieżka relatywna dla przeglądarki i Thymeleafa
+                String webPath = "/images/avatars/" + fileName;
+                customUser.setAvatarPath(webPath);
+                
+                // Aktualizacja obiektu użytkownika w bazie danych
+                customUserDAO.saveUser(customUser);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                
+                String message = "Something went wrong while uploading the photo!";
+                String nextPage = "/myProfile";
+
+                model.addAttribute("nextPage", nextPage);
+                model.addAttribute("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
+                model.addAttribute("message", message);
+
+                return "error/generic";
+            }
+        }
+        return "redirect:/myProfile";
     }
 }

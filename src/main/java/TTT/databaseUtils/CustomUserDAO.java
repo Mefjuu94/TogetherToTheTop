@@ -225,6 +225,9 @@ public class CustomUserDAO {
                     case "city":
                         user.setCity(value);
                         break;
+                        case "avatar": 
+                        user.setAvatarPath(value); // Zapisujemy string Base64 bezpośrednio w bazie
+                        break;
                     case "password":
                         if (isValidPassword(value)) {
                             user.setPassword(passwordEncoder.encode(value));
@@ -339,5 +342,26 @@ public class CustomUserDAO {
         }
 
         return hasUppercase && hasDigit;
+    }
+
+    public boolean updateAvatarPath(String email, String avatarPath) {
+    Transaction transaction = null;
+    boolean success = false;
+
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+        transaction = session.beginTransaction();
+        String hql = "UPDATE CustomUser SET avatarPath = :avatarPath WHERE email = :email";
+        var query = session.createQuery(hql);
+        query.setParameter("avatarPath", avatarPath);
+        query.setParameter("email", email);
+        int result = query.executeUpdate();
+        transaction.commit();
+        success = result > 0;
+    } catch (Exception e) {
+        if (transaction != null) transaction.rollback();
+        e.printStackTrace();
+    } 
+    return success;
     }
 }

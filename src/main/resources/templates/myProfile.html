@@ -1,80 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/userPanelStyles.css">
 </head>
 <body>
+
 <div class="background-image" style="background-image: url('/images/userProfile/backgroundUserProfile.jpg');"></div>
-<a href="/" id="homeButton">
-    <button class="home-button"><img src="/images/mainMenu_png/home-button.png" alt="return home" class="home-icon"></button>
+
+<a href="/" id="homeButton" class="home-button-wrapper">
+    <i class="fa-solid fa-arrow-left"></i> <span>Home</span>
 </a>
 
-<div class="profile-container">
-    <h1>My Profile</h1>
-
-    <div class="grid-container">
-
-        <div class="tile-editable" data-field="username" data-label="Username">
-            <h3>Username</h3>
-            <p id="username-display" th:text="${customUser.getCustomUserName()}">Username</p>
+<div class="profile-card animate-left">
+    <div class="profile-header">
+        <div class="avatar-container tile-editable" data-field="avatar" data-label="Profile Picture" id="avatar-click-zone">
+            <img th:if="${customUser.getAvatarPath() != null and !customUser.getAvatarPath().isEmpty()}" 
+                 th:src="${customUser.getAvatarPath()}" 
+                 alt="User Avatar" 
+                 class="user-avatar-img">
+                 
+            <i th:unless="${customUser.getAvatarPath() != null and !customUser.getAvatarPath().isEmpty()}" 
+               class="fa-solid fa-user-astronaut avatar-placeholder"></i>
         </div>
+        <h1 th:text="${customUser.getCustomUserName()}">Username</h1>
+        <p class="user-id">ID: <span th:text="${customUser.getId()}">502</span></p>
+    </div>
 
-        <div class="tile-editable" data-field="age" data-label="Age">
-            <h3>Age</h3>
-            <p id="age-display" th:text="${customUser.getAge()}">?</p>
-        </div>
+    <div class="profile-sections">
+        <div class="section-block">
+            <h2><i class="fa-solid fa-address-card"></i> Personal Info</h2>
+            <div class="info-grid">
+                
+                <div class="info-item tile-editable" data-field="username" data-label="Username">
+                    <span class="label"><i class="fa-solid fa-signature"></i> <h3>Username</h3></span>
+                    <p class="value" id="username-display" th:text="${customUser.getCustomUserName()}">user4</p>
+                </div>
 
-        <div class="tile-editable" data-field="city" data-label="city">
-            <h3>City</h3>
-            <p id="city" th:text="${customUser.getCity()}">?</p>
-        </div>
+                <div class="info-item tile-editable" data-field="age" data-label="Age">
+                    <span class="label"><i class="fa-solid fa-calendar-days"></i> <h3>Age</h3></span>
+                    <p class="value" id="age-display" th:text="${customUser.getAge()}">86</p>
+                </div>
 
-        <div class="tile" data-field="ID" data-label="id">
-            <h3>User ID</h3>
-            <p id="user-id" th:text="${customUser.getId()}">User ID</p>
-        </div>
-        <div class="tile" data-field="email" data-label="Email">
-            <h3>Email</h3>
-            <p id="email-display" th:text="${customUser.getEmail()}">Email</p>
-        </div>
+                <div class="info-item tile-editable" data-field="city" data-label="city">
+                    <span class="label"><i class="fa-solid fa-city"></i> <h3>City</h3></span>
+                    <p class="value" id="city" th:text="${customUser.getCity()}">tuytrfg</p>
+                </div>
 
-        <div class="tile-link">
-            <h3>Total Trips</h3>
-            <p th:text="${customUser.getNumbersOfTrips()}">numbers</p>
-        </div>
+                <div class="info-item">
+                    <span class="label"><i class="fa-solid fa-envelope"></i> <h3>Email</h3></span>
+                    <p class="value" id="email-display" th:text="${customUser.getEmail()}">user4@user.com</p>
+                </div>
 
-        <form action="/tripsOwned" method="GET">
-            <input type="hidden" name="userID" th:value="${customUser.getId()}">
-            <div class="tile-link" onclick="this.closest('form').submit()">
-                <h3>Trips Created</h3>
-                <p th:text="${customUser.tripsOwned.size()}">?</p>
             </div>
-        </form>
-
-        <form action="/tripsParticipated" method="GET">
-            <input type="hidden" name="userID" th:value="${customUser.getId()}">
-            <div class="tile-link" onclick="this.closest('form').submit()">
-                <h3>Trips Participated</h3>
-                <p th:text="${tripsParticipated.size()}">?</p>
-            </div>
-        </form>
-
-        <div class="tile">
-            <h3>Distance Traveled [km]</h3>
-                <p th:text="${customUser.getDistanceTraveled()}">?</p>
         </div>
+    </div>
+</div>
 
-        <form action="/userRating" method="GET">
-            <input type="hidden" name="userID" th:value="${customUser.getId()}">
-            <div class="tile-link" onclick="this.closest('form').submit()">
-                <h3>Rating</h3>
-                <p th:text="${rate}">?</p>
+<div class="profile-card stats-panel animate-right">
+    <div class="profile-sections">
+        <div class="section-block">
+            <h2><i class="fa-solid fa-chart-simple"></i> Trip Statistics</h2>
+            <div class="stats-grid">
+                
+                <div class="stat-card">
+                    <i class="fa-solid fa-map-route stat-icon"></i>
+                    <span class="stat-value" th:text="${customUser.getNumbersOfTrips()}">4</span>
+                    <span class="stat-label">Total Trips</span>
+                </div>
+
+                <div class="stat-card clickable" onclick="document.getElementById('form-owned').submit();">
+                    <form id="form-owned" action="/tripsOwned" method="GET" style="display:none;">
+                        <input type="hidden" name="userID" th:value="${customUser.getId()}">
+                    </form>
+                    <i class="fa-solid fa-mountain-sun stat-icon"></i>
+                    <span class="stat-value" th:text="${customUser.tripsOwned.size()}">0</span>
+                    <span class="stat-label">Created</span>
+                </div>
+
+                <div class="stat-card clickable" onclick="document.getElementById('form-participated').submit();">
+                    <form id="form-participated" action="/tripsParticipated" method="GET" style="display:none;">
+                        <input type="hidden" name="userID" th:value="${customUser.getId()}">
+                    </form>
+                    <i class="fa-solid fa-people-group stat-icon"></i>
+                    <span class="stat-value" th:text="${tripsParticipated.size()}">0</span>
+                    <span class="stat-label">Participated</span>
+                </div>
+
+                <div class="stat-card">
+                    <i class="fa-solid fa-shoe-prints stat-icon"></i>
+                    <span class="stat-value" th:text="${customUser.getDistanceTraveled()}">90.04</span>
+                    <span class="stat-label">Distance [km]</span>
+                </div>
+
+                <div class="stat-card clickable" onclick="document.getElementById('form-rating').submit();">
+                    <form id="form-rating" action="/userRating" method="GET" style="display:none;">
+                        <input type="hidden" name="userID" th:value="${customUser.getId()}">
+                    </form>
+                    <i class="fa-solid fa-star stat-icon rating-star"></i>
+                    <span class="stat-value" th:text="${rate}">3</span>
+                    <span class="stat-label">Rating</span>
+                </div>
+                
             </div>
-        </form>
-
+        </div>
     </div>
 </div>
 
@@ -82,14 +115,17 @@
     <div class="modal-content">
         <span class="close">&times;</span>
         <h2 id="modal-header">Edit Information</h2>
-        <form th:action="@{/updateField}" method="POST">
+        
+        <form id="text-fields-form" th:action="@{/updateField}" method="POST">
             <input type="hidden" name="fieldName" id="fieldName">
-            <div>
-                <label>
-                    <input type="text" name="newValue" id="field-value" placeholder="Enter new value" required>
-                </label>
+            
+            <div class="input-group">
+                <input type="text" name="newValue" id="field-value" placeholder="Enter new value" required>
+                
+                <input type="file" id="avatar-file-input" accept="image/*" style="display: none; padding: 5px 0;">
             </div>
-            <input type="submit" value="Save">
+            
+            <button type="submit" class="save-btn">Save Changes</button>
             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
         </form>
     </div>

@@ -29,6 +29,8 @@ public class CustomUser {
     private int numbersOfAnnouncements;
     private double distanceTraveled = 0.00;
     private String city;
+    @Column(columnDefinition = "TEXT")
+    private String avatarPath;
 
     // Lista wycieczek, których użytkownik jest właścicielem
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
@@ -160,6 +162,16 @@ public class CustomUser {
 
     public void setActivationCode(String activationCode) {
         this.activationCode = activationCode;
+    }
+
+    public String getAvatarPath() {
+    return avatarPath;
+    }
+
+
+    public String setAvatarPath(String avatarPath) {
+    this.avatarPath = avatarPath;
+    return avatarPath; 
     }
 
     public void addRating(UserRating rating) {

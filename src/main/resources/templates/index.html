@@ -1,33 +1,34 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Główna Strona</title>
     <link rel="stylesheet" th:href="@{/css/indexStyles.css}">
 </head>
-<body style="background-image: url('/images/background.jpg');">
+<body style="background-image: url('/images/background.jpg');"
+      th:class="${#authorization.expression('isAuthenticated()')} ? 'logged-in' : ''">
 
-<div class="login-container">
-    <main class="gridLogin">
+<div class="main-layout-container">
+    <main class="main-grid">
 
         <div class="tile">
             <div th:if="${not #authorization.expression('isAuthenticated()')}">
                 <a href="/login">
-                    <img src="/images/mainMenu_png/login.png" alt="User Profile">
+                    <img src="/images/mainMenu_png/login.png" alt="Login">
                     <span>Login</span>
                 </a>
             </div>
             <div th:if="${#authorization.expression('isAuthenticated()')}">
                 <a href="#" th:href="@{logout}" th:method="post">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                    <img src="/images/mainMenu_png/user-logout.png" alt="User Profile">
+                    <img src="/images/mainMenu_png/user-logout.png" alt="Logout">
                     <span>Logout</span>
                 </a>
             </div>
         </div>
 
-        <div class="tile">
+        <div class="tile" th:classappend="${not #authorization.expression('isAuthenticated()')} ? 'tile-locked' : ''">
             <div th:if="${not #authorization.expression('isAuthenticated()')}">
                 <a href="/login">
                     <img src="/images/mainMenu_png/rate_noActive.png" alt="rate">
@@ -36,7 +37,7 @@
             </div>
             <div th:if="${#authorization.expression('isAuthenticated()')}">
                 <a href="/rate">
-                    <img src="/images/mainMenu_png/rate_Active.png" alt="User Profile">
+                    <img src="/images/mainMenu_png/rate_Active.png" alt="Rate">
                     <span>Rate somebody</span>
                 </a>
             </div>
@@ -45,42 +46,34 @@
         <div class="tile">
             <div th:if="${not #authorization.expression('isAuthenticated()')}">
                 <a href="/register">
-                    <img src="/images/mainMenu_png/register.png" alt="Plan Trip">
+                    <img src="/images/mainMenu_png/register.png" alt="Register">
                     <span>Register</span>
                 </a>
             </div>
             <div th:if="${#authorization.expression('isAuthenticated()')}">
-                <form id="saveForm" th:action="@{/findFriend}" method="GET">
-                    <button type="submit" id="findFriend" style="border: none; background: none;">
-                        <img src="/images/mainMenu_png/find_friend.png" alt="Find Friend">
-                        <span>Find Friend</span>
-                    </button>
-                    <input type="text" id="friendName" name="friendName" placeholder="Search user by name..." required/>
-                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                </form>
+                <a href="#" id="findFriendTileBtn">
+                    <img src="/images/mainMenu_png/find_friend.png" alt="Find Friend">
+                    <span>Find Friend</span>
+                </a>
             </div>
         </div>
-    </main>
-</div>
 
-<div class="container">
-    <main class="grid">
-
-        <div class="tile">
+        <div class="tile" th:classappend="${not #authorization.expression('isAuthenticated()')} ? 'tile-locked' : ''">
             <div th:if="${not #authorization.expression('isAuthenticated()')}">
                 <a href="/login">
-                    <img src="/images/mainMenu_png/user-profile_not_active.png" alt="User Profile">
+                    <img src="/images/mainMenu_png/user-profile_not_active.png" alt="Profile">
                     <span>Login to view user profile</span>
                 </a>
             </div>
             <div th:if="${#authorization.expression('isAuthenticated()')}">
                 <a href="/myProfile">
-                    <img src="/images/mainMenu_png/user-profile.png" alt="User Profile">
-                    <span>my profile</span>
+                    <img src="/images/mainMenu_png/user-profile.png" alt="Profile">
+                    <span>My profile</span>
                 </a>
             </div>
         </div>
-        <div class="tile">
+
+        <div class="tile" th:classappend="${not #authorization.expression('isAuthenticated()')} ? 'tile-locked' : ''">
             <div th:if="${#authorization.expression('isAuthenticated()')}">
                 <a href="/map">
                     <img src="/images/mainMenu_png/map.png" alt="Plan Trip">
@@ -95,7 +88,7 @@
             </div>
         </div>
 
-        <div class="tile">
+        <div class="tile" th:classappend="${not #authorization.expression('isAuthenticated()')} ? 'tile-locked' : ''">
             <div th:if="${#authorization.expression('isAuthenticated()')}">
                 <a href="/announcement">
                     <img src="/images/mainMenu_png/announcement.png" alt="Announcements">
@@ -117,24 +110,18 @@
             </a>
         </div>
 
-        <div class="tile">
+        <div class="tile" th:classappend="${not #authorization.expression('isAuthenticated()')} ? 'tile-locked' : ''">
             <div th:if="${not #authorization.expression('isAuthenticated()')}">
                 <a href="/login" id="find_TripButton">
                     <img src="/images/mainMenu_png/findTrip_noActive.png" alt="Find Trip">
                     <span>Login to Find Trip!</span>
                 </a>
             </div>
-
             <div th:if="${#authorization.expression('isAuthenticated()')}">
-                <form id="Form" th:action="@{/findTrip}" method="GET">
-                    <button type="submit" id="find_Trip" style="border: none; background: none;">
-                        <img src="/images/mainMenu_png/findTripColor_active.png" alt="Find Trip">
-                        <span>I want to go...</span>
-                    </button>
-                    <input type="text" id="tripDestination" name="tripDestination"
-                           placeholder="Search trip by destination..." required/>
-                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                </form>
+                <a href="#" id="findTripTileBtn">
+                    <img src="/images/mainMenu_png/findTripColor_active.png" alt="Find Trip">
+                    <span>I want to go...</span>
+                </a>
             </div>
         </div>
 
@@ -153,18 +140,8 @@
         <span class="close">&times;</span>
         <h2>Login</h2>
         <form th:action="@{login}" method="post">
-            <div>
-                <label>
-                    <input type="email" name="email" placeholder="email" required/>
-                </label>
-                <i class="bx bxs-user"></i>
-            </div>
-            <div>
-                <label>
-                    <input type="password" name="password" placeholder="Password" required/>
-                </label>
-                <i class="bx bxs-lock-alt"></i>
-            </div>
+            <input type="email" name="email" placeholder="Email" required/>
+            <input type="password" name="password" placeholder="Password" required/>
             <input type="submit" value="Log in"/>
             <a id="passwordRetrieve" href="/sendVerifyCode">Forgot Password?</a>
         </form>
@@ -174,29 +151,21 @@
 <div id="registerModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-        <h2 style="text-align: center;">Register</h2>
-
+        <h2>Register</h2>
         <form th:action="@{/register}" method="post">
-
             <div class="form-grid">
                 <div class="form-inputs">
-                    <label>
-                        <input type="email" name="email" id="emailInput" placeholder="Email" required/>
-                        <span id="messageEmail"></span>
-                    </label>
-                    <label>
-                        <input type="password" name="password" placeholder="Password" id="passwordInput" required/>
-                        <span id="messagePassword"></span>
-                    </label>
+                    <input type="email" name="email" id="emailInput" placeholder="Email" required/>
+                    <span id="messageEmail"></span>
+                    <input type="password" name="password" placeholder="Password" id="passwordInput" required/>
+                    <span id="messagePassword"></span>
                 </div>
-
                 <div class="form-hints">
                     <div id="tooltip" class="tooltip">
-                        <p id="tooltipContent">Start sing up!</p>
+                        <p id="tooltipContent">Start signing up!</p>
                     </div>
                 </div>
             </div>
-
             <input type="submit" id="submitRegister" value="Register"/>
         </form>
     </div>
@@ -206,11 +175,7 @@
     <div class="modal-content">
         <span class="close">&times;</span>
         <h2>About TTT project</h2>
-        <p>The main idea of the project is to gather VERIFIED people
-            based on the opinions of other people who love mountain hiking.
-            You know who you are going with, and you are not afraid that your
-            companions will leave you at a difficult moment or will not show up
-            at the meeting point.</p>
+        <p>The main idea of the project is to gather VERIFIED people based on the opinions of other people who love mountain hiking...</p>
     </div>
 </div>
 
@@ -218,28 +183,35 @@
     <div class="modal-content">
         <span class="close">&times;</span>
         <h2>Contact</h2>
-        <p><img src="/images/mainMenu_png/mail.png" alt="" class="mail-icon"> Contatct with me by email:
-            mateusz94orzel@gmail.com</p>
+        <p><img src="/images/mainMenu_png/mail.png" alt="" class="mail-icon"> Contact with me by email: mateusz94orzel@gmail.com</p>
     </div>
 </div>
 
-<div id="privacyPolicyModal" class="modal">
+<div id="findFriendModal" class="modal">
     <div class="modal-content">
-        <span class="close" id="closePrivacyPolicy">&times;</span>
-        <h2>Privacy Policy</h2>
-        <p>
-            All information regarding the protection of your personal data can be found in
-            <a href="/privacyPolicy" target="_blank" id="privacyPolicyLink">
-                full privacy policy
-            </a>.
-        </p>
-        <button id="acceptPrivacyPolicy">Accept</button>
+        <span class="close">&times;</span>
+        <h2>Find Friend</h2>
+        <form th:action="@{/findFriend}" method="GET">
+            <input type="text" name="friendName" placeholder="Search user by name..." required/>
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+            <input type="submit" value="Search"/>
+        </form>
     </div>
 </div>
 
-<input th:value="${users}"
-       id="usersData" typeof="hidden" type="hidden">
+<div id="findTripModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Where do you want to go?</h2>
+        <form th:action="@{/findTrip}" method="GET">
+            <input type="text" name="tripDestination" placeholder="Search trip by destination..." required/>
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+            <input type="submit" value="Find Trip"/>
+        </form>
+    </div>
+</div>
+
+<input th:value="${users}" id="usersData" type="hidden">
 <script type="text/javascript" th:src="@{/js/index.js}"></script>
 </body>
-
 </html>

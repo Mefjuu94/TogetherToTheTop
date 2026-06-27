@@ -1,189 +1,332 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Reset stylów bazy */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body, html {
-    height: 100%;
-}
-
-h1 {
+body {
     display: flex;
+    justify-content: space-between; /* Kluczowe: jeden panel na lewo, drugi na prawo */
     align-items: center;
-    justify-content: center;
-    height: 5vh;
-    padding: 10px;
+    min-height: 100vh;
+    padding: 60px 80px; /* Margines po bokach i od góry ekranu */
+    background: #12181b; 
+    background: linear-gradient(135deg, #1a2327 0%, #0d1113 100%);
+    color: #ffffff;
+    overflow-x: hidden;
+    position: relative;
+    gap: 40px;
 }
 
+/* Pełnoekranowe tło graficzne z wędrowcą */
 .background-image {
     position: fixed;
-    background-attachment: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background-size: cover;
     background-position: center;
-    z-index: -1;
+    background-repeat: no-repeat;
+    z-index: -2;
 }
 
-.profile-container {
-    max-width: 100vh;
-    width: 90%;
-    margin: 0 auto;
-    padding: 20px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+/* Przycisk powrotu w lewym górnym rogu */
+.home-button-wrapper {
+    position: fixed; 
+    top: 25px;
+    left: 25px;
+    z-index: 50; 
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
-
-.grid-container {
-    display: grid ;
-    grid-template-columns: auto auto auto;
-    flex-direction: column;
-    gap: 20px;
+.home-button-wrapper:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
 }
 
-.tile {
-    background-color: rgba(255, 255, 255, 0.9);
-    border: #2c3e50 solid 3px;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    cursor: pointer;
-}
-
-.tile-editable {
-    background-color: rgba(255, 255, 255, 0.9);
-    border: #a127ae solid 3px;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    cursor: pointer;
-}
-
-.tile-link {
-    background-color: rgba(255, 255, 255, 0.9);
-    border: #0634ac solid 3px;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    cursor: pointer;
-}
-
-.tile h3 {
-    margin-bottom: 10px;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
+/* Uniwersalny styl dla obu szklanych paneli */
+.profile-card {
     width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.7);
+    max-width: 440px; /* Węższe panele dają oddech postaci na środku */
+    background: rgba(20, 28, 33, 0.75); 
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 35px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    z-index: 5;
+}
+
+/* Specyfika lewego panelu nagłówka */
+.profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.avatar-container {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 12px auto;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.avatar-placeholder {
+    font-size: 2.2rem;
+    color: #ffffff;
+}
+
+.profile-header h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.user-id {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 2px;
+}
+
+/* Struktura sekcji */
+.profile-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.section-block h2 {
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 6px;
+}
+
+/* Siatka info o użytkowniku (Jedna kolumna na panelu bocznym) */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr; 
+    gap: 12px;
+}
+
+.info-item {
+    background: rgba(13, 17, 19, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: all 0.2s ease;
+}
+
+.info-item.tile-editable {
+    cursor: pointer;
+}
+
+.info-item.tile-editable:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(4px);
+}
+
+/* h3 schowane pod skrypt JS – zachowuje kompatybilność */
+.info-item .label i {
+    margin-right: 6px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.info-item .label h3 {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+.info-item .value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* Siatka statystyk (Prawy panel, układ kwadratowy 2x2) */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.stat-card {
+    background: rgba(13, 17, 19, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
+    padding: 20px 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.stat-card.clickable {
+    cursor: pointer;
+}
+
+.stat-card.clickable:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+}
+
+.stat-icon {
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.rating-star {
+    color: #ffca28;
+}
+
+.stat-value {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Okno dialogowe / Modal na środku */
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 1000; 
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6); 
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-content {
-    background-color: #fff;
-    margin: 15% auto;
-    padding: 20px;
-    border-radius: 10px;
-    width: 80%;
+    background: #1a2327;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 30px;
+    width: 90%;
     max-width: 400px;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    color: white;
+    margin: auto;
 }
 
 .close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .close:hover {
-    color: black;
-    cursor: pointer;
+    color: #ffffff;
 }
 
-.tile-editable:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
+#modal-header {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    font-weight: 500;
 }
 
-.tile-link:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.input-group input {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    color: white;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    outline: none;
 }
 
-#homeButton {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 1000;
+.input-group input:focus {
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
-.home-button {
-    padding: 10px 20px;
-    background: none;
-    font-size: 16px;
+.save-btn {
+    width: 100%;
+    padding: 12px;
+    background: #ffffff;
+    color: #1a2327;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
     cursor: pointer;
-    display: flex;
-    align-items: center;
 }
 
-.home-button img.home-icon {
-    width: 50px;
-    height: auto;
-    margin-right: 8px;
-    background: transparent;
+.save-btn:hover {
+    background: rgba(255, 255, 255, 0.9);
 }
 
-.home-button:hover {
-    background-color: #6dc671;
+/* Stylowanie wgranego zdjęcia awatara */
+.user-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Kluczowe: obrazek utrzyma proporcje i wypełni całe koło bez zniekształceń */
+    border-radius: 50%; /* Idealne koło */
 }
 
-@media (max-width: 800px) {
-
-    .body {
+/* RESPONSIVENESS: Przebudowa na telefon/tablet */
+@media (max-width: 1100px) {
+    body {
+        flex-direction: column; 
         justify-content: center;
+        padding: 90px 20px 40px 20px;
+        gap: 25px;
     }
-
-    .profile-container {
-        justify-self: center;
-        position: relative;
-        max-width: 90%;
-        padding: 10px;
-        z-index: 1;
-        background-color: rgba(255, 255, 255, 0.6);
-        border-radius: 10px;
-        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
-    }
-    .grid-container {
-        display: grid ;
-        grid-template-columns: auto auto;
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .background-image {
-        background-position: 80% center;
-        background-attachment: fixed;
-        background-size: cover;
+    
+    .profile-card {
+        max-width: 500px; 
     }
 }
