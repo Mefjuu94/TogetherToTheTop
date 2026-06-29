@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-/* Reset stylów bazy */
 * {
     margin: 0;
     padding: 0;
@@ -10,10 +9,10 @@
 
 body {
     display: flex;
-    justify-content: space-between; /* Kluczowe: jeden panel na lewo, drugi na prawo */
+    justify-content: space-between;
     align-items: center;
     min-height: 100vh;
-    padding: 60px 80px; /* Margines po bokach i od góry ekranu */
+    padding: 60px 80px; 
     background: #12181b; 
     background: linear-gradient(135deg, #1a2327 0%, #0d1113 100%);
     color: #ffffff;
@@ -22,7 +21,7 @@ body {
     gap: 40px;
 }
 
-/* Pełnoekranowe tło graficzne z wędrowcą */
+
 .background-image {
     position: fixed;
     top: 0;
@@ -35,7 +34,7 @@ body {
     z-index: -2;
 }
 
-/* Przycisk powrotu w lewym górnym rogu */
+
 .home-button-wrapper {
     position: fixed; 
     top: 25px;
@@ -62,10 +61,10 @@ body {
     transform: translateY(-2px);
 }
 
-/* Uniwersalny styl dla obu szklanych paneli */
+
 .profile-card {
     width: 100%;
-    max-width: 440px; /* Węższe panele dają oddech postaci na środku */
+    max-width: 440px; 
     background: rgba(20, 28, 33, 0.75); 
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
@@ -76,7 +75,7 @@ body {
     z-index: 5;
 }
 
-/* Specyfika lewego panelu nagłówka */
+
 .profile-header {
     text-align: center;
     margin-bottom: 30px;
@@ -111,7 +110,7 @@ body {
     margin-top: 2px;
 }
 
-/* Struktura sekcji */
+
 .profile-sections {
     display: flex;
     flex-direction: column;
@@ -130,7 +129,7 @@ body {
     padding-bottom: 6px;
 }
 
-/* Siatka info o użytkowniku (Jedna kolumna na panelu bocznym) */
+
 .info-grid {
     display: grid;
     grid-template-columns: 1fr; 
@@ -158,7 +157,6 @@ body {
     transform: translateX(4px);
 }
 
-/* h3 schowane pod skrypt JS – zachowuje kompatybilność */
 .info-item .label i {
     margin-right: 6px;
     color: rgba(255, 255, 255, 0.6);
@@ -179,7 +177,7 @@ body {
     color: #ffffff;
 }
 
-/* Siatka statystyk (Prawy panel, układ kwadratowy 2x2) */
+
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -230,7 +228,7 @@ body {
     color: rgba(255, 255, 255, 0.5);
 }
 
-/* Okno dialogowe / Modal na środku */
+
 .modal {
     display: none; 
     position: fixed;
@@ -309,15 +307,14 @@ body {
     background: rgba(255, 255, 255, 0.9);
 }
 
-/* Stylowanie wgranego zdjęcia awatara */
+
 .user-avatar-img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Kluczowe: obrazek utrzyma proporcje i wypełni całe koło bez zniekształceń */
-    border-radius: 50%; /* Idealne koło */
+    object-fit: cover; 
+    border-radius: 50%; 
 }
 
-/* RESPONSIVENESS: Przebudowa na telefon/tablet */
 @media (max-width: 1100px) {
     body {
         flex-direction: column; 

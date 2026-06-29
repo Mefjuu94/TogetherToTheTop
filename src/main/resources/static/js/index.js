@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-
-    // --- Pobranie Modali ---
     const contactModal = document.getElementById("contactModal");
     const aboutModal = document.getElementById("aboutModal");
     const loginModal = document.getElementById("loginModal");
@@ -9,11 +7,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const findTripModal = document.getElementById("findTripModal");
     const privacyPolicyModal = document.getElementById("privacyPolicyModal");
 
-    // --- Pobranie Przycisków/Kafelków (Poprawione selektory pod nową strukturę HTML) ---
     const loginButton = document.querySelector(".main-grid .tile a[href='/login']");
     const registerButton = document.querySelector(".main-grid .tile a[href='/register']");
     
-    // Zabezpieczenie selektora profilu, szukamy kafelka z profile_not_active w obrazku
     const profileButton = document.querySelector(".main-grid .tile a[href='/login'] img[src*='user-profile_not_active']");
     
     const mapButton = document.getElementById("mapButton");
@@ -22,11 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const aboutButton = document.getElementById("aboutButton");
     const contactButton = document.getElementById("contactButton");
     
-    // Nowe kafelki-przyciski dla zalogowanych użytkowników
     const findFriendTileBtn = document.getElementById("findFriendTileBtn");
     const findTripTileBtn = document.getElementById("findTripTileBtn");
 
-    // --- Otwieranie Modali ---
     if (loginButton) {
         loginButton.onclick = function (event) {
             event.preventDefault();
@@ -41,7 +35,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Przekierowania na login dla niezalogowanych
     const loginRedirects = [mapButton, profileButton, announcementButton, find_TripButton];
     loginRedirects.forEach(btn => {
         if (btn) {
@@ -66,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Otwieranie nowych wyszukiwarek (dla zalogowanych)
+   
     if (findFriendTileBtn) {
         findFriendTileBtn.onclick = function (event) {
             event.preventDefault();
@@ -81,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // --- Zamykanie Modali przez kliknięcie w ikonę "X" ---
+    
     const closeButtons = document.querySelectorAll(".modal .close");
     closeButtons.forEach(btn => {
         btn.onclick = function () {
@@ -95,14 +88,13 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }
 
-    // --- Zamykanie Modali przez kliknięcie w tło (Zunifikowane) ---
     window.onclick = function (event) {
         if (event.target.classList.contains("modal")) {
             event.target.style.display = "none";
         }
     };
 
-    // --- Polityka Prywatności ---
+    // --- Private policy ---
     if (!localStorage.getItem('privacyPolicyAccepted') && privacyPolicyModal) {
         privacyPolicyModal.style.display = 'flex';
     }
@@ -114,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }
 
-    // --- Logika Walidacji Rejestracji ---
+    // --- register validation ---
     const emailInput = document.getElementById("emailInput");
     const passwordInput = document.getElementById("passwordInput");
     const tooltipContent = document.getElementById("tooltipContent");

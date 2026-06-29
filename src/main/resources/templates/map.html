@@ -1,159 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trip creator</title>
-    <script type="module" src="/js/map.js"></script>
-    <meta name="_csrf" content="TWÓJ_TOKEN_CSRF">
-
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
-
-    <!-- Leaflet Locate Control CSS (for user location) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol@0.72.0/dist/L.Control.Locate.min.css"/>
-
-    <!-- Leaflet MarkerCluster CSS (for marker clustering) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css"/>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
+    <title>Trip Creator</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
     <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
     <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet"/>
 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <link type="text/css" th:href="@{/css/map.css}" rel="stylesheet"/>
-
 </head>
 <body>
-<div id="container">
-
-    <div id="sidebar">
-        <h3>Route Planner</h3>
-
-        <label for="searchInput"></label><input type="text" id="searchInput" placeholder="Search..."/>
-        <button id="searchBtn">Search</button>
-        <div id="searchResults" class="dropdown"></div>
-
-        <div id="routeInfo">
-            <p><strong>Distance:</strong> <span id="distance"></span></p>
-            <p><strong>Duration:</strong> <span id="duration"></span></p>
-
-        </div>
-        <div id="poiFilters">
-            <label><input type="checkbox" id="restaurant"> Restaurants 🍽️</label><br>
-            <label><input type="checkbox" id="cafe"> Cafes ☕</label><br>
-            <label><input type="checkbox" id="parking" checked> Parking 🅿️</label><br>
-            <label><input type="checkbox" id="school" checked> Schools 🏫</label><br>
-            <label><input type="checkbox" id="hospital" checked> Hospitals 🏥</label><br>
-            <label><input type="checkbox" id="peak" checked> Peaks ⛰️</label><br> <!-- Added Peaks checkbox -->
-            <label><input type="checkbox" id="generalPoi"> General POIs 📍</label><br>
-        </div>
-
-        <button id="addSavedWaypointBtn">Add Saved Waypoint</button>
-        <div id="waypoints-section">
-            <div id="points"><h3>Waypoints :</h3></div>
-            <div id="waypointsContainer">
-                <ul id="waypointsList"></ul>
-            </div>
-        </div>
-    </div>
 
     <div id="map"></div>
 
-    <div id="announcement_information">
-        <h2>Announcement information</h2>
-        <div>
-            <p th:each="tekst: ${array}"
-               th:text="${tekst}"></p>
-        </div>
-        <form>
-            <div class="form-group">
-                <label for="description">describe your trip:</label>
-                <textarea id="description" rows="6"
-                          placeholder="Description of destination, route, etc. max 1000 signs!"></textarea>
+    <div id="app-container">
+
+        <aside id="sidebar-left" class="glass-panel">
+            <h3 class="panel-title">Route Planner</h3>
+            
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search places..."/>
+                <button id="searchBtn">Search</button>
+                <div id="searchResults" class="dropdown"></div>
             </div>
 
-            <div class="checkbox-group">
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" id="driver"> I am driving a vehicle and I can take someone with me
-                    </label>
-                    <label id="DriverPeopleInputLabel" style="display: none;">
-                        specify number of people: <input type="text" id="DriverPeopleInput" min="1" max="99"
-                                                         placeholder="amount of people 1-99" value="1">
-                    </label>
+            <div id="routeInfo" class="stats-box">
+                <div class="stat-item">
+                    <span class="stat-label">DISTANCE</span>
+                    <span id="distance" class="stat-value">0.00 km</span>
                 </div>
-
-                <div class="checkbox">
-                    <label><input type="checkbox" id="animals"> I tolerate animals</label>
-                </div>
-                    <div class="checkbox">
-                    <label>
-                        <input type="checkbox" id="closedGroupCheckbox"> Closed group (limiting the number of people)
-                    </label>
-
-                    <label id="peopleInputLabel" style="display: none;">specify number of people: <input type="text" min="1" max="99" required id="peopleInput"
-                                                         placeholder="amount of people 1-99" value="1">
-                    </label>
+                <div class="stat-item">
+                    <span class="stat-label">DURATION</span>
+                    <span id="duration" class="stat-value">0s</span>
                 </div>
             </div>
 
-        </form>
-        <div id="destination-div">
-            <label id="destination-label">Destination:</label>
-            <label for="destination"></label><input type="text" id="dest" placeholder="Your exact destination"/>
-        </div>
-        <div id="time">
-            <div>
-                <label>Set time of Your Trip </label>
+            <div class="filter-section">
+                <h4>Points of Interest (POI)</h4>
+                <div id="poiFilters" class="checkbox-grid">
+                    <label class="custom-checkbox"><input type="checkbox" id="restaurant"> <span>🍽️ Restaurants</span></label>
+                    <label class="custom-checkbox"><input type="checkbox" id="cafe"> <span>☕ Cafes</span></label>
+                    <label class="custom-checkbox"><input type="checkbox" id="parking" checked> <span>🅿️ Parking</span></label>
+                    <label class="custom-checkbox"><input type="checkbox" id="school" checked> <span>🏫 Schools</span></label>
+                    <label class="custom-checkbox"><input type="checkbox" id="hospital" checked> <span>🏥 Hospitals</span></label>
+                    <label class="custom-checkbox"><input type="checkbox" id="peak" checked> <span>⛰️ Peaks</span></label>
+                    <label class="custom-checkbox"><input type="checkbox" id="generalPoi"> <span>📍 General POIs</span></label>
+                </div>
             </div>
-            <div>
-                <label for="date"><input type="datetime-local" id="dateTime" name="date"></label>
+
+            <button id="addSavedWaypointBtn" class="btn-secondary">Add Saved Waypoint</button>
+            
+            <div id="waypoints-section">
+                <h4>Waypoints :</h4>
+                <div id="waypointsContainer">
+                    <ul id="waypointsList"></ul>
+                </div>
             </div>
-        </div>
-        <div>
-            <button id="add_announcement" type="button" onclick="sendToJava()">
-                Add announcement
-            </button>
-        </div>
+        </aside>
 
-        <form id="saveForm"
-              action="/sendData" method="POST">
+        <aside id="sidebar-right" class="glass-panel">
+            <h3 class="panel-title">Announcement Information</h3>
+            
+            <div th:if="${array}" class="info-messages">
+                <p th:each="tekst: ${array}" th:text="${tekst}"></p>
+            </div>
 
-            <input type="hidden" id="waypoints" name="waypoints">
-            <input type="hidden" id="coordinatesOfTrip" name="coordinatesOfTrip">
-            <input type="hidden" id="allRouteDuration" name="allRouteDuration">
-            <input type="hidden" id="distanceOfTrip" name="distanceOfTrip">
+            <form id="creatorForm" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="description">Describe your trip:</label>
+                    <textarea id="description" rows="5" maxlength="1000" placeholder="Description of destination, route, etc. (max 1000 signs)"></textarea>
+                </div>
 
-            <input type="hidden" id="descriptionOfTrip" name="descriptionOfTrip">
-            <input type="hidden" id="driverCheck" name="driverCheck">
-            <input type="hidden" id="amountOfPeopleDriver" name="amountOfPeopleDriver">
-            <input type="hidden" id="isCheckedAnimals" name="isCheckedAnimals">
-            <input type="hidden" id="isCheckedGroup" name="isCheckedGroup">
-            <input type="hidden" id="amountOfPeopleInGroup" name="amountOfPeopleInGroup">
-            <input type="hidden" id="destination" name="destination">
-            <input type="hidden" id="date" name="date">
-            <input type="hidden" id="jsonGeometryWaypoints" name="jsonGeometryWaypoints">
-            <input type="hidden" id="waypointsLength" name="waypointsLength">
-            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                <div class="checkbox-options">
+                    <div class="option-box">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="driver"> 
+                            <span>🚗 I am driving a vehicle</span>
+                        </label>
+                        <div id="DriverPeopleInputLabel" class="sub-input" style="display: none;">
+                            <label>Seats: <input type="number" id="DriverPeopleInput" min="1" max="99" value="1"></label>
+                        </div>
+                    </div>
 
-        </form>
+                    <div class="option-box">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="animals"> 
+                            <span>🐕 I tolerate animals</span>
+                        </label>
+                    </div>
 
+                    <div class="option-box">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="closedGroupCheckbox"> 
+                            <span>🔒 Closed group</span>
+                        </label>
+                        <div id="peopleInputLabel" class="sub-input" style="display: none;">
+                            <label>Max people: <input type="number" id="peopleInput" min="1" max="99" value="1"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group input-tile" id="destination-div">
+                    <label for="dest">Destination</label>
+                    <input type="text" id="dest" placeholder="Your exact destination"/>
+                </div>
+
+                <div class="form-group input-tile" id="time">
+                    <label for="dateTime">Departure Time</label>
+                    <input type="datetime-local" id="dateTime">
+                </div>
+
+                <button id="add_announcement" class="btn-primary" type="button">
+                    Publish Announcement
+                </button>
+            </form>
+
+            <form id="saveForm" action="/sendData" method="POST" style="display: none;">
+                <input type="hidden" id="waypoints" name="waypoints">
+                <input type="hidden" id="coordinatesOfTrip" name="coordinatesOfTrip">
+                <input type="hidden" id="allRouteDuration" name="allRouteDuration">
+                <input type="hidden" id="distanceOfTrip" name="distanceOfTrip">
+                <input type="hidden" id="descriptionOfTrip" name="descriptionOfTrip">
+                <input type="hidden" id="driverCheck" name="driverCheck">
+                <input type="hidden" id="amountOfPeopleDriver" name="amountOfPeopleDriver">
+                <input type="hidden" id="isCheckedAnimals" name="isCheckedAnimals">
+                <input type="hidden" id="isCheckedGroup" name="isCheckedGroup">
+                <input type="hidden" id="amountOfPeopleInGroup" name="amountOfPeopleInGroup">
+                <input type="hidden" id="destination" name="destination">
+                <input type="hidden" id="date" name="date">
+                <input type="hidden" id="jsonGeometryWaypoints" name="jsonGeometryWaypoints">
+                <input type="hidden" id="waypointsLength" name="waypointsLength">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            </form>
+        </aside>
     </div>
-</div>
 
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-<!-- Leaflet Locate Control (for finding user location) -->
-<script src="https://unpkg.com/leaflet.locatecontrol@0.72.0/dist/L.Control.Locate.min.js"></script>
-<!-- Leaflet Routing Machine (for route planning) -->
-<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
-<!-- Leaflet Control Geocoder (for address search) -->
-<script src="https://unpkg.com/leaflet-control-geocoder@1.13.0/dist/Control.Geocoder.js"></script>
-<!-- Leaflet MarkerCluster (for marker clustering) -->
-<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-
-<script type="text/javascript" th:src="@{/js/map.js}" ></script>
+    <script type="module" th:src="@{/js/map.js}"></script>
 </body>
 </html>
-
-

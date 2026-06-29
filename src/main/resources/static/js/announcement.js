@@ -1,45 +1,47 @@
-let trip = null;
-
-document.getElementById('trip_info').onclick = function () {
-    tripDescription = this.getAttribute('tripDescription');
-    destination = this.getAttribute('destination');
-    tripDuration = this.getAttribute('tripDuration');
-    closedGroup = this.getAttribute('closedGroup');
-    amountOfClosedGroup = this.getAttribute('amountOfClosedGroup');
-    DriverPeople = this.getAttribute('DriverPeople');
-    amountOfDriverPeople = this.getAttribute('amountOfDriverPeople');
-
-    console.log(trip);
-};
-
-
 document.addEventListener("DOMContentLoaded", function () {
-
-    const tripInfo = document.getElementById("trip_info");
-
-    window.onclick = function (event) {
-        if (event.target === tripInfo) {
-            tripInfo.style.display = "none";
-        }
-
-        const aboutButton = document.getElementById("trip_info");
+    const tripModal = document.getElementById("trip_info");
+    if (!tripModal) return; 
 
 
-        aboutButton.onclick = function (event) {
-            event.preventDefault();
-            tripInfo.style.display = "block";
-        }
+    const closeBtn = tripModal.querySelector(".close");
 
-        const closeAbout = tripInfo.querySelector(".close");
+    window.openTripDetails = function (element) {
+        if (!element) return;
 
-        closeAbout.onclick = function () {
-            tripInfo.style.display = "none";
-        }
+        const tripData = {
+            description: element.getAttribute('tripDescription') || 'No description available',
+            destination: element.getAttribute('destination') || '',
+            duration: element.getAttribute('tripDuration') || '',
+            closedGroup: element.getAttribute('closedGroup') === 'true',
+            amountOfClosedGroup: element.getAttribute('amountOfClosedGroup') || '0',
+            driverPeople: element.getAttribute('DriverPeople') || '',
+            amountOfDriverPeople: element.getAttribute('amountOfDriverPeople') || '0'
+        };
 
-        window.onclick = function (event) {
-            if (event.target === tripInfo) {
-                tripInfo.style.display = "none";
-            }
-        }
+        console.log("Loaded Trip Data:", tripData);
+
+        const modalDest = document.getElementById("modalDestination");
+        const modalDesc = document.getElementById("modalDescription");
+        const modalDuration = document.getElementById("modalDuration");
+
+        if (modalDest) modalDest.textContent = tripData.destination;
+        if (modalDesc) modalDesc.textContent = tripData.description;
+        if (modalDuration) modalDuration.textContent = tripData.duration;
+
+        tripModal.style.display = "flex";
+    };
+
+  
+    if (closeBtn) {
+        closeBtn.onclick = function () {
+            tripModal.style.display = "none";
+        };
     }
+
+    // --- close modal when click background ---
+    window.addEventListener("click", function (event) {
+        if (event.target === tripModal) {
+            tripModal.style.display = "none";
+        }
+    });
 });

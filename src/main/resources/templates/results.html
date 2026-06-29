@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,47 +9,61 @@
 <body style="background-image: url('/images/tripBackground.jpg');">
 
 <a href="/" id="homeButton">
-    <button class="home-button" id="home-button"><img src="/images/mainMenu_png/home-button.png" alt="return home"
-                                                      class="home-icon"></button>
+    <button class="home-button" id="home-button">
+        <img src="/images/mainMenu_png/home-button.png" alt="return home" class="home-icon">
+    </button>
 </a>
 
-<div class="container announcements-container">
+<div class="container">
     <h1>Results</h1>
 
     <div class="rating-list" th:if="${customUser != null}">
         <a th:href="@{'/userProfile/' + ${user.getId()}}" th:each="user : ${customUser}" class="announcement-item">
-            <div id="destination" class="small-grid">
-                <div id="dest1"><h2>Name:</h2></div>
-                <div id="dest2"><h2 th:text="${user.getCustomUserName()}">Name:</h2></div>
+            
+            <div class="trip-creator-info" style="align-items: flex-start; min-width: 180px;">
+                <span class="label">Username:</span>
+                <span class="trip-destination" th:text="${user.getCustomUserName()}" style="font-size: 1.25rem;">userCztery</span>
             </div>
 
-            <div id="distance" class="small-grid">
-                <div id="dist1"><h2>City</h2></div>
-                <div id="dist2"><p th:text="${user.getCity()}">City</p></div>
+            <div class="trip-creator-info" style="align-items: flex-start;">
+                <span class="label">City:</span>
+                <span class="creator-name" th:text="${user.getCity()}">fajne</span>
             </div>
 
-            <div id="Creator" class="small-grid">
-                <div id="creat1"><h2>Age</h2></div>
-                <div id="creat2"><p th:text="${user.getAge()}">Age</p></div>
+            <div class="trip-creator-info" style="align-items: flex-start;">
+                <span class="label">Age:</span>
+                <span class="creator-name" th:text="${user.getAge()}">66</span>
             </div>
 
-            <div id="icon_div" class="small-grid">
-                <div><h2>Numbers of Trips</h2></div>
-                <div><p th:text="${user.getNumbersOfTrips()}">Trips</p></div>
+            <div class="trip-creator-info" style="align-items: flex-start;">
+                <span class="label">Trips Organized:</span>
+                <span class="trip-date" th:text="${user.getNumbersOfTrips()}">4</span>
             </div>
+            
         </a>
     </div>
 
     <div class="rating-list" th:if="${trips != null}">
         <a th:href="@{'/trips/' + ${trip.getId()}}" th:each="trip : ${trips}" class="announcement-item">
-            <h3 th:text="${trip.getDestination()}">Destination</h3>
-            <p th:text="${trip.getTripDuration()}">Duration</p>
-            <p th:text="${trip.getTripDateTime()}">time</p>
-            <p th:if="${trip.isTripVisible()}" th:text="'Trip is active'">active or not</p>
-            <p th:unless="${trip.isTripVisible()}" th:text="'Trip is hidden'">active or not</p>
+            
+            <div class="trip-main-info">
+                <span class="trip-destination" th:text="${trip.getDestination()}">Destination</span>
+                <span class="trip-distance" th:text="${trip.getTripDuration()}">Duration</span>
+            </div>
+
+            <div class="trip-status-info">
+                <span class="trip-date" th:text="${#temporals.format(trip.tripDateTime, 'dd.MM.yyyy, HH:mm')}">25.07.2026, 07:45</span>
+                
+                <div class="status-icon-wrapper" style="border-radius: 8px; width: auto; padding: 5px 10px; height: auto;">
+                    <span th:if="${trip.isTripVisible()}" style="color: #2baf31; font-weight: bold; font-size: 0.85rem;">Active</span>
+                    <span th:unless="${trip.isTripVisible()}" style="color: #666; font-weight: bold; font-size: 0.85rem;">Hidden</span>
+                </div>
+            </div>
+            
         </a>
     </div>
 </div>
+
 <script type="text/javascript" th:src="@{/js/announcement.js}"></script>
 </body>
 </html>

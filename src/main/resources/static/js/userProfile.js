@@ -14,14 +14,12 @@ document.addEventListener("DOMContentLoaded", function () {
         modal.style.display = "flex";
 
         if (fieldName === "avatar") {
-            // Ukrywamy zwykły tekst, pokazujemy wybór pliku
             fieldValueInput.style.display = "none";
             fieldValueInput.required = false;
             avatarFileInput.style.display = "block";
             avatarFileInput.required = true;
             fieldValueInput.value = ""; 
         } else {
-            // Pokazujemy standardowy input tekstowy
             fieldValueInput.style.display = "block";
             fieldValueInput.required = true;
             avatarFileInput.style.display = "none";
@@ -30,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
             fieldValueInput.value = currentValue;
         }
 
-        // Walidacja wejścia (Twoje reguły)
         if (fieldName === "age") {
             fieldValueInput.addEventListener("input", validateNumericInput);
         } else {
@@ -44,8 +41,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Konwersja obrazka na Base64 przy wyborze pliku
-    // Kompresja, przycinanie do kwadratu i konwersja do małego Base64
+    // Convert image to Base64 upon file selection
+    // Compression, cropping to a square, and conversion to a small Base64 string
     avatarFileInput.addEventListener("change", function () {
         const file = this.files[0];
         if (file) {
@@ -53,34 +50,33 @@ document.addEventListener("DOMContentLoaded", function () {
             reader.onload = function (e) {
                 const img = new Image();
                 img.onload = function () {
-                    // Tworzymy wirtualne płótno (canvas) o wymiarach docelowego awatara
+                    
                     const canvas = document.createElement("canvas");
-                    const size = 150; // Wyjściowy rozmiar awatara: 150x150px (w zupełności wystarczy)
+                    const size = 150; // Initial avatar size: 150x150px
                     canvas.width = size;
                     canvas.height = size;
                     const ctx = canvas.getContext("2d");
-
-                    // Logika wycinania środka (crop do idealnego kwadratu)
+                    
                     let sourceX = 0;
                     let sourceY = 0;
                     let sourceSize = Math.min(img.width, img.height);
 
-                    // Jeśli obrazek jest szeroki (panoramiasty), wycinamy środek w poziomie
+                    // If the image is wide (panoramic), crop the center horizontally
                     if (img.width > img.height) {
                         sourceX = (img.width - img.height) / 2;
                     } 
-                    // Jeśli obrazek jest wysoki (pionowy), wycinamy środek w pionie
+                    // If the image is tall (portrait orientation), we crop the vertical center.
                     else if (img.height > img.width) {
                         sourceY = (img.height - img.width) / 2;
                     }
 
-                    // Rysujemy przycięty i przeskalowany obraz na płótnie
+                    // Draw the cropped and scaled image onto the canvas
                     ctx.drawImage(img, sourceX, sourceY, sourceSize, sourceSize, 0, 0, size, size);
 
-                    // Generujemy leciutki Base64 w formacie JPEG z jakością 80%
+                    // Generate a lightweight Base64 string in JPEG format with 80% quality
                     const compressedBase64 = canvas.toDataURL("image/jpeg", 0.8);
                     
-                    // Przypisujemy gotowy, malutki tekst do inputu formularza
+                    // Assign the ready-made, short text from base64 to the form input
                     fieldValueInput.value = compressedBase64;
                     console.log("Avatar skompresowany pomyślnie. Rozmiar ciągu: " + compressedBase64.length + " znaków.");
                 };

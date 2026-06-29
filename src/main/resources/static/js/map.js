@@ -356,7 +356,6 @@ map.on('click', (e) => {
         .setDOMContent(popupContent)
         .addTo(map);
 
-    // Obsługa zamykania popupu po 300ms, jeśli myszka wyjedzie poza obszar
     // close poup after 300 ms, if mouseover poupwindow
     let popupTimeout;
     popupContent.addEventListener('mouseleave', () => {
@@ -403,7 +402,7 @@ function updateWaypointsList() {
 // add event listener to button who save waypoint
 document.getElementById('addSavedWaypointBtn').addEventListener('click', () => {
     if (tempCoordinates) {
-        // Dodaj waypoint tak samo jak w przypadku POI
+        
         waypoints.push({coords: tempCoordinates, name: 'My Point'});
         updateWaypointsList();
         route();  // count route
@@ -420,7 +419,7 @@ document.getElementById('addSavedWaypointBtn').addEventListener('click', () => {
 
 document.getElementById('searchBtn').addEventListener('click', async () => {
     const searchInput = document.getElementById('searchInput').value;
-    if (!searchInput) return; // Jeśli pole wyszukiwania jest puste, wyjdź
+    if (!searchInput) return; 
 
     try {
         const url = `https://api.mapy.cz/v1/geocode?query=${searchInput}&lang=pl&limit=5&type=regional&type=poi`;
@@ -434,64 +433,58 @@ document.getElementById('searchBtn').addEventListener('click', async () => {
         });
 
         const data = await response.json();
-        // console.log('Results:', data); // Logowanie wyników w konsoli
 
-        // Wyczyść poprzednie wyniki
         const searchResults = document.getElementById('searchResults');
         searchResults.innerHTML = '';
 
-        // Sprawdź, czy są jakieś wyniki
         if (data.items && data.items.length > 0) {
-            searchResults.style.display = 'block'; // Pokaż wyniki
+            searchResults.style.display = 'block'; 
 
             data.items.forEach((item, index) => {
                 const lon = item.position.lon;
                 const lat = item.position.lat;
                 const label = item.name + "\n" + item.label || `Wynik ${index + 1}`;
 
-                // Stwórz element listy dla każdego wyniku
                 const resultItem = document.createElement('div');
                 resultItem.textContent = label;
                 resultItem.className = 'search-result-item'; // css class
 
-                // Obsługa kliknięcia na wynik
                 resultItem.addEventListener('click', () => {
                     waypoints.push({coords: [lon, lat], name: label});
                     updateWaypointsList();
-                    route(); // Zaktualizuj trasę
+                    route(); 
 
-                    // Centrum mapy na wybranym wyniku
+                    // center map 
                     map.flyTo({
                         center: [lon, lat],
                         zoom: 15
                     });
 
-                    // Dodaj marker na mapie dla wybranego wyniku
+                    // add mark
                     new maplibregl.Marker()
                         .setLngLat([lon, lat])
-                        .setPopup(new maplibregl.Popup().setText(label)) // Etykieta na markerze
+                        .setPopup(new maplibregl.Popup().setText(label)) 
                         .addTo(map);
 
-                    // Wyczyść wyniki wyszukiwania po kliknięciu
+                    // clean search
                     searchResults.innerHTML = '';
-                    searchResults.style.display = 'none'; // Ukryj listę
+                    searchResults.style.display = 'none'; // hide list
                 });
 
-                // Dodaj wynik do listy
+                // add to list
                 searchResults.appendChild(resultItem);
             });
         } else {
-            // Jeśli brak wyników
             const noResults = document.createElement('div');
             noResults.textContent = "Brak wyników.";
             searchResults.appendChild(noResults);
-            searchResults.style.display = 'block'; // Pokaż informację o braku wyników
+            searchResults.style.display = 'block'; // show info about no search
         }
     } catch (error) {
         console.error('Error fetching data:', error);
         const searchResults = document.getElementById('searchResults');
         searchResults.innerHTML = '<div>Wystąpił błąd podczas wyszukiwania.</div>';
-        searchResults.style.display = 'block'; // Pokaż błąd
+        searchResults.style.display = 'block'; // show error
     }
 });
 
@@ -523,7 +516,7 @@ map.on('click', (e) => {
         .addTo(map);
 });
 
-// localiye user
+// localize user
 function locateUser() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -655,7 +648,6 @@ timeInput.addEventListener('input', function () {
 
 var submitButton = document.getElementById('add_announcement');
 
-// Funkcja do sprawdzania, czy wszystkie pola są wypełnione
 function checkInputs() {
 
     if (descriptionBool && destinationBool && timeBool) {
@@ -670,7 +662,6 @@ function checkInputs() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Dodaj listener do przycisku "Add announcement"
     const addAnnouncementButton = document.getElementById('add_announcement');
     if (addAnnouncementButton) {
         addAnnouncementButton.addEventListener('click', sendToJava);
@@ -681,45 +672,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function sendToJava() {
+    if (!activeSendButton) {
+        alert("Wypełnij wymagane pola (Opis, Cel oraz Czas wyjazdu) przed wysłaniem!");
+        return;
+    }
 
-    if(activeSendButton) {
+    if (waypoints.length < 2) {
+        alert("Musisz wyznaczyć trasę na mapie składającą się z co najmniej 2 punktów!");
+        return;
+    }
 
-        var waypoints1 = waypoints;
-        var waypointsLength = waypoints.length;
-        var coords2 = coordinatesOfTrip;
-        var duration3 = allRouteDuration;
-        var description = document.getElementById('description').value;
-        const isCheckedDriver = document.getElementById('driver').checked;
-        var amountOfPeopleDriver = document.getElementById('DriverPeopleInput').value;
-        const isCheckedAnimals = document.getElementById('animals').checked;
-        const isCheckedGroup = document.getElementById('closedGroupCheckbox').checked;
-        var amountOfPeopleInGroup = document.getElementById('peopleInput').value;
-        var dest = document.getElementById('dest').value;
-        var date = document.getElementById('dateTime').value;
-        var textContentOfDistance = document.getElementById('distance').textContent;
+    try {
+        const descriptionValue = document.getElementById("description").value;
+        const driverChecked = document.getElementById("driver").checked;
+        const driverPeopleValue = document.getElementById("DriverPeopleInput").value;
+        const animalsChecked = document.getElementById("animals").checked;
+        const closedGroupChecked = document.getElementById("closedGroupCheckbox").checked;
+        const closedGroupPeopleValue = document.getElementById("peopleInput").value;
+        const destinationValue = document.getElementById("dest").value;
+        const dateTimeValue = document.getElementById("dateTime").value;
 
-        // Ustawianie wartości w polach ukrytych formularza
-        document.getElementById('waypoints').value = JSON.stringify(waypoints1);
-        document.getElementById('coordinatesOfTrip').value = JSON.stringify(coords2);
-        document.getElementById('allRouteDuration').value = duration3;
+        let waypointsStringArray = waypoints.map(wp => wp.coords.join(','));
+        document.getElementById("waypoints").value = waypointsStringArray.join(', ');
 
-        document.getElementById('descriptionOfTrip').value = description;
-        document.getElementById('driverCheck').value = isCheckedDriver;
-        document.getElementById('amountOfPeopleDriver').value = amountOfPeopleDriver;
-        document.getElementById('isCheckedAnimals').bool = isCheckedAnimals;
-        document.getElementById('isCheckedGroup').value = isCheckedGroup;
-        document.getElementById('amountOfPeopleInGroup').value = amountOfPeopleInGroup;
-        document.getElementById('destination').value = dest;
-        document.getElementById('date').value = date;
-        document.getElementById('distanceOfTrip').value = textContentOfDistance;
-        document.getElementById('jsonGeometryWaypoints').value = jsonGeometryWaypoints;
-        document.getElementById('waypointsLength').value = waypoints.length;
+        document.getElementById("coordinatesOfTrip").value = coordinatesOfTrip;
+        document.getElementById("jsonGeometryWaypoints").value = jsonGeometryWaypoints;
+        
+        document.getElementById("allRouteDuration").value = allRouteDuration;
+        document.getElementById("distanceOfTrip").value = document.getElementById('distance').textContent;
+        
+        document.getElementById("descriptionOfTrip").value = descriptionValue;
+        document.getElementById("driverCheck").value = driverChecked ? "yes" : "no";
+        document.getElementById("amountOfPeopleDriver").value = driverChecked ? driverPeopleValue : "0";
+        document.getElementById("isCheckedAnimals").value = animalsChecked ? "yes" : "no";
+        document.getElementById("isCheckedGroup").value = closedGroupChecked ? "yes" : "no";
+        document.getElementById("amountOfPeopleInGroup").value = closedGroupChecked ? closedGroupPeopleValue : "0";
+        document.getElementById("destination").value = destinationValue;
+        document.getElementById("date").value = dateTimeValue;
+        document.getElementById("waypointsLength").value = waypoints.length;
 
-        if (date.length < 1 || dest.length < 1 || description.length < 1) {
-            alert("fulfill description, destination, date and time of trip!")
-        } else {
-            console.log("wysyłam")
-            document.getElementById('saveForm').submit();
-        }
+        document.getElementById("saveForm").submit();
+
+    } catch (error) {
+        console.error("Błąd podczas przygotowywania danych do wysyłki:", error);
+        alert("Wystąpił nieoczekiwany błąd podczas zapisu wycieczki.");
     }
 }
+
+window.sendToJava = sendToJava;

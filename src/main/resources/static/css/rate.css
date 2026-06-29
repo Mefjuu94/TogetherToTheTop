@@ -1,246 +1,271 @@
-html, body {
-    height: 90%;
+* {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    color: #050505;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
     width: 100%;
-    overflow-x: hidden; /* Ukrycie poziomego przewijania */
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #333333;
+    overflow: hidden; 
+    background: transparent;
 }
 
-#homeButton {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 1000;
-}
-
-#approveButton:disabled {
-    background-color: #ccc; /* Gray background */
-    color: #666; /* Gray text */
-    cursor: not-allowed; /* Change cursor to indicate it's not clickable */
-}
-
-.home-button {
-    padding: 10px 20px;
-    background: none;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-
-.home-button img.home-icon {
-    width: 50px;
-    height: auto;
-    background: transparent; /* Tło ikony przezroczyste */
-}
 
 .background-blur {
-    position: fixed; /* Umożliwia przykrycie całej strony */
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('/images/rate_Background.jpg'); /* Obrazek tła jest dobrze mimo podkreślenia*/
+    background-image: url('/images/rate_Background.jpg');
     background-size: cover;
     background-position: center;
-    filter: blur(2px); /* Efekt blur */
+    background-repeat: no-repeat;
+    background-color: #1e1e24;
+    filter: blur(8px);
+    z-index: -1;
 }
+
+.background-blur::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.35);
+}
+
 
 .content {
-    position: relative; /* Umożliwia umieszczenie treści nad nakładką */
-    z-index: 1; /* Zapewnia, że treść jest nad tłem */
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100vh;            
+    display: flex;
+    flex-direction: column;
+    align-items: center;      
+    justify-content: center;   
+    padding: 20px;
 }
 
 
-#button-approve {
-    display: flex;            /* Użycie Flexboxa */
-    justify-content: center;  /* Wyśrodkowanie poziome */
-    margin-top: 20px;        /* Odstęp od góry */
+#homeButton {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+.home-button {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 50%;
+    width: 46px;
+    height: 46px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+
+.home-button:hover {
+    background: #2ecc71;
+    transform: scale(1.05);
+    border-color: #2ecc71;
+}
+
+.home-button img.home-icon {
+    width: 22px;
+    height: 22px;
 }
 
 
 h1 {
-    color: #333;
-    margin-top: 0;
-    margin-bottom: 10px;
+    color: #ffffff;
+    font-size: 2.2rem;
+    margin-bottom: 20px; 
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    font-weight: 700;
 }
 
-
-h2,h3 {
-    margin: 10px;
+h2 {
+    font-size: 1.3rem;
+    color: #111111;
+    margin: 5px 0;
+    font-weight: 700;
 }
+
+h3 {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 4px;
+}
+
 
 .coverflow {
-    padding-right: 20px;
     position: relative;
-    height: auto;
     width: 100%;
-    overflow: visible;
-    min-height: 400px; /* Minimalna wysokość kontenera */
-    min-width: 300px; /* Minimalna szerokość kontenera */
+    max-width: 360px; 
+    height: 490px;
+    margin: 0 auto;
+    overflow: visible; 
 }
-
 
 .coverflow-inner {
     display: flex;
-    height: auto;
-    position: relative; /* Pozwala na przesuwanie całego kontenera */
-    transition: transform 0.5s ease;
-    gap: 30px; /* Ustawienie odstępu między elementami */
+    align-items: center;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+    gap: 40px;
 }
 
-.cover-item {
-    min-width: 300px; /* Szerokość elementów */
-    margin: 0 0px; /* Odstęp między elementami */
 
+.cover-item {
+    min-width: 360px;
+    max-width: 360px;
+    display: flex;
     flex-direction: column;
-    align-items: center;
-    transition: transform 0.5s ease, opacity 0.5s ease;
-    /*padding-top: 50px;*/
+    background: rgba(255, 255, 255, 0.95);
+    padding: 22px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: transform 0.45s ease, opacity 0.45s ease, filter 0.45s ease;
 }
 
 .cover-item.active {
-    transform: scale(1.1); /* Powiększenie aktywnego elementu */
-    width:  350px;
+    transform: scale(1.05);
+    opacity: 1;
+    filter: none;
+    z-index: 10;
 }
 
 .cover-item.prev,
 .cover-item.next {
-    opacity: 0.7; /* Widoczne, ale mniej wyraźne */
+    opacity: 0.4;
+    transform: scale(0.85);
+    filter: blur(0.5px);
+    pointer-events: none;
 }
 
 .cover-item:not(.active):not(.prev):not(.next) {
-    opacity: 0; /* Ukrycie pozostałych */
-}
-
-.cover-item.inactive {
-    pointer-events: none; /* Zablokuj interakcje */
-    opacity: 0.7; /* Zmniejsz przezroczystość */
-}
-
-#button-container {
-    display: flex; /* Ustawienie Flexboxa */
-    justify-content: center; /* Wyśrodkowanie przycisków w poziomie */
-    align-items: center; /* Wyśrodkowanie w pionie */
-    margin-top: 20px; /* Odstęp od góry (opcjonalne) */
-}
-
-#prevBtn, #nextBtn {
-    background-color: #af39e8; /* Kolor tła */
-    color: white; /* Kolor tekstu */
-    border: none; /* Bez ramki */
-    padding: 10px 15px; /* Odsunięcie wewnętrzne */
-    border-radius: 5px; /* Zaokrąglenie rogów */
-    cursor: pointer; /* Kursor wskazujący na przycisk */
-    font-size: 16px; /* Rozmiar czcionki */
-    transition: background 0.3s, transform 0.3s; /* Animacja zmiany tła i transformacji */
-}
-
-/* Ustawienie marginesu dla przycisków */
-#prevBtn {
-    margin-right: 350px; /* Odstęp od prawego przycisku (300px / 2) */
-}
-
-
-#send {
-    display: block; /* Umożliwia użycie margin auto */
-    margin: 0 auto; /* Wyśrodkowanie przycisku */
-}
-
-#prevBtn {
-    left: 10px; /* Odstęp od lewej krawędzi */
-}
-
-#nextBtn {
-    right: 10px; /* Odstęp od prawej krawędzi */
-}
-
-.small-grid {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center; /* Wyśrodkowanie zawartości w poziomie */
-    margin-bottom: 15px;
-    padding: 10px;
-    background: #F6F5F2;
-    border: 2px solid #ccc;
-    border-radius: 8px;
+    opacity: 0;
+    transform: scale(0.7);
+    pointer-events: none;
 }
 
 
 .small-grid {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Wyśrodkowanie zawartości w poziomie */
-    margin-bottom: 15px; /* Odstęp poniżej */
-    padding: 10px; /* Zwiększenie paddingu dla lepszego wyglądu */
-    width: 100%; /* Ustawienie szerokości na 100% kontenera nadrzędnego */
-    max-width: 800px; /* Maksymalna szerokość, jeśli chcesz ograniczyć */
-    background: #F6F5F2; /* Tło */
-    border: 2px solid #ccc; /* Ramka */
-    border-radius: 8px; /* Zaokrąglenie rogów */
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    width: 100%;
+    background: #f8f9fa;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    text-align: center;
 }
 
-button {
-    background: #4CAF50;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.3s, transform 0.3s;
-}
-
-button:hover {
-    background: #45a049;
-    transform: scale(1.05);
+.small-grid:last-of-type {
+    margin-bottom: 15px;
 }
 
 input[type="text"] {
-    width: 90%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    width: 100%;
+    padding: 10px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    color: #333333;
+    font-size: 0.9rem;
+    text-align: center;
 }
+
 .stars {
     display: flex;
     flex-direction: row-reverse;
     justify-content: center;
+    gap: 4px;
 }
 
 .star {
-    font-size: 2rem;
+    font-size: 2.1rem;
     cursor: pointer;
-    color: gray; /* Domyślny kolor gwiazdek */
+    color: #cbd5e1;
+    transition: color 0.15s ease;
 }
 
-.star:hover,
-.star:hover ~ .star,
-.star.selected,
-.star.selected ~ .star {
-    color: gold; /* Kolor zaznaczonych gwiazdek */
+.star:hover, .star:hover ~ .star { color: #ffb703; }
+.star.selected, .star.selected ~ .star { color: #fb8500; }
+
+p { font-size: 0.85rem; color: #64748b; margin-top: 4px; }
+.rating-value { font-weight: bold; color: #fb8500; }
+
+#button-approve {
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
+#approveButton {
+    width: 100%;
+    background: #2ecc71;
+    color: #ffffff;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
 
-@media (max-width: 600px) {
-    .container {
-        width: 100%;
-        padding: 15px;
-    }
+#approveButton:hover:not(:disabled) { background: #27ae60; }
+#approveButton:disabled {
+    background: #e2e8f0 !important;
+    color: #94a3b8 !important;
+    cursor: not-allowed;
+}
 
-    .star {
-        font-size: 1.5rem;
-    }
+#button-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 360px;   
+    margin-top: 30px;   
+    position: relative; 
+    z-index: 200;       
+}
+
+#prevBtn, #nextBtn {
+    background: rgba(255, 255, 255, 0.95);
+    color: #222222;
+    border: 1px solid #cbd5e1;
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+}
+
+#prevBtn:hover, #nextBtn:hover {
+    background: #ffffff;
+    transform: scale(1.03);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    border-color: #94a3b8;
 }

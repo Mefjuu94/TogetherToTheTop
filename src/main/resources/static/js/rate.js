@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const coverItems = document.querySelectorAll('.cover-item');
     let currentIndex = 0;
 
-    function setupStarsForActiveItem() {
+    function setupActiveItemLogic() {
         const activeItem = document.querySelector('.cover-item.active');
         if (!activeItem) return;
 
@@ -11,63 +11,85 @@ document.addEventListener('DOMContentLoaded', function () {
         const hiddenRate = activeItem.querySelector('.hiddenRate');
         const ratingValue = activeItem.querySelector('.rating-value');
         const approveButton = activeItem.querySelector('#approveButton');
-
+        
+        // cleaning old listeners
         stars.forEach(star => {
+            const newStar = star.cloneNode(true);
+            star.parentNode.replaceChild(newStar, star);
+        });
+
+        const freshStars = activeItem.querySelectorAll('.star');
+
+        freshStars.forEach(star => {
             star.addEventListener('click', function () {
                 const value = this.getAttribute('data-value');
                 hiddenRate.value = value;
                 ratingValue.textContent = value;
 
-                stars.forEach(s => s.classList.remove('selected'));
+                freshStars.forEach(s => s.classList.remove('selected'));
                 this.classList.add('selected');
+                
                 let nextSibling = this.nextElementSibling;
                 while (nextSibling) {
                     nextSibling.classList.add('selected');
                     nextSibling = nextSibling.nextElementSibling;
                 }
 
-                // Enable or disable the button based on the rating
-                approveButton.disabled = hiddenRate.value === "" || hiddenRate.value <= 0;
+                approveButton.disabled = !hiddenRate.value || hiddenRate.value <= 0;
             });
         });
 
-        // Initial check to disable the button if no stars are selected
-        approveButton.disabled = hiddenRate.value === "" || hiddenRate.value <= 0;
+        approveButton.disabled = !hiddenRate.value || hiddenRate.value <= 0;
     }
 
-    function updateCoverFlow() {
-        const itemWidth = coverItems[0].offsetWidth;
-        const containerWidth = coverflowInner.offsetWidth;
-        const gap = 20;
+    // rewrite comment bfore sendd to spring
+window.prepareFormData = function() {
+    // 1. take only middle tile
+    const activeItem = document.querySelector('.cover-item.active');
+    if (!activeItem) return;
 
-        const offset = (containerWidth / 2) - (itemWidth / 2) - (currentIndex * (itemWidth + gap));
-        coverflowInner.style.transform = `translateX(${offset}px)`;
+    // 2. search input only in this active tile
+    const visibleInput = activeItem.querySelector('input[name="behavior-visible"]');
+    // 3. lf hidden input where active tile
+    const hiddenInput = activeItem.querySelector('.hiddenBehavior');
 
-        coverItems.forEach((item, index) => {
-            item.classList.remove('active', 'prev', 'next');
-            item.classList.add('inactive');
-            item.style.opacity = '0.5';
-            item.style.transform = 'scale(0.9)';
+    // 4. if 2 fields exis then rewrite safty
+    if (visibleInput && hiddenInput) {
+        hiddenInput.value = visibleInput.value;
+    }
+};
 
-            if (index === currentIndex) {
-                item.classList.add('active');
-                item.classList.remove('inactive');
-                item.style.opacity = '1';
-                item.style.transform = 'scale(1.1)';
-            } else if (index === (currentIndex - 1 + coverItems.length) % coverItems.length) {
-                item.classList.add('prev');
-                item.style.opacity = '0.7';
-            } else if (index === (currentIndex + 1) % coverItems.length) {
-                item.classList.add('next');
-                item.style.opacity = '0.7';
-            } else {
-                item.style.opacity = '0';
-                item.style.transform = 'scale(0)';
-            }
+    document.querySelectorAll('.cover-item form').forEach(form => {
+        form.addEventListener('submit', function() {
+            window.prepareFormData();
         });
+    });
 
-        setupStarsForActiveItem();
-    }
+    // math for make middle point
+    function updateCoverFlow() {
+    if (coverItems.length === 0) return;
+    
+    const itemWidth = coverItems[0].offsetWidth;
+    const gap = 40; // css gap
+
+    // center tile
+    const offset = - (currentIndex * (itemWidth + gap));
+    coverflowInner.style.transform = `translateX(${offset}px)`;
+
+    coverItems.forEach((item, index) => {
+        item.classList.remove('active', 'prev', 'next');
+        
+        if (index === currentIndex) {
+            item.classList.add('active');
+        } else if (index === (currentIndex - 1 + coverItems.length) % coverItems.length) {
+            item.classList.add('prev');
+        } else if (index === (currentIndex + 1) % coverItems.length) {
+            item.classList.add('next');
+        }
+    });
+
+    setupActiveItemLogic();
+}
 
     document.getElementById('prevBtn').addEventListener('click', function () {
         currentIndex = (currentIndex - 1 + coverItems.length) % coverItems.length;
@@ -79,5 +101,6 @@ document.addEventListener('DOMContentLoaded', function () {
         updateCoverFlow();
     });
 
+    window.addEventListener('resize', updateCoverFlow);
     updateCoverFlow();
 });

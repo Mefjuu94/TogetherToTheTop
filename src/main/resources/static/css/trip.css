@@ -1,325 +1,378 @@
-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
+/* --- RESET I BAZA --- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
-body, html {
-    min-height: 100%;
-    overflow: auto;
+html, body {
+    min-height: 100vh;
 }
 
-.background-image {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+body {
     background-size: cover;
     background-position: center;
-    z-index: -1;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #fff;
 }
 
 .container {
+    max-width: 1300px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 40px 20px;
 }
 
+/* --- NAGŁÓWEK --- */
 .tileCenter {
-    background-color: rgba(255, 255, 255, 0.9);
+    background: rgba(20, 30, 40, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
     text-align: center;
-    max-width: 60%;
-    margin: 20px auto;
+    max-width: 50%;
+    margin: 0 auto 30px auto;
 }
 
+.tileCenter h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+}
 
+/* --- GŁÓWNY UKŁAD (3 KOLUMNY) --- */
 .big-grid-container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 50px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    grid-template-columns: 280px 1fr 380px;
+    gap: 30px;
+    margin-bottom: 30px;
+    align-items: start;
 }
 
-
-.left-grid {
-    float: left;
+/* --- SZKLANE KAFELKI / ELEMENTY --- */
+.tile, .Participants-tile, #commentSection, #renew_trip_div {
+    background: rgba(20, 30, 40, 0.4);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 16px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
+    padding: 20px;
 }
 
-.center-grid #map {
-    height: 400px;
-    width: 100%;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-}
-.download_button-container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-}
-.download_button{
-    margin: 0 auto;
+/* Etykiety i teksty w strukturze góra/dół */
+.label {
     display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #b0c4de;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
 }
 
-.right-grid .info-container {
-    padding: 20px;
-    border-radius: 10px;
+.value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
 }
 
-.grid-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+.value-accent {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #00ff88;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-.tile {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+.value-date {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffcc00;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
-.Participants-tile {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    display: inline-block;
-}
-
-#description {
-    margin-top: 20px;
-}
-
-#button-container {
-    text-align: center;
-    margin-top: 20px;
-}
-
-
-#commentSection {
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    max-width: 80%;
-    margin: 0 auto;
-    overflow-y: auto;
-    max-height: 300px;
-}
-
-.comment-item {
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-}
-#homeButton {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 1000;
+.value-owner {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #38b6ff;
     text-decoration: none;
 }
 
-.home-button {
-    background: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.value-desc {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: #f0f4f8;
 }
 
-.home-button img.home-icon {
-    width: 50px;
-    height: auto;
-    background: transparent;
-}
-
-/* Efekt hover */
-.home-button:hover {
-    background-color: #6dc671;
-}
-
-#deleteTrip{
-    align-self: center;
-    text-align: center;
-    margin-top: 20px;
-}
-
-#delete_trip_button {
-    background-color: darkred;
-    margin-top: 20px;
-}
-
-#renew_trip {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease-out;
-    background-color: #f9f9f9;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-button {
-    cursor: pointer;
-    padding: 8px 12px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-/*tutaj coś test */
-#add_announcement {
-    margin-top: 10%;
-    padding: 15px 30px;
-    font-size: 18px;
-    background-color: grey;
-    color: white;
-    border: solid black;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, border 0.3s ease;
-}
-
-#time {
-    justify-content: center;
-    margin-top: 10%;
-    border: solid black 2px;
-    border-radius: 5px;
-    background-color: #c0392b;
-}
-
-#add_announcement:hover {
-    border: 2px solid orange;
-}
-
-#destination-div{
-    justify-items: center;
-    margin-top: 10%;
-    border: solid black 2px;
-    border-radius: 5px;
-    background-color: #c0392b;
-}
-
-#destination-label{
-    display: flex;
-    justify-content: center;
-    text-align: center;
+/* --- LEWA KOLUMNA: UCZESTNICY --- */
+.Participants-tile {
     width: 100%;
 }
 
-#dest {
-    flex: 1;
-    padding: 8px;
-    box-sizing: border-box;
+.Participants-tile h3 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding-bottom: 10px;
+}
+
+.Participants-tile ul {
+    list-style: none;
+}
+
+.Participants-tile li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.participant-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.participant-link:hover {
+    color: #00ff88;
+}
+
+/* --- ŚRODKOWA KOLUMNA: MAPA --- */
+#map {
+    height: 440px;
+    width: 100%;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    background: rgba(0,0,0,0.2);
+    position: relative; /* Zabezpieczenie dla kafelków Leafleta */
+    z-index: 1;
+}
+
+#gpxFile {
+    margin-top: 20px;
+}
+
+/* --- PRAWA KOLUMNA: DANE --- */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
 }
 
 #description {
-    flex: 1;
-    padding: 8px;
-    box-sizing: border-box;
+    margin-top: 15px;
 }
 
-/*checkboxy*/
+/* --- PRZYCISKI --- */
+button, .download_button, .add_button, .addCommentButton, #renew_trip_button {
+    width: 100%;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    transition: all 0.2s ease;
+}
 
-.checkbox{
-    border: solid black 2px;
-    border-radius: 5px;
-    padding: 5px;
+button:hover, .download_button:hover, .add_button:hover, .addCommentButton:hover, #renew_trip_button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
+    background: linear-gradient(135deg, #0056b3, #004094);
+}
+
+.add_button {
+    background: linear-gradient(135deg, #00ff88, #00b35f);
+    color: #002211;
+    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+}
+
+.add_button:hover {
+    background: linear-gradient(135deg, #00d672, #009951);
+    box-shadow: 0 6px 20px rgba(0, 255, 136, 0.5);
+}
+
+.btn-danger-small {
+    width: auto;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    background: rgba(212, 42, 42, 0.8);
+    box-shadow: none;
+}
+.btn-danger-small:hover {
+    background: #d42a2a;
+}
+
+#delete_trip_button {
+    background: linear-gradient(135deg, #d42a2a, #8a0f0f);
+    box-shadow: 0 4px 15px rgba(212, 42, 42, 0.3);
+    max-width: 250px;
+    margin: 20px auto;
     display: block;
-    box-sizing: border-box;
-    margin: 5px;
 }
 
-h2 {
-    color: #333;
+#delete_trip_button:hover {
+    background: linear-gradient(135deg, #b51c1c, #6b0707);
+}
+
+/* --- KOMENTARZE --- */
+#commentSection {
+    max-width: 100%;
+    margin-top: 30px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+#commentForm textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 12px;
+    color: #fff;
+    font-size: 1rem;
+    resize: vertical;
+    margin-bottom: 12px;
+}
+
+.comments-list {
+    list-style: none;
+    margin-top: 20px;
+}
+
+.comment-item {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.comment-username {
+    font-weight: 700;
+    color: #38b6ff;
+    text-decoration: none;
+}
+
+.comment-date {
+    font-size: 0.85rem;
+    color: #b0c4de;
+}
+
+.comment-text {
+    color: #f0f4f8;
+    line-height: 1.4;
+}
+
+.btn-danger-text {
+    background: transparent;
+    color: #ff5c5c;
+    padding: 0;
+    font-size: 0.85rem;
+    box-shadow: none;
+    margin-top: 6px;
+    width: fit-content;
+}
+.btn-danger-text:hover {
+    background: transparent;
+    text-decoration: underline;
+    color: #ff3333;
+}
+
+/* --- PRZYCISK HOME --- */
+#homeButton {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1000;
+}
+
+.home-button {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 8px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.home-button img.home-icon {
+    width: 32px;
+    height: 32px;
+}
+
+.home-button:hover {
+    background: rgba(109, 198, 113, 0.85);
+}
+
+/* --- PANEL RENEW (ODNAWIANIE) --- */
+#renew_trip_div {
+    max-width: 600px;
+    margin: 20px auto;
 }
 
 .form-group {
     margin-bottom: 15px;
 }
 
-label {
-    font-weight: bold;
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
 }
 
-input[type="text"], textarea {
+.form-group input[type="datetime-local"], .form-group textarea, .form-group input[type="number"] {
     width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
     padding: 10px;
-    margin-top: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    color: #fff;
 }
 
-.checkbox-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
+.checkbox-modern {
+    display: block;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
 }
 
-.checkbox-group input {
+.checkbox-modern input {
     margin-right: 10px;
 }
 
-#time, #descriptionTrip, #renew_trip_button {
-    background-color: #c0392b;
-    transition: background-color 0.3s ease;
-}
-
-#time{
-    padding: 0;
-    margin: 0;
-}
-
-#renew_trip_div {
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    max-width: 70%;
-    margin: 0 auto auto auto;
-    overflow-y: auto;
-}
-
-.completed {
-    background-color: green !important;
-}
-
-#renew_trip_button{
-    display: block;
-    margin: 0 auto;
-}
-
-#renew_trip{
-visibility: hidden;
+.sub-input {
+    padding-left: 20px;
+    margin-top: -4px;
+    margin-bottom: 12px;
 }
 
 .hidden {
@@ -328,52 +381,25 @@ visibility: hidden;
     transition: height 0.5s ease-in-out;
 }
 
-#toggleButton{
-    display: block;
-    margin: 10px auto;
+#toggleButton {
+    max-width: 200px;
+    margin: 20px auto;
 }
 
-.show {
-    height: auto; /* Ustawia wysokość na 'auto', by rozwinąć zawartość */
+.comment-date {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #ffb74d; 
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin-left: auto; 
 }
 
 
-@media (max-width: 800px) {
-
-        .container {
-            display: grid;
-            grid-template-rows: auto auto auto auto auto;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        .tileCenter {
-            grid-row: 1 / 2;
-            grid-column: 1 / 2;
-        }
-
-        .center-grid {
-            grid-row: 2 / 3;
-            grid-column: 1 / -1;
-        }
-
-        .right-grid {
-            grid-row: 3 / 4;
-            grid-column: 1 / -1;
-        }
-
-        .left-grid {
-            grid-row: 4 / 5;
-            grid-column: 1 / -1;
-        }
-
-        #commentSection {
-            grid-row: 5 / 6;
-            grid-column: 1 / -1;
-        }
-
-        #comment{
-            width: 100%;
-            box-sizing: border-box;
-        }
+@media (max-width: 1100px) {
+    .big-grid-container {
+        grid-template-columns: 1fr;
+    }
+    .tileCenter {
+        max-width: 90%;
+    }
 }

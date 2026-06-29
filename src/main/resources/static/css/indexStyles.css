@@ -10,7 +10,6 @@ body {
     min-height: 100vh;
 }
 
-/* Subtelne przyciemnienie tła przed zalogowaniem */
 body::before {
     content: "";
     position: absolute;
@@ -21,28 +20,28 @@ body::before {
     transition: background-color 0.5s ease;
 }
 
-/* Usunięcie przyciemnienia po zalogowaniu */
+/* delete shadow from background after login */
 body.logged-in::before {
     background-color: rgba(0, 0, 0, 0);
 }
 
-/* Główny kontener pozycjonujący całe menu */
+/* main container */
 .main-layout-container {
-    max-width: 900px; /* Szerokość dopasowana do 3 kolumn kafelków */
+    max-width: 900px; 
     margin: 0 auto;
     position: relative;
     z-index: 2;
     padding: 20px;
     
-    /* WYŚRODKOWANIE NA ŚRODKU EKRANU */
+  
     display: flex;
     justify-content: center;
-    align-items: center; /* Centrowanie w pionie */
-    min-height: 100vh;   /* Zajmuje całą wysokość ekranu */
+    align-items: center; 
+    min-height: 100vh;   
     box-sizing: border-box;
 }
 
-/* Spójna, sztywna siatka 3x3 gwarantująca wyrównanie pionowe i poziome */
+
 .main-grid {
     display: grid;
     grid-template-columns: repeat(3, 250px);
@@ -51,7 +50,7 @@ body.logged-in::before {
     justify-content: center;
 }
 
-/* Styl kafelka - Prawdziwy Glassmorphism */
+
 .tile {
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
@@ -75,13 +74,13 @@ body.logged-in::before {
     width: 100%;
 }
 
-/* Wizualny stan dla kafelka zablokowanego */
+
 .tile.tile-locked {
     background: rgba(0, 0, 0, 0.15);
     opacity: 0.75;
 }
 
-/* Efekt Hover dla aktywnych kafelków */
+
 .tile:not(.tile-locked):hover {
     transform: translateY(-8px) scale(1.03);
     background: rgba(255, 255, 255, 0.25);
@@ -89,7 +88,7 @@ body.logged-in::before {
     box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.3);
 }
 
-/* Efekt Hover dla zablokowanych kafelków */
+
 .tile.tile-locked:hover {
     transform: translateY(-2px);
     background: rgba(255, 255, 255, 0.18);
@@ -114,7 +113,7 @@ body.logged-in::before {
     text-shadow: 0 2px 4px rgba(0,0,0,0.4);
 }
 
-/* Nowoczesne Okna Modalne */
+
 .modal {
     display: none;
     position: fixed;
@@ -160,7 +159,7 @@ body.logged-in::before {
     cursor: pointer;
 }
 
-/* Style inputów w modalach */
+
 input[type="email"],
 input[type="password"],
 input[type="text"] {
